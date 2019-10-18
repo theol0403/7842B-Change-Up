@@ -57,7 +57,12 @@ void opcontrol() {
   auto xModel = std::dynamic_pointer_cast<XDriveModel>(chassis->getModel());
   Controller controller(ControllerId::master);
 
+  ADIEncoder enc('A', 'B');
+  lv_obj_t* label = lv_label_create(lv_scr_act(), NULL);
+
   while (true) {
+
+    lv_label_set_text(label, std::to_string(enc.get()).c_str());
 
     xModel->xArcade(
       controller.getAnalog(ControllerAnalog::rightX),
