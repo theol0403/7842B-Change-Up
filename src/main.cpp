@@ -1,4 +1,5 @@
 #include "main.h"
+#include "odomDebug/odomDebug.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -39,35 +40,38 @@ void competition_initialize() {}
  */
 void autonomous() {}
 
-/**
- * Runs the operator control code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the operator
- * control mode.
- *
- * If no competition control is connected, this function will run immediately
- * following initialize().
- *
- * If the robot is disabled or communications is lost, the
- * operator control task will be stopped. Re-enabling the robot will restart the
- * task, not resume it from where it left off.
- */
 void opcontrol() {
-  auto chassis = ChassisControllerBuilder().withMotors(1, 2, 3, 4).build();
-  auto xModel = std::dynamic_pointer_cast<XDriveModel>(chassis->getModel());
+
+  auto chassis = ChassisControllerBuilder()
+                   // .withMotors(1, 2, 3, 4)
+                   .withMotors({1, 2}, {3, 4})
+                   .withSensors(ADIEncoder(3, 4, true), ADIEncoder(5, 6), ADIEncoder(1, 2, true))
+                   .withDimensions({{2.75_in, 13.2_in, 0.001_in}, 360})
+                   .withOdometry(StateMode::CARTESIAN)
+                   .buildOdometry();
+
+  // auto xModel = std::dynamic_pointer_cast<XDriveModel>(chassis->getModel());
+  // auto oModel = std::dynamic_pointer_cast<ThreeEncoderSkidSteerModel>(chassis->getModel());
   Controller controller(ControllerId::master);
 
-  ADIEncoder enc('A', 'B');
-  lv_obj_t* label = lv_label_create(lv_scr_act(), NULL);
+  OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
+  display.setStateCallback([&](OdomDebug::state_t state) {
+    chassis->setState({state.x, state.y, state.theta});
+  });
+  display.setResetCallback([&]() {
+    chassis->setState({0_in, 0_in, 0_deg});
+  });
 
   while (true) {
 
-    lv_label_set_text(label, std::to_string(enc.get()).c_str());
+    auto state = chassis->getState();
+    auto sensors = chassis->getModel()->getSensorVals();
+    display.setData({state.x, state.y, state.theta}, {sensors[0], sensors[1], sensors[2]});
 
-    xModel->xArcade(
-      controller.getAnalog(ControllerAnalog::rightX),
-      controller.getAnalog(ControllerAnalog::rightY),
-      controller.getAnalog(ControllerAnalog::leftX));
+    // xModel->xArcade(
+    //   controller.getAnalog(ControllerAnalog::rightX),
+    //   controller.getAnalog(ControllerAnalog::rightY),
+    //   controller.getAnalog(ControllerAnalog::leftX));
 
     pros::delay(20);
   }
