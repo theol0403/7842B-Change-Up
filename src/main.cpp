@@ -1,5 +1,6 @@
 #include "main.h"
 #include "odomDebug/odomDebug.hpp"
+#include "main/threeEncXDriveModel.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -42,36 +43,45 @@ void autonomous() {}
 
 void opcontrol() {
 
-  auto chassis = ChassisControllerBuilder()
-                   // .withMotors(1, 2, 3, 4)
-                   .withMotors({1, 2}, {3, 4})
-                   .withSensors(ADIEncoder(3, 4, true), ADIEncoder(5, 6), ADIEncoder(1, 2, true))
-                   .withDimensions({{2.75_in, 13.2_in, 0.001_in}, 360})
-                   .withOdometry(StateMode::CARTESIAN)
-                   .buildOdometry();
+  auto model = std::make_shared<ThreeEncXDriveModel>(
+    // motors
+    std::make_shared<Motor>(1), //
+    std::make_shared<Motor>(2), //
+    std::make_shared<Motor>(3), //
+    std::make_shared<Motor>(4), //
+    // sensors
+    std::make_shared<ADIEncoder>(3, 4, true), //
+    std::make_shared<ADIEncoder>(5, 6), //
+    std::make_shared<ADIEncoder>(1, 2, true), //
+    // limits
+    200, 12000);
 
-  // auto xModel = std::dynamic_pointer_cast<XDriveModel>(chassis->getModel());
-  // auto oModel = std::dynamic_pointer_cast<ThreeEncoderSkidSteerModel>(chassis->getModel());
+  auto odometry = std::make_shared<ThreeEncoderOdometry>(
+    TimeUtilFactory::create(), model, ChassisScales({2.75_in, 13.2_in, 0.001_in}, 360));
+
   Controller controller(ControllerId::master);
 
   OdomDebug display(lv_scr_act(), LV_COLOR_ORANGE);
   display.setStateCallback([&](OdomDebug::state_t state) {
-    chassis->setState({state.x, state.y, state.theta});
+    odometry->setState({state.x, state.y, state.theta}, StateMode::CARTESIAN);
   });
+
   display.setResetCallback([&]() {
-    chassis->setState({0_in, 0_in, 0_deg});
+    model->resetSensors();
+    odometry->setState({0_in, 0_in, 0_deg}, StateMode::CARTESIAN);
   });
 
   while (true) {
+    auto state = odometry->getState(StateMode::CARTESIAN);
+    auto sensors = model->getSensorVals();
+    display.setData(
+      {state.x, state.y, state.theta},
+      {(double)sensors[0], (double)sensors[1], (double)sensors[2]});
 
-    auto state = chassis->getState();
-    auto sensors = chassis->getModel()->getSensorVals();
-    display.setData({state.x, state.y, state.theta}, {sensors[0], sensors[1], sensors[2]});
-
-    // xModel->xArcade(
-    //   controller.getAnalog(ControllerAnalog::rightX),
-    //   controller.getAnalog(ControllerAnalog::rightY),
-    //   controller.getAnalog(ControllerAnalog::leftX));
+    model->xArcade(
+      controller.getAnalog(ControllerAnalog::rightX),
+      controller.getAnalog(ControllerAnalog::rightY),
+      controller.getAnalog(ControllerAnalog::leftX));
 
     pros::delay(20);
   }
