@@ -1,6 +1,6 @@
 #include "main.h"
 #include "odomDebug/odomDebug.hpp"
-#include "main/threeEncXDriveModel.hpp"
+#include "utility/threeEncXDriveModel.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
