@@ -13,20 +13,20 @@ Robot& Robot::initialize() {
   return instance;
 }
 
-std::shared_ptr<ThreeEncXDriveModel> Robot::getModel() {
-  if (!model) throw std::runtime_error("Robot::getModel: model is null");
-  return model;
-}
-std::shared_ptr<ThreeEncoderOdometry> Robot::getOdom() {
-  if (!odom) throw std::runtime_error("Robot::getOdom: odom is null");
-  return odom;
+Robot& Robot::update() {
+  auto& instance = get();
+  instance.updateScreen();
 }
 
-void Robot::updateScreen() {
-  auto state = odom->getState(StateMode::CARTESIAN);
-  auto sensors = model->getSensorVals();
-  odomScreen->setData(
-    {state.x, state.y, state.theta}, {(double)sensors[0], (double)sensors[1], (double)sensors[2]});
+std::shared_ptr<ThreeEncXDriveModel> Robot::getModel() {
+  auto& instance = get();
+  if (!instance.model) throw std::runtime_error("Robot::getModel: model is null");
+  return instance.model;
+}
+std::shared_ptr<ThreeEncoderOdometry> Robot::getOdom() {
+  auto& instance = get();
+  if (!instance.odom) throw std::runtime_error("Robot::getOdom: odom is null");
+  return instance.odom;
 }
 
 void Robot::initializeChassis() {
@@ -60,4 +60,11 @@ void Robot::initializeScreen() {
     model->resetSensors();
     odom->setState({0_in, 0_in, 0_deg}, StateMode::CARTESIAN);
   });
+}
+
+void Robot::updateScreen() {
+  auto state = odom->getState(StateMode::CARTESIAN);
+  auto sensors = model->getSensorVals();
+  odomScreen->setData(
+    {state.x, state.y, state.theta}, {(double)sensors[0], (double)sensors[1], (double)sensors[2]});
 }

@@ -47,9 +47,9 @@ void opcontrol() {
   Controller controller(ControllerId::master);
 
   while (true) {
-    Robot::get().updateScreen();
+    Robot::update();
 
-    Robot::get().getModel()->xArcade(
+    Robot::getModel()->xArcade(
       controller.getAnalog(ControllerAnalog::rightX),
       controller.getAnalog(ControllerAnalog::rightY),
       controller.getAnalog(ControllerAnalog::leftX));

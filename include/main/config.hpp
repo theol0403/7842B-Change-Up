@@ -7,23 +7,23 @@ class Robot {
  public:
   static Robot& get();
   static Robot& initialize();
+  static Robot& update();
 
-  std::shared_ptr<ThreeEncXDriveModel> getModel();
-  std::shared_ptr<ThreeEncoderOdometry> getOdom();
-
-  void updateScreen();
+  static std::shared_ptr<ThreeEncXDriveModel> getModel();
+  static std::shared_ptr<ThreeEncoderOdometry> getOdom();
 
  protected:
+  Robot() = default;
+  Robot(const Robot& irobot) = delete;
+  ~Robot() = default;
+
   void initializeChassis();
   void initializeDevices();
   void initializeScreen();
 
+  void updateScreen();
+
   std::shared_ptr<ThreeEncXDriveModel> model {nullptr};
   std::shared_ptr<ThreeEncoderOdometry> odom {nullptr};
   std::shared_ptr<OdomDebug> odomScreen {nullptr};
-
- private:
-  Robot() = default;
-  Robot(const Robot& irobot) = delete;
-  ~Robot() = default;
 };
