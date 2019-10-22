@@ -8,6 +8,7 @@
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+  pros::delay(200);
   Robot::initialize();
 }
 
@@ -54,6 +55,6 @@ void opcontrol() {
       controller.getAnalog(ControllerAnalog::rightY),
       controller.getAnalog(ControllerAnalog::leftX));
 
-    pros::delay(20);
+    pros::delay(10);
   }
 }
