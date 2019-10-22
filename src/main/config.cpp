@@ -15,6 +15,7 @@ Robot& Robot::initialize() {
 
 Robot& Robot::update() {
   auto& instance = get();
+  instance.updateOdom();
   instance.updateScreen();
 }
 
@@ -90,6 +91,10 @@ void Robot::initializeScreen() {
     model->resetSensors();
     odom->setState({0_in, 0_in, 0_deg}, StateMode::CARTESIAN);
   });
+}
+
+void Robot::updateOdom() {
+  odom->step();
 }
 
 void Robot::updateScreen() {

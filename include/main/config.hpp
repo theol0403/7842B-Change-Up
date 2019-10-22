@@ -21,6 +21,7 @@ class Robot {
   void initializeDevices();
   void initializeScreen();
 
+  void updateOdom();
   void updateScreen();
 
   std::shared_ptr<ThreeEncXDriveModel> model {nullptr};
