@@ -44,8 +44,8 @@ void Robot::initializeChassis() {
   model = std::make_shared<ThreeEncXDriveModel>(
     // motors
     std::make_shared<Motor>(1), //
-    std::make_shared<Motor>(2), //
-    std::make_shared<Motor>(3), //
+    std::make_shared<Motor>(-2), //
+    std::make_shared<Motor>(-3), //
     std::make_shared<Motor>(4), //
     // sensors
     std::make_shared<ADIEncoder>(3, 4, true), //
