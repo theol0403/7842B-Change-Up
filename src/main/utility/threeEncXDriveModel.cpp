@@ -6,8 +6,8 @@ ThreeEncXDriveModel::ThreeEncXDriveModel(
   std::shared_ptr<AbstractMotor> ibottomRightMotor,
   std::shared_ptr<AbstractMotor> ibottomLeftMotor,
   std::shared_ptr<ContinuousRotarySensor> ileftEnc,
-  std::shared_ptr<ContinuousRotarySensor> imiddleEnc,
   std::shared_ptr<ContinuousRotarySensor> irightEnc,
+  std::shared_ptr<ContinuousRotarySensor> imiddleEnc,
   const double imaxVelocity,
   const double imaxVoltage) :
   XDriveModel(
