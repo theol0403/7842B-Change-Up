@@ -1,7 +1,9 @@
 #pragma once
 #include "main.h"
-#include "utility/threeEncXDriveModel.hpp"
+#include "lib7842/odometry/threeEncXDriveModel.hpp"
 #include "odomDebug/odomDebug.hpp"
+
+using namespace lib7842;
 
 class Robot {
  public:

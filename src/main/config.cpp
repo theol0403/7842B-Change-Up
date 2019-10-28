@@ -55,7 +55,7 @@ void Robot::initializeChassis() {
     200, 12000);
 
   odom = std::make_shared<ThreeEncoderOdometry>(
-    TimeUtilFactory::create(), model, ChassisScales({2.75_in, 13.2_in, 0.001_in}, 360));
+    TimeUtilFactory().create(), model, ChassisScales({2.75_in, 13.2_in, 0.001_in}, 360));
 }
 
 /***
