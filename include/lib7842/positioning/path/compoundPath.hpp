@@ -21,26 +21,13 @@ public:
 
   CompoundPath& addPath(const std::shared_ptr<AbstractPath>& ipath);
 
-  CompoundPath& copyPath(const AbstractPath& ipath);
-  CompoundPath& importPath(const AbstractPath& ipath);
-
   /**
    * Interpolate the path
    *
    * @param isteps how many points to interpolate per segment, from start (inclusive) to end (exclusive) of segment
    * @return generated path
    */
-  virtual SimplePath generate(const int isteps = 1) const override;
-
-  /**
-   * Return shared pointer to copy of path
-   */
-  virtual std::shared_ptr<AbstractPath> copyPtr() const override;
-
-  /**
-   * Move the path into a shared pointer and return pointer
-   */
-  virtual std::shared_ptr<AbstractPath> movePtr() const override;
+  SimplePath generate(const int isteps = 1) const override;
 
 protected:
   std::vector<std::shared_ptr<AbstractPath>> paths {};
