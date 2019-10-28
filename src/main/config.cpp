@@ -24,7 +24,7 @@ std::shared_ptr<ThreeEncXDriveModel> Robot::getModel() {
   if (!instance.model) throw std::runtime_error("Robot::getModel: model is null");
   return instance.model;
 }
-std::shared_ptr<ThreeEncoderOdometry> Robot::getOdom() {
+std::shared_ptr<CustomOdometry> Robot::getOdom() {
   auto& instance = get();
   if (!instance.odom) throw std::runtime_error("Robot::getOdom: odom is null");
   return instance.odom;
@@ -54,8 +54,8 @@ void Robot::initializeChassis() {
     // limits
     200, 12000);
 
-  odom = std::make_shared<ThreeEncoderOdometry>(
-    TimeUtilFactory().create(), model, ChassisScales({2.75_in, 13.2_in, 0.001_in}, 360));
+  odom = std::make_shared<CustomOdometry>(model, ChassisScales({2.75_in, 13.2_in, 0.00_in}, 360));
+  odom->startTask("Odometry");
 }
 
 /***
@@ -84,12 +84,11 @@ void Robot::initializeScreen() {
   odomScreen = std::make_shared<OdomDebug>(lv_scr_act(), LV_COLOR_ORANGE);
 
   odomScreen->setStateCallback([&](OdomDebug::state_t state) {
-    odom->setState({state.x, state.y, state.theta}, StateMode::CARTESIAN);
+    odom->setState({state.x, state.y, state.theta});
   });
 
   odomScreen->setResetCallback([&]() {
-    model->resetSensors();
-    odom->setState({0_in, 0_in, 0_deg}, StateMode::CARTESIAN);
+    odom->reset();
   });
 }
 
@@ -98,7 +97,7 @@ void Robot::updateOdom() {
 }
 
 void Robot::updateScreen() {
-  auto state = odom->getState(StateMode::CARTESIAN);
+  auto state = odom->getState();
   auto sensors = model->getSensorVals();
   odomScreen->setData(
     {state.x, state.y, state.theta}, {(double)sensors[0], (double)sensors[1], (double)sensors[2]});

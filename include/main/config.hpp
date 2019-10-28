@@ -1,6 +1,8 @@
 #pragma once
 #include "main.h"
 #include "lib7842/odometry/threeEncXDriveModel.hpp"
+#include "lib7842/odometry/customOdometry.hpp"
+
 #include "odomDebug/odomDebug.hpp"
 
 using namespace lib7842;
@@ -12,7 +14,7 @@ class Robot {
   static Robot& update();
 
   static std::shared_ptr<ThreeEncXDriveModel> getModel();
-  static std::shared_ptr<ThreeEncoderOdometry> getOdom();
+  static std::shared_ptr<CustomOdometry> getOdom();
 
  protected:
   Robot() = default;
@@ -27,6 +29,6 @@ class Robot {
   void updateScreen();
 
   std::shared_ptr<ThreeEncXDriveModel> model {nullptr};
-  std::shared_ptr<ThreeEncoderOdometry> odom {nullptr};
+  std::shared_ptr<CustomOdometry> odom {nullptr};
   std::shared_ptr<OdomDebug> odomScreen {nullptr};
 };
