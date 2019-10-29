@@ -41,7 +41,18 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+  // Robot::getController()->driveDistance(1_ft);
+  // Robot::getController()->turnToAngle(90_deg);
+  // Robot::getController()->driveDistance(1_ft);
+  // Robot::getController()->turnToAngle(180_deg);
+  // Robot::getController()->driveDistance(1_ft);
+  // Robot::getController()->turnToAngle(270_deg);
+  // Robot::getController()->driveDistance(1_ft);
+  // Robot::getController()->turnToAngle(90_deg);
+  // Robot::getOdom()->reset();
+  Robot::getController()->driveToPoint({2_ft, 2_ft}, 2);
+}
 
 void opcontrol() {
 
@@ -67,6 +78,8 @@ void opcontrol() {
       lift.moveVoltage(0);
       lift2.moveVoltage(0);
     }
+
+    if (controller.getDigital(ControllerDigital::A)) { autonomous(); }
 
     pros::delay(5);
   }
