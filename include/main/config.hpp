@@ -2,6 +2,7 @@
 #include "main.h"
 #include "lib7842/odometry/threeEncXDriveModel.hpp"
 #include "lib7842/odometry/customOdometry.hpp"
+#include "lib7842/odometry/controller/controller.hpp"
 
 #include "odomDebug/odomDebug.hpp"
 
@@ -15,6 +16,7 @@ class Robot {
 
   static std::shared_ptr<ThreeEncXDriveModel> getModel();
   static std::shared_ptr<CustomOdometry> getOdom();
+  static std::shared_ptr<OdomController> getController();
 
  protected:
   Robot() = default;
@@ -30,5 +32,6 @@ class Robot {
 
   std::shared_ptr<ThreeEncXDriveModel> model {nullptr};
   std::shared_ptr<CustomOdometry> odom {nullptr};
+  std::shared_ptr<OdomController> controller {nullptr};
   std::shared_ptr<OdomDebug> odomScreen {nullptr};
 };
