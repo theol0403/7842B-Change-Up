@@ -2,9 +2,10 @@
 #include "main.h"
 #include "lib7842/odometry/threeEncXDriveModel.hpp"
 #include "lib7842/odometry/customOdometry.hpp"
-#include "lib7842/odometry/controller/controller.hpp"
+#include "lib7842/odometry/odomController.hpp"
 
-#include "odomDebug/odomDebug.hpp"
+#include "lib7842/gui/screen.hpp"
+#include "lib7842/gui/odomDebug.hpp"
 
 using namespace lib7842;
 
@@ -27,11 +28,9 @@ class Robot {
   void initializeDevices();
   void initializeScreen();
 
-  void updateOdom();
-  void updateScreen();
-
   std::shared_ptr<ThreeEncXDriveModel> model {nullptr};
   std::shared_ptr<CustomOdometry> odom {nullptr};
   std::shared_ptr<OdomController> controller {nullptr};
-  std::shared_ptr<OdomDebug> odomScreen {nullptr};
+
+  std::shared_ptr<Screen> screen {nullptr};
 };

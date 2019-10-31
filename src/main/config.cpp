@@ -13,11 +13,7 @@ Robot& Robot::initialize() {
   return instance;
 }
 
-Robot& Robot::update() {
-  auto& instance = get();
-  instance.updateOdom();
-  instance.updateScreen();
-}
+Robot& Robot::update() {}
 
 std::shared_ptr<ThreeEncXDriveModel> Robot::getModel() {
   auto& instance = get();
@@ -100,24 +96,12 @@ void Robot::initializeDevices() {}
  *                                    
  */
 void Robot::initializeScreen() {
-  odomScreen = std::make_shared<OdomDebug>(lv_scr_act(), LV_COLOR_ORANGE);
 
-  odomScreen->setStateCallback([&](OdomDebug::state_t state) {
-    odom->setState({state.x, state.y, state.theta});
-  });
+  screen = std::make_shared<Screen>(lv_scr_act(), LV_COLOR_ORANGE);
 
-  odomScreen->setResetCallback([&]() {
+  screen->makePage<OdomDebug>().attachOdom(odom).attachResetter([&]() {
     odom->reset();
   });
-}
 
-void Robot::updateOdom() {
-  odom->step();
-}
-
-void Robot::updateScreen() {
-  auto state = odom->getState();
-  auto sensors = model->getSensorVals();
-  odomScreen->setData(
-    {state.x, state.y, state.theta}, {(double)sensors[0], (double)sensors[1], (double)sensors[2]});
+  screen->startTask("Screen");
 }
