@@ -1,8 +1,8 @@
 #pragma once
 #include "main.h"
-#include "lib7842/odometry/threeEncXDriveModel.hpp"
 #include "lib7842/odometry/customOdometry.hpp"
 #include "lib7842/odometry/odomController.hpp"
+#include "lib7842/odometry/odomXController.hpp"
 
 #include "lib7842/gui/screen.hpp"
 #include "lib7842/gui/odomDebug.hpp"
@@ -15,7 +15,7 @@ class Robot {
   static Robot& initialize();
   static Robot& update();
 
-  static std::shared_ptr<ThreeEncXDriveModel> getModel();
+  static std::shared_ptr<ThreeEncoderXDriveModel> getModel();
   static std::shared_ptr<CustomOdometry> getOdom();
   static std::shared_ptr<OdomController> getController();
 
@@ -28,7 +28,7 @@ class Robot {
   void initializeDevices();
   void initializeScreen();
 
-  std::shared_ptr<ThreeEncXDriveModel> model {nullptr};
+  std::shared_ptr<ThreeEncoderXDriveModel> model {nullptr};
   std::shared_ptr<CustomOdometry> odom {nullptr};
   std::shared_ptr<OdomController> controller {nullptr};
 

@@ -15,7 +15,7 @@ Robot& Robot::initialize() {
 
 Robot& Robot::update() {}
 
-std::shared_ptr<ThreeEncXDriveModel> Robot::getModel() {
+std::shared_ptr<ThreeEncoderXDriveModel> Robot::getModel() {
   auto& instance = get();
   if (!instance.model) throw std::runtime_error("Robot::getModel: model is null");
   return instance.model;
@@ -44,7 +44,7 @@ std::shared_ptr<OdomController> Robot::getController() {
  *                                     
  */
 void Robot::initializeChassis() {
-  model = std::make_shared<ThreeEncXDriveModel>(
+  model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
     std::make_shared<Motor>(1), //
     std::make_shared<Motor>(-2), //
@@ -60,17 +60,21 @@ void Robot::initializeChassis() {
   odom = std::make_shared<CustomOdometry>(model, ChassisScales({2.75_in, 13.2_in, 0.00_in}, 360));
   odom->startTask("Odometry");
 
-  controller = std::make_shared<OdomController>(
+  controller = std::make_shared<OdomXController>(
     model, odom,
     //Distance PID - To mm
     std::make_unique<IterativePosPIDController>(
-      0.007, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(20, 10, 25_ms)),
+      0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
     //Turn PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.02, 0.00, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
+      0.03, 0.00, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.007, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(50, 10, 100_ms)));
+      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)),
+    //Strafe PID - To mm
+    std::make_unique<IterativePosPIDController>(
+      0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
+    5_in);
 }
 
 /***
