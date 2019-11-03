@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 #include "odomMath.hpp"
-#include "lib7842/odometry/customOdometry.hpp"
+#include "customOdometry.hpp"
 
 namespace lib7842 {
 
@@ -36,15 +36,15 @@ public:
    * @param idistanceController The distance pid controller
    * @param iturnController     The turning pid controller
    * @param iangleController    The angle pid controller, used to keep distance driving straight
-   * @param isettleRadius        The radius from the target point to give up angle correction
+   * @param isettleRadius       The radius from the target point to give up angle correction
    */
   OdomController(
-    std::shared_ptr<ChassisModel> imodel,
-    std::shared_ptr<CustomOdometry> iodometry,
+    const std::shared_ptr<ChassisModel>& imodel,
+    const std::shared_ptr<CustomOdometry>& iodometry,
     std::unique_ptr<IterativePosPIDController> idistanceController,
     std::unique_ptr<IterativePosPIDController> iturnController,
     std::unique_ptr<IterativePosPIDController> iangleController,
-    const QLength& isettleRadius = 6_in);
+    const QLength& isettleRadius);
 
   virtual ~OdomController() = default;
 
@@ -68,9 +68,7 @@ public:
    * @param settler The settler
    */
   virtual void turnToAngle(
-    const QAngle& angle,
-    const Turner& turner = pointTurn,
-    const Settler& settler = defaultTurnSettler);
+    const QAngle& angle, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
 
   /**
    * Turn the chassis to face a relative angle
@@ -80,9 +78,7 @@ public:
    * @param settler The settler
    */
   virtual void turnAngle(
-    const QAngle& angle,
-    const Turner& turner = pointTurn,
-    const Settler& settler = defaultTurnSettler);
+    const QAngle& angle, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
 
   /**
    * Turn the chassis to face a point
@@ -92,9 +88,7 @@ public:
    * @param settler The settler
    */
   virtual void turnToPoint(
-    const Vector& point,
-    const Turner& turner = pointTurn,
-    const Settler& settler = defaultTurnSettler);
+    const Vector& point, const Turner& turner = pointTurn, const Settler& settler = defaultTurnSettler);
 
   /**
    * Drive a distance while correcting angle using an AngleCalculator 
@@ -151,6 +145,11 @@ public:
   static bool defaultDriveSettler(const OdomController& odom);
 
   /**
+   * A Settler that is used for driving which uses the distance and angle pid's isSettled() method
+   */
+  static bool defaultDriveAngleSettler(const OdomController& odom);
+
+  /**
    * A Turner that excecutes a point turn which turns in place. Used as default for turn functions
    */
   static void pointTurn(ChassisModel& model, double vel);
@@ -182,7 +181,7 @@ public:
    * @param angle The angle error theshold
    * @param distance The distance error theshold
    */
-  static Settler makeSettler(const QLength& angle, const QAngle& distance);
+  static Settler makeSettler(const QLength& distance, const QAngle& angle);
 
   /**
    * Generates an AngleCalculator that seeks a given absolute angle
@@ -199,11 +198,23 @@ public:
   static AngleCalculator makeAngleCalculator(const Vector& point);
 
   /**
+   * Generates an AngleCaclulator that returns a constant error.
+   *
+   * @param error The error
+   */
+  static AngleCalculator makeAngleCalculator(double error);
+
+  /**
    * Generates an AngleCalculator that does nothing
    */
   static AngleCalculator makeAngleCalculator();
 
 protected:
+  /**
+   * Resets the pid controllers, used before every motion
+   */
+  virtual void resetPid();
+
   /**
    * Controls the chassis movement
    * Applies magnitude control to prioritize turning
@@ -212,11 +223,6 @@ protected:
    * @param yaw          The yaw
    */
   void driveVector(double forwardSpeed, double yaw);
-
-  /**
-   * Resets the pid controllers, used before every motion
-   */
-  void resetPid();
 
   /**
    * Calculates angle from the chassis to the point
