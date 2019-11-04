@@ -1,38 +1,5 @@
 #include "config.hpp"
 
-Robot& Robot::get() {
-  static Robot instance;
-  return instance;
-}
-
-Robot& Robot::initialize() {
-  auto& instance = get();
-  instance.initializeChassis();
-  instance.initializeDevices();
-  instance.initializeScreen();
-  return instance;
-}
-
-Robot& Robot::update() {}
-
-std::shared_ptr<ThreeEncoderXDriveModel> Robot::getModel() {
-  auto& instance = get();
-  if (!instance.model) throw std::runtime_error("Robot::getModel: model is null");
-  return instance.model;
-}
-
-std::shared_ptr<CustomOdometry> Robot::getOdom() {
-  auto& instance = get();
-  if (!instance.odom) throw std::runtime_error("Robot::getOdom: odom is null");
-  return instance.odom;
-}
-
-std::shared_ptr<OdomController> Robot::getController() {
-  auto& instance = get();
-  if (!instance.controller) throw std::runtime_error("Robot::getOdom: controller is null");
-  return instance.controller;
-}
-
 /***
  *     _____ _                   _     
  *    /  __ \ |                 (_)    
@@ -43,8 +10,8 @@ std::shared_ptr<OdomController> Robot::getController() {
  *                                     
  *                                     
  */
-void Robot::initializeChassis() {
-  model = std::make_shared<ThreeEncoderXDriveModel>(
+void Robot::_initializeChassis() {
+  _model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
     std::make_shared<Motor>(1), //
     std::make_shared<Motor>(-2), //
@@ -57,11 +24,11 @@ void Robot::initializeChassis() {
     // limits
     200, 12000);
 
-  odom = std::make_shared<CustomOdometry>(model, ChassisScales({2.75_in, 13.2_in, 0.00_in}, 360));
-  odom->startTask("Odometry");
+  _odom = std::make_shared<CustomOdometry>(_model, ChassisScales({2.75_in, 13.2_in, 0.00_in}, 360));
+  _odom->startTask("Odometry");
 
-  controller = std::make_shared<OdomXController>(
-    model, odom,
+  _controller = std::make_shared<OdomXController>(
+    _model, _odom,
     //Distance PID - To mm
     std::make_unique<IterativePosPIDController>(
       0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
@@ -87,7 +54,7 @@ void Robot::initializeChassis() {
  *                                     
  *                                     
  */
-void Robot::initializeDevices() {}
+void Robot::_initializeDevices() {}
 
 /***
  *     _____                          
@@ -99,13 +66,53 @@ void Robot::initializeDevices() {}
  *                                    
  *                                    
  */
-void Robot::initializeScreen() {
+void Robot::_initializeScreen() {
+  _screen = std::make_shared<Screen>(lv_scr_act(), LV_COLOR_ORANGE);
 
-  screen = std::make_shared<Screen>(lv_scr_act(), LV_COLOR_ORANGE);
-
-  screen->makePage<OdomDebug>().attachOdom(odom).attachResetter([&]() {
-    odom->reset();
+  _screen->makePage<OdomDebug>().attachOdom(_odom).attachResetter([&]() {
+    _odom->reset();
   });
 
-  screen->startTask("Screen");
+  _screen->startTask("Screen");
+}
+
+/***
+ *     _____ _             _      _              
+ *    /  ___(_)           | |    | |             
+ *    \ `--. _ _ __   __ _| | ___| |_ ___  _ __  
+ *     `--. \ | '_ \ / _` | |/ _ \ __/ _ \| '_ \ 
+ *    /\__/ / | | | | (_| | |  __/ || (_) | | | |
+ *    \____/|_|_| |_|\__, |_|\___|\__\___/|_| |_|
+ *                    __/ |                      
+ *                   |___/                       
+ */
+Robot& Robot::get() {
+  static Robot instance;
+  return instance;
+}
+
+Robot& Robot::initialize() {
+  auto& instance = get();
+  instance._initializeChassis();
+  instance._initializeDevices();
+  instance._initializeScreen();
+  return instance;
+}
+
+std::shared_ptr<ThreeEncoderXDriveModel> Robot::model() {
+  auto& instance = get();
+  if (!instance._model) throw std::runtime_error("Robot::model: model is null");
+  return instance._model;
+}
+
+std::shared_ptr<CustomOdometry> Robot::odom() {
+  auto& instance = get();
+  if (!instance._odom) throw std::runtime_error("Robot::odom: odom is null");
+  return instance._odom;
+}
+
+std::shared_ptr<OdomController> Robot::chassis() {
+  auto& instance = get();
+  if (!instance._controller) throw std::runtime_error("Robot::chassis: chassis is null");
+  return instance._controller;
 }

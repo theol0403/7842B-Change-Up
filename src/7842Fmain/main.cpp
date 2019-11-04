@@ -42,16 +42,16 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-  // Robot::getController()->driveDistance(1_ft);
-  // Robot::getController()->turnToAngle(90_deg);
-  // Robot::getController()->driveDistance(1_ft);
-  // Robot::getController()->turnToAngle(180_deg);
-  // Robot::getController()->driveDistance(1_ft);
-  // Robot::getController()->turnToAngle(270_deg);
-  // Robot::getController()->driveDistance(1_ft);
-  // Robot::getController()->turnToAngle(90_deg);
-  // Robot::getOdom()->reset();
-  Robot::getController()->driveToPoint({2_ft, 2_ft}, 2);
+  // Robot::chassis()->driveDistance(1_ft);
+  // Robot::chassis()->turnToAngle(90_deg);
+  // Robot::chassis()->driveDistance(1_ft);
+  // Robot::chassis()->turnToAngle(180_deg);
+  // Robot::chassis()->driveDistance(1_ft);
+  // Robot::chassis()->turnToAngle(270_deg);
+  // Robot::chassis()->driveDistance(1_ft);
+  // Robot::chassis()->turnToAngle(90_deg);
+  // Robot::odom()->reset();
+  Robot::chassis()->driveToPoint({2_ft, 2_ft}, 2);
 }
 
 void opcontrol() {
@@ -61,9 +61,8 @@ void opcontrol() {
   Motor lift2(12);
 
   while (true) {
-    Robot::update();
 
-    Robot::getModel()->xArcade(
+    Robot::model()->xArcade(
       controller.getAnalog(ControllerAnalog::rightX),
       controller.getAnalog(ControllerAnalog::rightY),
       controller.getAnalog(ControllerAnalog::leftX));
