@@ -54,7 +54,9 @@ void Robot::_initializeChassis() {
  *                                     
  *                                     
  */
-void Robot::_initializeDevices() {}
+void Robot::_initializeDevices() {
+  _lift = std::make_shared<MotorGroup>(std::initializer_list<Motor>({-11, 12}));
+}
 
 /***
  *     _____                          
@@ -115,4 +117,10 @@ std::shared_ptr<OdomController> Robot::chassis() {
   auto& instance = get();
   if (!instance._controller) throw std::runtime_error("Robot::chassis: chassis is null");
   return instance._controller;
+}
+
+std::shared_ptr<MotorGroup> Robot::lift() {
+  auto& instance = get();
+  if (!instance._lift) throw std::runtime_error("Robot::lift: lift is null");
+  return instance._lift;
 }

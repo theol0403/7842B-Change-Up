@@ -57,8 +57,6 @@ void autonomous() {
 void opcontrol() {
 
   Controller controller(ControllerId::master);
-  Motor lift(11);
-  Motor lift2(12);
 
   while (true) {
 
@@ -68,14 +66,11 @@ void opcontrol() {
       controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::up)) {
-      lift.moveVoltage(-1 * 12000);
-      lift2.moveVoltage(1 * 12000);
+      Robot::lift()->moveVoltage(12000);
     } else if (controller.getDigital(ControllerDigital::down)) {
-      lift.moveVoltage(1 * 12000);
-      lift2.moveVoltage(-1 * 12000);
+      Robot::lift()->moveVoltage(-12000);
     } else {
-      lift.moveVoltage(0);
-      lift2.moveVoltage(0);
+      Robot::lift()->moveVoltage(0);
     }
 
     if (controller.getDigital(ControllerDigital::A)) { autonomous(); }
