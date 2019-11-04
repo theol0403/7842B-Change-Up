@@ -1,11 +1,5 @@
 #pragma once
 #include "main.h"
-#include "lib7842/odometry/customOdometry.hpp"
-#include "lib7842/odometry/odomController.hpp"
-#include "lib7842/odometry/odomXController.hpp"
-
-#include "lib7842/gui/screen.hpp"
-#include "lib7842/gui/odomDebug.hpp"
 
 using namespace lib7842;
 
