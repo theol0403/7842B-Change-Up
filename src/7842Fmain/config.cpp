@@ -57,8 +57,8 @@ void Robot::_initializeChassis() {
 void Robot::_initializeDevices() {
   _lift = std::make_shared<Lift>(
     std::make_shared<Motor>(-9), std::make_shared<Motor>(10),
-    std::make_shared<IterativePosPIDController>(0.01, 0, 0, 0, TimeUtilFactory().create()),
-    std::make_shared<IterativePosPIDController>(0.01, 0, 0, 0, TimeUtilFactory().create()));
+    std::make_shared<IterativePosPIDController>(0.03, 0, 0, 0, TimeUtilFactory().create()),
+    std::make_shared<IterativePosPIDController>(0.03, 0, 0, 0, TimeUtilFactory().create()));
 }
 
 /***
