@@ -55,7 +55,7 @@ void Robot::_initializeChassis() {
  *                                     
  */
 void Robot::_initializeDevices() {
-  _lift = std::make_shared<MotorGroup>(std::initializer_list<Motor>({-11, 12}));
+  _lift = std::make_shared<MotorGroup>(std::initializer_list<Motor>({10, -9}));
 }
 
 /***
@@ -101,26 +101,23 @@ Robot& Robot::initialize() {
   return instance;
 }
 
+#define getDevice(x)                                                                               \
+  auto& instance = get();                                                                          \
+  if (!instance._##x) throw std::runtime_error("Robot::" #x ": _" #x " is null");                  \
+  return instance._##x;
+
 std::shared_ptr<ThreeEncoderXDriveModel> Robot::model() {
-  auto& instance = get();
-  if (!instance._model) throw std::runtime_error("Robot::model: model is null");
-  return instance._model;
+  getDevice(model);
 }
 
 std::shared_ptr<CustomOdometry> Robot::odom() {
-  auto& instance = get();
-  if (!instance._odom) throw std::runtime_error("Robot::odom: odom is null");
-  return instance._odom;
+  getDevice(odom);
 }
 
 std::shared_ptr<OdomController> Robot::chassis() {
-  auto& instance = get();
-  if (!instance._controller) throw std::runtime_error("Robot::chassis: chassis is null");
-  return instance._controller;
+  getDevice(controller);
 }
 
 std::shared_ptr<MotorGroup> Robot::lift() {
-  auto& instance = get();
-  if (!instance._lift) throw std::runtime_error("Robot::lift: lift is null");
-  return instance._lift;
+  getDevice(lift);
 }
