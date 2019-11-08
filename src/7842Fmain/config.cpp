@@ -55,7 +55,10 @@ void Robot::_initializeChassis() {
  *                                     
  */
 void Robot::_initializeDevices() {
-  _lift = std::make_shared<MotorGroup>(std::initializer_list<Motor>({10, -9}));
+  _lift = std::make_shared<Lift>(
+    std::make_shared<Motor>(-9), std::make_shared<Motor>(10),
+    std::make_shared<IterativePosPIDController>(0.01, 0, 0, 0, TimeUtilFactory().create()),
+    std::make_shared<IterativePosPIDController>(0.01, 0, 0, 0, TimeUtilFactory().create()));
 }
 
 /***
@@ -118,6 +121,6 @@ std::shared_ptr<OdomController> Robot::chassis() {
   getDevice(controller);
 }
 
-std::shared_ptr<MotorGroup> Robot::lift() {
+std::shared_ptr<Lift> Robot::lift() {
   getDevice(lift);
 }

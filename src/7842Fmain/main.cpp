@@ -58,6 +58,9 @@ void opcontrol() {
 
   Controller controller(ControllerId::master);
 
+  Lift::states liftState = Lift::states::off;
+  Lift::states lastLiftState = Lift::states::off;
+
   while (true) {
 
     Robot::model()->xArcade(
@@ -65,16 +68,23 @@ void opcontrol() {
       controller.getAnalog(ControllerAnalog::rightY),
       controller.getAnalog(ControllerAnalog::leftX));
 
-    if (controller.getDigital(ControllerDigital::up)) {
-      Robot::lift()->moveVoltage(12000);
+    if (controller.getDigital(ControllerDigital::L1)) {
+      liftState = Lift::states::up;
+    } else if (controller.getDigital(ControllerDigital::L2)) {
+      liftState = Lift::states::down;
     } else if (controller.getDigital(ControllerDigital::down)) {
-      Robot::lift()->moveVoltage(-12000);
+      liftState = Lift::states::bottom;
     } else {
-      Robot::lift()->moveVoltage(0);
+      liftState = Lift::states::holdCurrentPos;
+    }
+
+    if (liftState != lastLiftState) {
+      Robot::lift()->setState(liftState);
+      lastLiftState = liftState;
     }
 
     if (controller.getDigital(ControllerDigital::A)) { autonomous(); }
 
-    pros::delay(5);
+    pros::delay(10);
   }
 }
