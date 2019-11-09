@@ -1,5 +1,6 @@
 #include "main.h"
 #include "config.hpp"
+#include "driver.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -56,38 +57,10 @@ void autonomous() {
 
 void opcontrol() {
 
-  Controller controller(ControllerId::master);
-
-  liftStates liftState = liftStates::hold;
-  liftStates lastLiftState = liftStates::hold;
-
   while (true) {
 
-    Robot::model()->xArcade(
-      controller.getAnalog(ControllerAnalog::rightX),
-      controller.getAnalog(ControllerAnalog::rightY),
-      controller.getAnalog(ControllerAnalog::leftX));
-
-    bool moveSlow = controller.getDigital(ControllerDigital::down);
-
-    if (
-      controller.getDigital(ControllerDigital::L2)
-      && controller.getDigital(ControllerDigital::L1)) {
-      liftState = liftStates::bottom;
-    } else if (controller.getDigital(ControllerDigital::L1)) {
-      liftState = moveSlow ? liftStates::upSlow : liftStates::up;
-    } else if (controller.getDigital(ControllerDigital::L2)) {
-      liftState = moveSlow ? liftStates::downSlow : liftStates::down;
-    } else {
-      liftState = liftStates::hold;
-    }
-
-    if (liftState != lastLiftState) {
-      Robot::lift()->setState(liftState);
-      lastLiftState = liftState;
-    }
-
-    if (controller.getDigital(ControllerDigital::A)) { autonomous(); }
+    driverBaseControl();
+    driverDeviceControl();
 
     pros::delay(10);
   }
