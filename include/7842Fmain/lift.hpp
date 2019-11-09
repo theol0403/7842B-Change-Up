@@ -1,7 +1,10 @@
 #pragma once
 #include "main.h"
+#include "statemachine.hpp"
 
-class Lift : public TaskWrapper {
+enum class liftStates { off, holdCurrentPos, holdAtPos, up, down, bottom };
+
+class Lift : public StateMachine<liftStates> {
 
  public:
   Lift(
@@ -10,22 +13,16 @@ class Lift : public TaskWrapper {
     const std::shared_ptr<IterativePosPIDController>& ilpid,
     const std::shared_ptr<IterativePosPIDController>& irpid);
 
-  enum class states { off, holdCurrentPos, holdAtPos, up, down, bottom };
-
-  void calibrate();
-
-  void setState(const states& istate);
-  const states& getState() const;
-
   double getLAngle() const;
   double getRAngle() const;
 
   double setLHoldPos(double iholdPos);
   double setRHoldPos(double iholdPos);
 
+ protected:
+  void calibrate() override;
   void loop() override;
 
- protected:
   std::shared_ptr<Motor> leftLift {nullptr};
   std::shared_ptr<Motor> rightLift {nullptr};
   std::shared_ptr<IterativePosPIDController> lpid {nullptr};
@@ -36,6 +33,4 @@ class Lift : public TaskWrapper {
 
   double lholdPos = 0;
   double rholdPos = 0;
-
-  states state = states::off;
 };
