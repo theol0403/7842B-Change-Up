@@ -2,7 +2,7 @@
 #include "main.h"
 #include "statemachine.hpp"
 
-enum class liftStates { off, holdCurrentPos, holdAtPos, up, down, bottom };
+enum class liftStates { off, hold, holdAtPos, up, down, bottom };
 
 class Lift : public StateMachine<liftStates> {
 
@@ -13,24 +13,16 @@ class Lift : public StateMachine<liftStates> {
     std::unique_ptr<IterativePosPIDController>&& ilpid,
     std::unique_ptr<IterativePosPIDController>&& irpid);
 
-  double getLAngle() const;
-  double getRAngle() const;
-
-  double setLHoldPos(double iholdPos);
-  double setRHoldPos(double iholdPos);
+  void setPosition(const std::valarray<double>& ipos);
+  std::valarray<double> getPosition() const;
 
  protected:
   void calibrate() override;
   void loop() override;
 
-  std::unique_ptr<Motor> leftLift {nullptr};
-  std::unique_ptr<Motor> rightLift {nullptr};
-  std::unique_ptr<IterativePosPIDController> lpid {nullptr};
-  std::unique_ptr<IterativePosPIDController> rpid {nullptr};
+  std::array<std::unique_ptr<Motor>, 2> lift {nullptr, nullptr};
+  std::array<std::unique_ptr<IterativePosPIDController>, 2> pid {nullptr, nullptr};
 
-  double lstartAngle = 0;
-  double rstartAngle = 0;
-
-  double lholdPos = 0;
-  double rholdPos = 0;
+  std::valarray<double> startPos {0, 0};
+  std::valarray<double> holdPos {0, 0};
 };

@@ -5,38 +5,26 @@ Lift::Lift(
   std::unique_ptr<Motor>&& irightLift,
   std::unique_ptr<IterativePosPIDController>&& ilpid,
   std::unique_ptr<IterativePosPIDController>&& irpid) :
-  leftLift(std::move(ileftLift)),
-  rightLift(std::move(irightLift)),
-  lpid(std::move(ilpid)),
-  rpid(std::move(irpid)) {
+  lift({std::move(ileftLift), std::move(irightLift)}), pid({std::move(ilpid), std::move(irpid)}) {
   calibrate();
   startTask("Lift");
 }
 
-double Lift::getLAngle() const {
-  return leftLift->getPosition() - lstartAngle;
+void Lift::setPosition(const std::valarray<double>& ipos) {
+  holdPos = ipos;
 }
 
-double Lift::getRAngle() const {
-  return rightLift->getPosition() - rstartAngle;
-}
-
-double Lift::setLHoldPos(double iholdPos) {
-  lholdPos = iholdPos;
-}
-
-double Lift::setRHoldPos(double iholdPos) {
-  rholdPos = iholdPos;
+std::valarray<double> Lift::getPosition() const {
+  return std::valarray<double>({lift[0]->getPosition(), lift[1]->getPosition()}) - startPos;
 }
 
 void Lift::calibrate() {
-  leftLift->setBrakeMode(AbstractMotor::brakeMode::coast);
-  leftLift->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
-  rightLift->setBrakeMode(AbstractMotor::brakeMode::coast);
-  rightLift->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
+  lift[0]->setBrakeMode(AbstractMotor::brakeMode::coast);
+  lift[0]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
+  lift[1]->setBrakeMode(AbstractMotor::brakeMode::coast);
+  lift[1]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
 
-  lstartAngle = leftLift->getPosition();
-  rstartAngle = rightLift->getPosition();
+  startPos = {lift[0]->getPosition(), lift[1]->getPosition()};
 }
 
 void Lift::loop() {
@@ -46,38 +34,37 @@ void Lift::loop() {
     switch (state) {
 
       case liftStates::off:
-        leftLift->moveVoltage(0);
-        rightLift->moveVoltage(0);
+        lift[0]->moveVoltage(0);
+        lift[1]->moveVoltage(0);
         break;
 
-      case liftStates::holdCurrentPos:
-        lholdPos = getLAngle();
-        rholdPos = getRAngle();
+      case liftStates::hold:
+        holdPos = getPosition();
         state = liftStates::holdAtPos;
         break;
 
       case liftStates::holdAtPos:
-        lpid->setTarget(lholdPos);
-        rpid->setTarget(rholdPos);
-        leftLift->moveVoltage(lpid->step(getLAngle()) * 12000);
-        rightLift->moveVoltage(rpid->step(getRAngle()) * 12000);
+        pid[0]->setTarget(holdPos[0]);
+        pid[1]->setTarget(holdPos[1]);
+        lift[0]->moveVoltage(pid[0]->step(getPosition()[0]) * 12000);
+        lift[1]->moveVoltage(pid[1]->step(getPosition()[1]) * 12000);
         break;
 
       case liftStates::up:
-        leftLift->moveVoltage(12000);
-        rightLift->moveVoltage(12000);
+        lift[0]->moveVoltage(12000);
+        lift[1]->moveVoltage(12000);
         break;
 
       case liftStates::down:
-        leftLift->moveVoltage(-12000);
-        rightLift->moveVoltage(-12000);
+        lift[0]->moveVoltage(-12000);
+        lift[1]->moveVoltage(-12000);
         break;
 
       case liftStates::bottom:
-        lpid->setTarget(0);
-        rpid->setTarget(0);
-        leftLift->moveVoltage(lpid->step(getLAngle()) * 12000);
-        rightLift->moveVoltage(rpid->step(getRAngle()) * 12000);
+        pid[0]->setTarget(0);
+        pid[1]->setTarget(0);
+        lift[0]->moveVoltage(pid[0]->step(getPosition()[0]) * 12000);
+        lift[1]->moveVoltage(pid[1]->step(getPosition()[1]) * 12000);
         break;
     }
 
