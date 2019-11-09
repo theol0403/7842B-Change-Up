@@ -1,10 +1,10 @@
 #include "lift.hpp"
 
 Lift::Lift(
-  const std::unique_ptr<Motor>& ileftLift,
-  const std::unique_ptr<Motor>& irightLift,
-  const std::unique_ptr<IterativePosPIDController>& ilpid,
-  const std::unique_ptr<IterativePosPIDController>& irpid) :
+  std::unique_ptr<Motor>&& ileftLift,
+  std::unique_ptr<Motor>&& irightLift,
+  std::unique_ptr<IterativePosPIDController>&& ilpid,
+  std::unique_ptr<IterativePosPIDController>&& irpid) :
   leftLift(std::move(ileftLift)),
   rightLift(std::move(irightLift)),
   lpid(std::move(ilpid)),
@@ -45,35 +45,35 @@ void Lift::loop() {
 
     switch (state) {
 
-      case states::off:
+      case liftStates::off:
         leftLift->moveVoltage(0);
         rightLift->moveVoltage(0);
         break;
 
-      case states::holdCurrentPos:
+      case liftStates::holdCurrentPos:
         lholdPos = getLAngle();
         rholdPos = getRAngle();
-        state = states::holdAtPos;
+        state = liftStates::holdAtPos;
         break;
 
-      case states::holdAtPos:
+      case liftStates::holdAtPos:
         lpid->setTarget(lholdPos);
         rpid->setTarget(rholdPos);
         leftLift->moveVoltage(lpid->step(getLAngle()) * 12000);
         rightLift->moveVoltage(rpid->step(getRAngle()) * 12000);
         break;
 
-      case states::up:
+      case liftStates::up:
         leftLift->moveVoltage(12000);
         rightLift->moveVoltage(12000);
         break;
 
-      case states::down:
+      case liftStates::down:
         leftLift->moveVoltage(-12000);
         rightLift->moveVoltage(-12000);
         break;
 
-      case states::bottom:
+      case liftStates::bottom:
         lpid->setTarget(0);
         rpid->setTarget(0);
         leftLift->moveVoltage(lpid->step(getLAngle()) * 12000);

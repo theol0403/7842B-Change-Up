@@ -8,10 +8,10 @@ class Lift : public StateMachine<liftStates> {
 
  public:
   Lift(
-    const std::unique_ptr<Motor>& ileftLift,
-    const std::unique_ptr<Motor>& irightLift,
-    const std::unique_ptr<IterativePosPIDController>& ilpid,
-    const std::unique_ptr<IterativePosPIDController>& irpid);
+    std::unique_ptr<Motor>&& ileftLift,
+    std::unique_ptr<Motor>&& irightLift,
+    std::unique_ptr<IterativePosPIDController>&& ilpid,
+    std::unique_ptr<IterativePosPIDController>&& irpid);
 
   double getLAngle() const;
   double getRAngle() const;
