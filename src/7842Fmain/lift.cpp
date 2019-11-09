@@ -10,24 +10,6 @@ Lift::Lift(
   startTask("Lift");
 }
 
-void Lift::calibrate() {
-  leftLift->setBrakeMode(AbstractMotor::brakeMode::coast);
-  leftLift->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
-  rightLift->setBrakeMode(AbstractMotor::brakeMode::coast);
-  rightLift->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
-
-  lstartAngle = leftLift->getPosition();
-  rstartAngle = rightLift->getPosition();
-}
-
-void Lift::setState(const states& istate) {
-  state = istate;
-}
-
-const Lift::states& Lift::getState() const {
-  return state;
-}
-
 double Lift::getLAngle() const {
   return leftLift->getPosition() - lstartAngle;
 }
@@ -42,6 +24,16 @@ double Lift::setLHoldPos(double iholdPos) {
 
 double Lift::setRHoldPos(double iholdPos) {
   rholdPos = iholdPos;
+}
+
+void Lift::calibrate() {
+  leftLift->setBrakeMode(AbstractMotor::brakeMode::coast);
+  leftLift->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
+  rightLift->setBrakeMode(AbstractMotor::brakeMode::coast);
+  rightLift->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
+
+  lstartAngle = leftLift->getPosition();
+  rstartAngle = rightLift->getPosition();
 }
 
 void Lift::loop() {
