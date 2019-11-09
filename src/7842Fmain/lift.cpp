@@ -1,11 +1,14 @@
 #include "lift.hpp"
 
 Lift::Lift(
-  const std::shared_ptr<Motor>& ileftLift,
-  const std::shared_ptr<Motor>& irightLift,
-  const std::shared_ptr<IterativePosPIDController>& ilpid,
-  const std::shared_ptr<IterativePosPIDController>& irpid) :
-  leftLift(ileftLift), rightLift(irightLift), lpid(ilpid), rpid(irpid) {
+  const std::unique_ptr<Motor>& ileftLift,
+  const std::unique_ptr<Motor>& irightLift,
+  const std::unique_ptr<IterativePosPIDController>& ilpid,
+  const std::unique_ptr<IterativePosPIDController>& irpid) :
+  leftLift(std::move(ileftLift)),
+  rightLift(std::move(irightLift)),
+  lpid(std::move(ilpid)),
+  rpid(std::move(irpid)) {
   calibrate();
   startTask("Lift");
 }

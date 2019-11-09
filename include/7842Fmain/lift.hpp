@@ -8,10 +8,10 @@ class Lift : public StateMachine<liftStates> {
 
  public:
   Lift(
-    const std::shared_ptr<Motor>& ileftLift,
-    const std::shared_ptr<Motor>& irightLift,
-    const std::shared_ptr<IterativePosPIDController>& ilpid,
-    const std::shared_ptr<IterativePosPIDController>& irpid);
+    const std::unique_ptr<Motor>& ileftLift,
+    const std::unique_ptr<Motor>& irightLift,
+    const std::unique_ptr<IterativePosPIDController>& ilpid,
+    const std::unique_ptr<IterativePosPIDController>& irpid);
 
   double getLAngle() const;
   double getRAngle() const;
@@ -23,10 +23,10 @@ class Lift : public StateMachine<liftStates> {
   void calibrate() override;
   void loop() override;
 
-  std::shared_ptr<Motor> leftLift {nullptr};
-  std::shared_ptr<Motor> rightLift {nullptr};
-  std::shared_ptr<IterativePosPIDController> lpid {nullptr};
-  std::shared_ptr<IterativePosPIDController> rpid {nullptr};
+  std::unique_ptr<Motor> leftLift {nullptr};
+  std::unique_ptr<Motor> rightLift {nullptr};
+  std::unique_ptr<IterativePosPIDController> lpid {nullptr};
+  std::unique_ptr<IterativePosPIDController> rpid {nullptr};
 
   double lstartAngle = 0;
   double rstartAngle = 0;
