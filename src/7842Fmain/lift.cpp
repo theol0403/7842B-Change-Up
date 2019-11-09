@@ -38,18 +38,6 @@ void Lift::loop() {
         lift[1]->moveVoltage(0);
         break;
 
-      case liftStates::hold:
-        holdPos = getPosition();
-        state = liftStates::holdAtPos;
-        break;
-
-      case liftStates::holdAtPos:
-        pid[0]->setTarget(holdPos[0]);
-        pid[1]->setTarget(holdPos[1]);
-        lift[0]->moveVoltage(pid[0]->step(getPosition()[0]) * 12000);
-        lift[1]->moveVoltage(pid[1]->step(getPosition()[1]) * 12000);
-        break;
-
       case liftStates::up:
         lift[0]->moveVoltage(12000);
         lift[1]->moveVoltage(12000);
@@ -58,6 +46,28 @@ void Lift::loop() {
       case liftStates::down:
         lift[0]->moveVoltage(-12000);
         lift[1]->moveVoltage(-12000);
+        break;
+
+      case liftStates::upSlow:
+        lift[0]->moveVelocity(50);
+        lift[1]->moveVelocity(50);
+        break;
+
+      case liftStates::downSlow:
+        lift[0]->moveVelocity(-50);
+        lift[1]->moveVelocity(-50);
+        break;
+
+      case liftStates::hold:
+        holdPos = getPosition().sum() / 2.0;
+        state = liftStates::holdAtPos;
+        break;
+
+      case liftStates::holdAtPos:
+        pid[0]->setTarget(holdPos[0]);
+        pid[1]->setTarget(holdPos[1]);
+        lift[0]->moveVoltage(pid[0]->step(getPosition()[0]) * 12000);
+        lift[1]->moveVoltage(pid[1]->step(getPosition()[1]) * 12000);
         break;
 
       case liftStates::bottom:

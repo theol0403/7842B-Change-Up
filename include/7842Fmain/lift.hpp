@@ -2,7 +2,7 @@
 #include "main.h"
 #include "statemachine.hpp"
 
-enum class liftStates { off, hold, holdAtPos, up, down, bottom };
+enum class liftStates { off, up, down, upSlow, downSlow, hold, holdAtPos, bottom };
 
 class Lift : public StateMachine<liftStates> {
 

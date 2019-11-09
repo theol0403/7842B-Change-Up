@@ -68,12 +68,16 @@ void opcontrol() {
       controller.getAnalog(ControllerAnalog::rightY),
       controller.getAnalog(ControllerAnalog::leftX));
 
-    if (controller.getDigital(ControllerDigital::L1)) {
-      liftState = liftStates::up;
-    } else if (controller.getDigital(ControllerDigital::L2)) {
-      liftState = liftStates::down;
-    } else if (controller.getDigital(ControllerDigital::down)) {
+    bool moveSlow = controller.getDigital(ControllerDigital::down);
+
+    if (
+      controller.getDigital(ControllerDigital::L2)
+      && controller.getDigital(ControllerDigital::L1)) {
       liftState = liftStates::bottom;
+    } else if (controller.getDigital(ControllerDigital::L1)) {
+      liftState = moveSlow ? liftStates::upSlow : liftStates::up;
+    } else if (controller.getDigital(ControllerDigital::L2)) {
+      liftState = moveSlow ? liftStates::downSlow : liftStates::down;
     } else {
       liftState = liftStates::hold;
     }
