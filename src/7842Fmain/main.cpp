@@ -58,8 +58,8 @@ void opcontrol() {
 
   Controller controller(ControllerId::master);
 
-  Lift::states liftState = Lift::states::off;
-  Lift::states lastLiftState = Lift::states::off;
+  liftStates liftState = liftStates::holdCurrentPos;
+  liftStates lastLiftState = liftStates::holdCurrentPos;
 
   while (true) {
 
@@ -69,13 +69,13 @@ void opcontrol() {
       controller.getAnalog(ControllerAnalog::leftX));
 
     if (controller.getDigital(ControllerDigital::L1)) {
-      liftState = Lift::states::up;
+      liftState = liftStates::up;
     } else if (controller.getDigital(ControllerDigital::L2)) {
-      liftState = Lift::states::down;
+      liftState = liftStates::down;
     } else if (controller.getDigital(ControllerDigital::down)) {
-      liftState = Lift::states::bottom;
+      liftState = liftStates::bottom;
     } else {
-      liftState = Lift::states::holdCurrentPos;
+      liftState = liftStates::holdCurrentPos;
     }
 
     if (liftState != lastLiftState) {
