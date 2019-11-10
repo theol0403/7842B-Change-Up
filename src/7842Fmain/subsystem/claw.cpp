@@ -33,6 +33,7 @@ void Claw::loop() {
       case clawStates::release:
         pid->setTarget(-200);
         claw->moveVoltage(pid->step(claw->getPosition()) * 12000);
+        break;
 
       case clawStates::hold:
         holdPos = claw->getPosition();
