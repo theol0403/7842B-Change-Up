@@ -1,6 +1,6 @@
 #pragma once
 #include "main.h"
-#include "statemachine.hpp"
+#include "7842Fmain/util/statemachine.hpp"
 
 enum class liftStates { off, up, down, upSlow, downSlow, hold, holdAtPos, bottom };
 

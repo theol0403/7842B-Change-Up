@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 
-#include "lift.hpp"
+#include "subsystem/lift.hpp"
 
 class Robot {
  protected:
