@@ -62,11 +62,11 @@ void Robot::_initializeDevices() {
 
   _clawLeft = std::make_shared<Claw>(
     std::make_unique<Motor>(-11),
-    std::make_unique<IterativePosPIDController>(0.005, 0, 0, 0, TimeUtilFactory().create()));
+    std::make_unique<IterativePosPIDController>(0.006, 0, 0, 0, TimeUtilFactory().create()));
 
   _clawRight = std::make_shared<Claw>(
     std::make_unique<Motor>(12),
-    std::make_unique<IterativePosPIDController>(0.005, 0, 0, 0, TimeUtilFactory().create()));
+    std::make_unique<IterativePosPIDController>(0.006, 0, 0, 0, TimeUtilFactory().create()));
 }
 
 /***

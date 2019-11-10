@@ -2,7 +2,7 @@
 #include "main.h"
 #include "7842Fmain/util/statemachine.hpp"
 
-enum class clawStates { off, close, open, clamp, release, hold, holdAtPos };
+enum class clawStates { off, close, open, clamp, release, brake };
 
 class Claw : public StateMachine<clawStates> {
 
@@ -17,5 +17,4 @@ class Claw : public StateMachine<clawStates> {
   std::unique_ptr<IterativePosPIDController> pid {nullptr};
 
   double startPos {0};
-  double holdPos {0};
 };

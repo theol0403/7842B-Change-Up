@@ -7,7 +7,7 @@ Claw::Claw(std::unique_ptr<Motor>&& iclaw, std::unique_ptr<IterativePosPIDContro
 }
 
 void Claw::calibrate() {
-  claw->setBrakeMode(AbstractMotor::brakeMode::coast);
+  claw->setBrakeMode(AbstractMotor::brakeMode::brake);
   claw->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
 
   startPos = claw->getPosition();
@@ -35,15 +35,7 @@ void Claw::loop() {
         claw->moveVoltage(pid->step(claw->getPosition()) * 12000);
         break;
 
-      case clawStates::hold:
-        holdPos = claw->getPosition();
-        state = clawStates::holdAtPos;
-        break;
-
-      case clawStates::holdAtPos:
-        pid->setTarget(holdPos);
-        claw->moveVoltage(pid->step(claw->getPosition()) * 12000);
-        break;
+      case clawStates::brake: claw->moveVelocity(0); break;
     }
 
     //std::cout << "claw: " << getArmAngle() << std::endl;

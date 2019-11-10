@@ -37,11 +37,11 @@ void driverBaseControl() {
 static liftStates liftState = liftStates::hold;
 static liftStates lastLiftState = liftStates::hold;
 
-static clawStates leftClawState = clawStates::hold;
-static clawStates lastLeftClawState = clawStates::hold;
+static clawStates leftClawState = clawStates::brake;
+static clawStates lastLeftClawState = clawStates::brake;
 
-static clawStates rightClawState = clawStates::hold;
-static clawStates lastRightClawState = clawStates::hold;
+static clawStates rightClawState = clawStates::brake;
+static clawStates lastRightClawState = clawStates::brake;
 
 void driverDeviceControl() {
 
@@ -88,7 +88,7 @@ void driverDeviceControl() {
   } else if (mDigital(L1)) {
     leftClawState = clawStates::release;
   } else {
-    leftClawState = clawStates::hold;
+    leftClawState = clawStates::brake;
   }
 
   if (leftClawState != lastLeftClawState) {
@@ -104,7 +104,7 @@ void driverDeviceControl() {
   } else if (mDigital(R1)) {
     rightClawState = clawStates::release;
   } else {
-    rightClawState = clawStates::hold;
+    rightClawState = clawStates::brake;
   }
 
   if (rightClawState != lastRightClawState) {
