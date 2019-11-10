@@ -23,7 +23,7 @@
 void driverBaseControl() {
   Robot::model()->xArcade(mAnalog(RIGHT_X), mAnalog(RIGHT_Y), mAnalog(LEFT_X));
 
-  if (mDigital(A)) autonomous();
+  // if (mDigital(A)) autonomous();
 }
 
 /***
@@ -37,6 +37,12 @@ void driverBaseControl() {
 static liftStates liftState = liftStates::hold;
 static liftStates lastLiftState = liftStates::hold;
 
+static clawStates leftClawState = clawStates::hold;
+static clawStates lastLeftClawState = clawStates::hold;
+
+// static clawStates rightClawState = clawStates::hold;
+// static clawStates lastRightClawState = clawStates::hold;
+
 void driverDeviceControl() {
 
   /***
@@ -47,14 +53,16 @@ void driverDeviceControl() {
    *    | |___| | | | |_ 
    *    \_____/_|_|  \__|
    */
-  bool moveSlow = mDigital(R1);
+  bool moveSlow = mDigital(Y) || mDigital(A);
 
-  if (mDigital(L2) && mDigital(L1)) {
-    liftState = liftStates::downMedium;
-  } else if (mDigital(L1)) {
+  if (mDigital(X)) {
     liftState = moveSlow ? liftStates::upSlow : liftStates::up;
-  } else if (mDigital(L2)) {
+  } else if (mDigital(B)) {
     liftState = moveSlow ? liftStates::downSlow : liftStates::down;
+  } else if (mDigital(Y)) {
+    liftState = liftStates::downMedium;
+  } else if (mDigital(A)) {
+    liftState = liftStates::upMedium;
   } else {
     liftState = liftStates::hold;
   }
@@ -72,4 +80,36 @@ void driverDeviceControl() {
    *    | \__/\ | (_| |\ V  V / 
    *     \____/_|\__,_| \_/\_/  
    */
+  // left
+  // if (mDigital(L2) && mDigital(L1)) {
+  //   leftClawState = clawStates::off;
+  // } else
+  if (mDigital(L2)) {
+    leftClawState = clawStates::clamp;
+  } else if (mDigital(L1)) {
+    leftClawState = clawStates::release;
+  } else {
+    leftClawState = clawStates::hold;
+  }
+
+  if (leftClawState != lastLeftClawState) {
+    Robot::clawLeft()->setState(leftClawState);
+    lastLeftClawState = leftClawState;
+  }
+
+  // // right
+  // if (mDigital(R2) && mDigital(R1)) {
+  //   rightClawState = clawStates::off;
+  // } else if (mDigital(R2)) {
+  //   rightClawState = clawStates::clamp;
+  // } else if (mDigital(R1)) {
+  //   rightClawState = clawStates::release;
+  // } else {
+  //   rightClawState = clawStates::hold;
+  // }
+
+  // if (rightClawState != lastRightClawState) {
+  //   Robot::clawRight()->setState(rightClawState);
+  //   lastRightClawState = rightClawState;
+  // }
 }
