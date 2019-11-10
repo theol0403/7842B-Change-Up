@@ -2,6 +2,7 @@
 #include "main.h"
 
 #include "subsystem/lift.hpp"
+#include "subsystem/claw.hpp"
 
 class Robot {
  protected:
@@ -18,6 +19,8 @@ class Robot {
   std::shared_ptr<OdomController> _controller {nullptr};
 
   std::shared_ptr<Lift> _lift {nullptr};
+  std::shared_ptr<Claw> _clawLeft {nullptr};
+  std::shared_ptr<Claw> _clawRight {nullptr};
 
   std::shared_ptr<Screen> _screen {nullptr};
 
@@ -28,4 +31,6 @@ class Robot {
   static std::shared_ptr<CustomOdometry> odom();
   static std::shared_ptr<OdomController> chassis();
   static std::shared_ptr<Lift> lift();
+  static std::shared_ptr<Claw> clawLeft();
+  static std::shared_ptr<Claw> rclawRight();
 };
