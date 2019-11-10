@@ -50,7 +50,7 @@ void driverDeviceControl() {
   bool moveSlow = mDigital(R1);
 
   if (mDigital(L2) && mDigital(L1)) {
-    liftState = liftStates::bottom;
+    liftState = liftStates::downMedium;
   } else if (mDigital(L1)) {
     liftState = moveSlow ? liftStates::upSlow : liftStates::up;
   } else if (mDigital(L2)) {
