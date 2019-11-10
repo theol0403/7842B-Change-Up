@@ -16,3 +16,4 @@ temp.errors
 .d/
 
 *.sublime-workspace
+.ccls-cache
