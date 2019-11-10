@@ -32,5 +32,5 @@ class Robot {
   static std::shared_ptr<OdomController> chassis();
   static std::shared_ptr<Lift> lift();
   static std::shared_ptr<Claw> clawLeft();
-  static std::shared_ptr<Claw> rclawRight();
+  static std::shared_ptr<Claw> clawRight();
 };

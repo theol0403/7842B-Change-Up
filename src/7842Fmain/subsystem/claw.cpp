@@ -26,13 +26,23 @@ void Claw::loop() {
       case clawStates::open: claw->moveVoltage(-12000); break;
 
       case clawStates::clamp:
-        pid->setTarget(10);
+        pid->setTarget(50);
         claw->moveVoltage(pid->step(claw->getPosition()) * 12000);
         break;
 
       case clawStates::release:
-        pid->setTarget(-100);
+        pid->setTarget(-200);
         claw->moveVoltage(pid->step(claw->getPosition()) * 12000);
+
+      case clawStates::hold:
+        holdPos = claw->getPosition();
+        state = clawStates::holdAtPos;
+        break;
+
+      case clawStates::holdAtPos:
+        pid->setTarget(holdPos);
+        claw->moveVoltage(pid->step(claw->getPosition()) * 12000);
+        break;
     }
 
     //std::cout << "claw: " << getArmAngle() << std::endl;

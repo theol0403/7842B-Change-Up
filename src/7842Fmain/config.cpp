@@ -61,12 +61,12 @@ void Robot::_initializeDevices() {
     std::make_unique<IterativePosPIDController>(0.018, 0, 0.0002, 0.3, TimeUtilFactory().create()));
 
   _clawLeft = std::make_shared<Claw>(
-    std::make_unique<Motor>(1),
-    std::make_unique<IterativePosPIDController>(0.02, 0, 0, 0, TimeUtilFactory().create()));
+    std::make_unique<Motor>(-11),
+    std::make_unique<IterativePosPIDController>(0.005, 0, 0, 0, TimeUtilFactory().create()));
 
   _clawRight = std::make_shared<Claw>(
-    std::make_unique<Motor>(2),
-    std::make_unique<IterativePosPIDController>(0.02, 0, 0, 0, TimeUtilFactory().create()));
+    std::make_unique<Motor>(12),
+    std::make_unique<IterativePosPIDController>(0.005, 0, 0, 0, TimeUtilFactory().create()));
 }
 
 /***
@@ -131,4 +131,12 @@ std::shared_ptr<OdomController> Robot::chassis() {
 
 std::shared_ptr<Lift> Robot::lift() {
   getDevice(lift);
+}
+
+std::shared_ptr<Claw> Robot::clawLeft() {
+  getDevice(clawLeft);
+}
+
+std::shared_ptr<Claw> Robot::clawRight() {
+  getDevice(clawRight);
 }
