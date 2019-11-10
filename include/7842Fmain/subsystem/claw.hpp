@@ -2,7 +2,7 @@
 #include "main.h"
 #include "7842Fmain/util/statemachine.hpp"
 
-enum class clawStates { off, close, open, clamp, release };
+enum class clawStates { off, close, open, clamp, release, hold };
 
 class Claw : public StateMachine<clawStates> {
 
