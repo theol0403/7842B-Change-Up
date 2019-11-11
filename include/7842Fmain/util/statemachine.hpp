@@ -1,7 +1,8 @@
 #pragma once
 #include "main.h"
 
-template <typename States> class StateMachine : public TaskWrapper {
+template <typename States, States assumedState = States::off>
+class StateMachine : public TaskWrapper {
 
  public:
   StateMachine() = default;
@@ -9,6 +10,13 @@ template <typename States> class StateMachine : public TaskWrapper {
 
   virtual void setState(const States& istate) {
     state = istate;
+  }
+
+  virtual void setNewState(const States& istate) {
+    if (istate != lastState) {
+      state = istate;
+      lastState = istate;
+    }
   }
 
   virtual const States& getState() const {
@@ -20,4 +28,5 @@ template <typename States> class StateMachine : public TaskWrapper {
   virtual void loop() = 0;
 
   States state {States::off};
+  States lastState {assumedState};
 };

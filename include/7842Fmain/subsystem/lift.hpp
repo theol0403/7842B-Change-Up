@@ -15,7 +15,7 @@ enum class liftStates {
   bottom
 };
 
-class Lift : public StateMachine<liftStates> {
+class Lift : public StateMachine<liftStates, liftStates::hold> {
 
  public:
   Lift(

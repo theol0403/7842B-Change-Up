@@ -4,7 +4,7 @@
 
 enum class clawStates { off, close, open, clamp, release, brake };
 
-class Claw : public StateMachine<clawStates> {
+class Claw : public StateMachine<clawStates, clawStates::brake> {
 
  public:
   Claw(std::unique_ptr<Motor>&& iclaw, std::unique_ptr<IterativePosPIDController>&& ipid);
