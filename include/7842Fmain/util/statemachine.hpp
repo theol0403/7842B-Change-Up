@@ -4,9 +4,10 @@
 /**
  * State machine helper class.
  *
- * @tparam States       An enum class representing the states of a subsystem. Required to have an off state.
- * @tparam assumedState Optional - The assumed last state when using setNewState. Initially calling setNewState with
- *                      this state will not trigger a state transition.
+ * @tparam States       An enum class representing the states of a subsystem. Required to have an
+ *                      off state.
+ * @tparam assumedState Optional - The assumed last state when using setNewState. Initially calling
+ *                      setNewState with this state will not trigger a state transition.
  */
 template <typename States, States assumedState = States::off>
 class StateMachine : public TaskWrapper {
