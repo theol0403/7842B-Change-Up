@@ -7,6 +7,10 @@ Claw::Claw(
   startTask("claw");
 }
 
+std::shared_ptr<Motor> Claw::getMotor() const {
+  return claw;
+}
+
 void Claw::calibrate() {
   claw->setBrakeMode(AbstractMotor::brakeMode::brake);
   claw->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
