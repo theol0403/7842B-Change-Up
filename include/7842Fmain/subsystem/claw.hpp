@@ -2,7 +2,15 @@
 #include "main.h"
 #include "7842Fmain/util/statemachine.hpp"
 
-enum class clawStates { off, close, open, clamp, release, brake };
+enum class clawStates {
+  off, // motor 0 voltage
+  close, // motor 100% voltage
+  open, // motor -100% voltage
+  clamp, // pid to close position
+  release, // pid to open position
+  brake, // apply motor brake
+  calibrate, // apply motor brake
+};
 
 class Claw : public StateMachine<clawStates, clawStates::brake> {
 

@@ -41,6 +41,15 @@ void Claw::loop() {
         break;
 
       case clawStates::brake: claw->moveVelocity(0); break;
+
+      case clawStates::calibrate:
+        do {
+          claw->moveVoltage(8000);
+          pros::delay(100);
+        } while (claw->getActualVelocity() > 10);
+        claw->moveVoltage(0);
+        startPos = claw->getPosition();
+        break;
     }
 
     //std::cout << "claw: " << getArmAngle() << std::endl;
