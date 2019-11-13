@@ -6,7 +6,7 @@ Lift::Lift(
   const std::shared_ptr<IterativePosPIDController>& ilpid,
   const std::shared_ptr<IterativePosPIDController>& irpid) :
   lift({std::move(ileftLift), std::move(irightLift)}), pid({std::move(ilpid), std::move(irpid)}) {
-  calibrate();
+  initialize();
   startTask("Lift");
 }
 
@@ -26,7 +26,7 @@ std::shared_ptr<Motor> Lift::getRightMotor() const {
   return lift[1];
 }
 
-void Lift::calibrate() {
+void Lift::initialize() {
   lift[0]->setBrakeMode(AbstractMotor::brakeMode::coast);
   lift[0]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
   lift[1]->setBrakeMode(AbstractMotor::brakeMode::coast);

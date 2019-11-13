@@ -31,7 +31,7 @@ class Lift : public StateMachine<liftStates, liftStates::hold> {
   std::shared_ptr<Motor> getRightMotor() const;
 
  protected:
-  void calibrate() override;
+  void initialize() override;
   void loop() override;
 
   std::array<std::shared_ptr<Motor>, 2> lift {nullptr, nullptr};
