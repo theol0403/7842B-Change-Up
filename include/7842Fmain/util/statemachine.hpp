@@ -26,6 +26,19 @@ class StateMachine : public TaskWrapper {
   }
 
   /**
+   * Sets the state and waits until the statemachine reports done.
+   *
+   * @param istate The istate
+   */
+  virtual void setStateBlocking(const States& istate) {
+    _isDone = false;
+    state = istate;
+    while (!isDone()) {
+      pros::delay(20);
+    };
+  }
+
+  /**
    * Sets the state only if the state is different from the last time this function was called.
    *
    * @param istate The state
@@ -46,6 +59,15 @@ class StateMachine : public TaskWrapper {
     return state;
   }
 
+  /**
+   * Gets the state.
+   *
+   * @return The state.
+   */
+  virtual bool isDone() const {
+    return _isDone;
+  }
+
  protected:
   /**
    * Override this method to implement setup procedures.
@@ -57,6 +79,10 @@ class StateMachine : public TaskWrapper {
    */
   void loop() override = 0;
 
+  virtual void setDone();
+
   States state {States::off};
   States lastState {assumedState};
+
+  bool _isDone = false;
 };
