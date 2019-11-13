@@ -52,7 +52,7 @@ void Claw::loop() {
         break;
     }
 
-    //std::cout << "claw: " << getArmAngle() << std::endl;
+    std::cout << "claw: " << claw->getPosition() << std::endl;
     pros::delay(10);
   }
 }
