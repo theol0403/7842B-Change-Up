@@ -12,7 +12,7 @@ class Claw : public StateMachine<clawStates, clawStates::brake> {
   std::shared_ptr<Motor> getMotor() const;
 
  protected:
-  void calibrate() override;
+  void initialize() override;
   void loop() override;
 
   std::shared_ptr<Motor> claw {nullptr};

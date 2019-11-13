@@ -3,7 +3,7 @@
 Claw::Claw(
   const std::shared_ptr<Motor>& iclaw, const std::shared_ptr<IterativePosPIDController>& ipid) :
   claw(std::move(iclaw)), pid(std::move(ipid)) {
-  calibrate();
+  initialize();
   startTask("claw");
 }
 
@@ -11,7 +11,7 @@ std::shared_ptr<Motor> Claw::getMotor() const {
   return claw;
 }
 
-void Claw::calibrate() {
+void Claw::initialize() {
   claw->setBrakeMode(AbstractMotor::brakeMode::brake);
   claw->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
 

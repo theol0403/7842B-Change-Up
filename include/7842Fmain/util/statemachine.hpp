@@ -50,7 +50,7 @@ class StateMachine : public TaskWrapper {
   /**
    * Override this method to implement setup procedures.
    */
-  virtual void calibrate() = 0;
+  virtual void initialize() = 0;
 
   /**
    * Override this method to implement the statemachine task
