@@ -1,10 +1,10 @@
 #include "lift.hpp"
 
 Lift::Lift(
-  std::unique_ptr<Motor>&& ileftLift,
-  std::unique_ptr<Motor>&& irightLift,
-  std::unique_ptr<IterativePosPIDController>&& ilpid,
-  std::unique_ptr<IterativePosPIDController>&& irpid) :
+  const std::shared_ptr<Motor>& ileftLift,
+  const std::shared_ptr<Motor>& irightLift,
+  const std::shared_ptr<IterativePosPIDController>& ilpid,
+  const std::shared_ptr<IterativePosPIDController>& irpid) :
   lift({std::move(ileftLift), std::move(irightLift)}), pid({std::move(ilpid), std::move(irpid)}) {
   calibrate();
   startTask("Lift");
@@ -16,6 +16,14 @@ void Lift::setPosition(const std::valarray<double>& ipos) {
 
 std::valarray<double> Lift::getPosition() const {
   return std::valarray<double>({lift[0]->getPosition(), lift[1]->getPosition()}) - startPos;
+}
+
+std::shared_ptr<Motor> Lift::getLeftMotor() const {
+  return lift[0];
+}
+
+std::shared_ptr<Motor> Lift::getRightMotor() const {
+  return lift[1];
 }
 
 void Lift::calibrate() {

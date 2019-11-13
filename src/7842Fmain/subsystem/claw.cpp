@@ -1,6 +1,7 @@
 #include "claw.hpp"
 
-Claw::Claw(std::unique_ptr<Motor>&& iclaw, std::unique_ptr<IterativePosPIDController>&& ipid) :
+Claw::Claw(
+  const std::shared_ptr<Motor>& iclaw, const std::shared_ptr<IterativePosPIDController>& ipid) :
   claw(std::move(iclaw)), pid(std::move(ipid)) {
   calibrate();
   startTask("claw");

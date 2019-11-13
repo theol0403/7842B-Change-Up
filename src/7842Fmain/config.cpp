@@ -11,8 +11,6 @@
  *                                     
  */
 void Robot::_initializeChassis() {
-  _motorWarning = std::make_shared<MotorWarning>();
-
   _model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
     std::make_shared<Motor>(1), //
@@ -58,17 +56,17 @@ void Robot::_initializeChassis() {
  */
 void Robot::_initializeDevices() {
   _lift = std::make_shared<Lift>(
-    std::make_unique<Motor>(-9), std::make_unique<Motor>(10),
-    std::make_unique<IterativePosPIDController>(0.019, 0, 0.0001, 0.3, TimeUtilFactory().create()),
-    std::make_unique<IterativePosPIDController>(0.019, 0, 0.0001, 0.3, TimeUtilFactory().create()));
+    std::make_shared<Motor>(-9), std::make_shared<Motor>(10),
+    std::make_shared<IterativePosPIDController>(0.019, 0, 0.0001, 0.3, TimeUtilFactory().create()),
+    std::make_shared<IterativePosPIDController>(0.019, 0, 0.0001, 0.3, TimeUtilFactory().create()));
 
   _clawLeft = std::make_shared<Claw>(
-    std::make_unique<Motor>(-11),
-    std::make_unique<IterativePosPIDController>(0.006, 0, 0, 0, TimeUtilFactory().create()));
+    std::make_shared<Motor>(-11),
+    std::make_shared<IterativePosPIDController>(0.006, 0, 0, 0, TimeUtilFactory().create()));
 
   _clawRight = std::make_shared<Claw>(
-    std::make_unique<Motor>(12),
-    std::make_unique<IterativePosPIDController>(0.006, 0, 0, 0, TimeUtilFactory().create()));
+    std::make_shared<Motor>(12),
+    std::make_shared<IterativePosPIDController>(0.006, 0, 0, 0, TimeUtilFactory().create()));
 }
 
 /***
@@ -89,6 +87,23 @@ void Robot::_initializeScreen() {
   });
 
   _screen->startTask("Screen");
+
+  _motorWarning = std::make_shared<MotorWarning>();
+
+  _motorWarning->addMotor(
+    std::dynamic_pointer_cast<Motor>(_model->getTopLeftMotor()), "TopLeftBase");
+  _motorWarning->addMotor(
+    std::dynamic_pointer_cast<Motor>(_model->getTopRightMotor()), "TopRightBase");
+  _motorWarning->addMotor(
+    std::dynamic_pointer_cast<Motor>(_model->getBottomLeftMotor()), "BottomLeftBase");
+  _motorWarning->addMotor(
+    std::dynamic_pointer_cast<Motor>(_model->getBottomRightMotor()), "BottomRightBase");
+
+  _motorWarning->addMotor(_lift->getLeftMotor(), "Left Lift");
+  _motorWarning->addMotor(_lift->getRightMotor(), "Right Lift");
+
+  _motorWarning->addMotor(_clawLeft->getMotor(), "Left Claw");
+  _motorWarning->addMotor(_clawRight->getMotor(), "Right Claw");
 }
 
 /***

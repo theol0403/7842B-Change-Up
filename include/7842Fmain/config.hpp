@@ -15,8 +15,6 @@ class Robot {
   void _initializeDevices();
   void _initializeScreen();
 
-  std::shared_ptr<MotorWarning> _motorWarning {nullptr};
-
   std::shared_ptr<ThreeEncoderXDriveModel> _model {nullptr};
   std::shared_ptr<CustomOdometry> _odom {nullptr};
   std::shared_ptr<OdomController> _controller {nullptr};
@@ -26,6 +24,7 @@ class Robot {
   std::shared_ptr<Claw> _clawRight {nullptr};
 
   std::shared_ptr<Screen> _screen {nullptr};
+  std::shared_ptr<MotorWarning> _motorWarning {nullptr};
 
  public:
   static Robot& get();
