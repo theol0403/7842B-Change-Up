@@ -11,6 +11,8 @@
  *                                     
  */
 void Robot::_initializeChassis() {
+  _motorWarning = std::make_shared<MotorWarning>();
+
   _model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
     std::make_shared<Motor>(1), //

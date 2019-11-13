@@ -3,6 +3,7 @@
 
 #include "subsystem/lift.hpp"
 #include "subsystem/claw.hpp"
+#include "util/motorWarning.hpp"
 
 class Robot {
  protected:
@@ -13,6 +14,8 @@ class Robot {
   void _initializeChassis();
   void _initializeDevices();
   void _initializeScreen();
+
+  std::shared_ptr<MotorWarning> _motorWarning {nullptr};
 
   std::shared_ptr<ThreeEncoderXDriveModel> _model {nullptr};
   std::shared_ptr<CustomOdometry> _odom {nullptr};
