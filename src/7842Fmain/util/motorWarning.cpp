@@ -7,7 +7,8 @@ void MotorWarning::addMotor(const std::shared_ptr<Motor>& imotor, const std::str
 void MotorWarning::loop() {
   while (true) {
     for (auto&& [motor, name] : motors) {
-      if (motor->isOverTemp()) LOG_WARN(name + " is over temp in port " + motor->getPort());
+      if (motor->isOverTemp())
+        LOG_WARN(name + " is over temp in port " + std::to_string(motor->getPort()));
     }
     pros::delay(20);
   }
