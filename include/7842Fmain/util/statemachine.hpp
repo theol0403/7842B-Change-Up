@@ -79,7 +79,9 @@ class StateMachine : public TaskWrapper {
    */
   void loop() override = 0;
 
-  virtual void setDone();
+  virtual void setDone() {
+    _isDone = true;
+  }
 
   States state {States::off};
   States lastState {assumedState};
