@@ -12,10 +12,15 @@ Lift::Lift(
 
 void Lift::setPosition(const std::valarray<double>& ipos) {
   holdPos = ipos;
+  error = INFINITY;
 }
 
 std::valarray<double> Lift::getPosition() const {
   return std::valarray<double>({lift[0]->getPosition(), lift[1]->getPosition()}) - startPos;
+}
+
+double Lift::getError() const {
+  return std::abs(error).sum() / 2;
 }
 
 std::shared_ptr<Motor> Lift::getLeftMotor() const {
@@ -86,6 +91,7 @@ void Lift::loop() {
         pid[1]->setTarget(holdPos[1]);
         lift[0]->moveVoltage(pid[0]->step(getPosition()[0]) * 12000);
         lift[1]->moveVoltage(pid[1]->step(getPosition()[1]) * 12000);
+        error = holdPos - getPosition();
         break;
 
       case liftStates::bottom:

@@ -189,3 +189,21 @@ std::shared_ptr<Claw> Robot::clawLeft() {
 std::shared_ptr<Claw> Robot::clawRight() {
   getDevice(clawRight);
 }
+
+void Robot::deploy() {
+  clawLeft()->setState(clawStates::close);
+  clawRight()->setState(clawStates::close);
+  pros::delay(500);
+  clawLeft()->setState(clawStates::off);
+  clawRight()->setState(clawStates::off);
+
+  lift()->setPosition({200, 200});
+  lift()->setState(liftStates::hold);
+  while (lift()->getError() > 50) {
+    pros::delay(20);
+  }
+
+  clawLeft()->setState(clawStates::release);
+  clawRight()->setState(clawStates::release);
+  lift()->setState(liftStates::off);
+}

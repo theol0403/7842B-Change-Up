@@ -27,6 +27,7 @@ class Lift : public StateMachine<liftStates, liftStates::hold> {
 
   void setPosition(const std::valarray<double>& ipos);
   std::valarray<double> getPosition() const;
+  double getError() const;
 
   std::shared_ptr<Motor> getLeftMotor() const;
   std::shared_ptr<Motor> getRightMotor() const;
@@ -40,4 +41,5 @@ class Lift : public StateMachine<liftStates, liftStates::hold> {
 
   std::valarray<double> startPos {0, 0};
   std::valarray<double> holdPos {0, 0};
+  std::valarray<double> error {INFINITY, INFINITY};
 };

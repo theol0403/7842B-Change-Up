@@ -36,5 +36,5 @@ class Robot {
   static std::shared_ptr<Claw> clawLeft();
   static std::shared_ptr<Claw> clawRight();
 
-  void deploy();
+  static void deploy();
 };

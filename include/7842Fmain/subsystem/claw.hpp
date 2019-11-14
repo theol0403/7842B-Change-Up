@@ -20,12 +20,11 @@ class Claw : public StateMachine<clawStates, clawStates::brake> {
   Claw(const std::shared_ptr<Motor>& iclaw, const std::shared_ptr<IterativePosPIDController>& ipid);
 
   std::shared_ptr<Motor> getMotor() const;
+  double getPosition();
 
  protected:
   void initialize() override;
   void loop() override;
-
-  double getPosition();
 
   std::shared_ptr<Motor> claw {nullptr};
   std::shared_ptr<IterativePosPIDController> pid {nullptr};
