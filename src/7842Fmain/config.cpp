@@ -62,11 +62,11 @@ void Robot::_initializeDevices() {
 
   _clawLeft = std::make_shared<Claw>(
     std::make_shared<Motor>(-11),
-    std::make_shared<IterativePosPIDController>(0.006, 0, 0, 0, TimeUtilFactory().create()));
+    std::make_shared<IterativePosPIDController>(0.008, 0, 0, 0, TimeUtilFactory().create()));
 
   _clawRight = std::make_shared<Claw>(
-    std::make_shared<Motor>(12),
-    std::make_shared<IterativePosPIDController>(0.006, 0, 0, 0, TimeUtilFactory().create()));
+    std::make_shared<Motor>(7),
+    std::make_shared<IterativePosPIDController>(0.008, 0, 0, 0, TimeUtilFactory().create()));
 }
 
 /***
@@ -106,30 +106,25 @@ void Robot::_initializeScreen() {
   _motorWarning->addMotor(_clawRight->getMotor(), "Right Claw");
 
   _screen->makePage<Graph>("Lift")
-    .withRange(-1000, 1000)
+    .withRange(-250, 900)
+    .withResolution(50)
     .withSeries(
       "Left mA", LV_COLOR_RED,
       [&]() {
-        return _lift->getLeftMotor()->getCurrentDraw() / 12000.0 * 1000.0;
+        return _lift->getLeftMotor()->getCurrentDraw();
       })
-    .withSeries(
-      "Right mA", LV_COLOR_ORANGE,
-      [&]() {
-        return _lift->getRightMotor()->getCurrentDraw() / 12000.0 * 1000.0;
-      })
-    .withSeries(
-      "Left Efficiency", LV_COLOR_BLUE,
-      [&]() {
-        return _lift->getLeftMotor()->getEfficiency() / 100.0 * 1000.0;
-      })
-    .withSeries("Right Efficiency", LV_COLOR_GREEN, [&]() {
-      return _lift->getRightMotor()->getEfficiency() / 100.0 * 1000.0;
+    .withSeries("Right mA", LV_COLOR_GREEN, [&]() {
+      return _lift->getRightMotor()->getCurrentDraw();
     });
 
-  _screen->makePage<ButtonMatrix>("Calibrate").button("Claw", [&]() {
-    _clawLeft->setState(clawStates::calibrate);
-    _clawRight->setState(clawStates::calibrate);
-  });
+  _screen->makePage<ButtonMatrix>("Calibrate")
+    .button(
+      "Claw",
+      [&]() {
+        _clawLeft->setState(clawStates::calibrate);
+        _clawRight->setState(clawStates::calibrate);
+      })
+    .build();
 }
 
 /***
