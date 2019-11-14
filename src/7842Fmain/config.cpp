@@ -129,6 +129,12 @@ void Robot::_initializeScreen() {
       [&]() {
         _lift->setState(liftStates::calibrate);
       })
+    .newRow()
+    .button(
+      "Deploy",
+      [&]() {
+        Robot::get().deploy();
+      })
     .build();
 }
 
