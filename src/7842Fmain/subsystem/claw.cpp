@@ -41,7 +41,7 @@ void Claw::loop() {
 
       case clawStates::release:
         pid->setTarget(-230);
-        claw->moveVoltage(pid->step(getPosition()) * 12000);
+        claw->moveVoltage(pid->step(getPosition()) * 6000);
         break;
 
       case clawStates::brake: claw->moveVelocity(0); break;

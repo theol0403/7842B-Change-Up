@@ -119,10 +119,15 @@ void Robot::_initializeScreen() {
 
   _screen->makePage<ButtonMatrix>("Calibrate")
     .button(
-      "Claw",
+      "Calibrate Claw",
       [&]() {
         _clawLeft->setState(clawStates::calibrate);
         _clawRight->setState(clawStates::calibrate);
+      })
+    .button(
+      "Calibrate Lift",
+      [&]() {
+        _lift->setState(liftStates::calibrate);
       })
     .build();
 }

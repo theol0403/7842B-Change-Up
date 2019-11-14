@@ -54,16 +54,14 @@ void driverDeviceControl() {
    *    | |___| | | | |_ 
    *    \_____/_|_|  \__|
    */
-  bool moveSlow = mDigital(Y) || mDigital(A);
-
-  if (mDigital(X)) {
-    Robot::lift()->setNewState(moveSlow ? liftStates::upSlow : liftStates::up);
-  } else if (mDigital(B)) {
-    Robot::lift()->setNewState(moveSlow ? liftStates::downSlow : liftStates::down);
-  } else if (mDigital(Y)) {
-    Robot::lift()->setNewState(liftStates::down);
-  } else if (mDigital(A)) {
+  if (mDigital(R1)) {
     Robot::lift()->setNewState(liftStates::up);
+  } else if (mDigital(R2)) {
+    Robot::lift()->setNewState(liftStates::down);
+  } else if (mDigital(L1)) {
+    Robot::lift()->setNewState(liftStates::upSlow);
+  } else if (mDigital(L2)) {
+    Robot::lift()->setNewState(liftStates::downSlow);
   } else {
     Robot::lift()->setNewState(liftStates::hold);
   }
@@ -77,24 +75,24 @@ void driverDeviceControl() {
    *     \____/_|\__,_| \_/\_/  
    */
   // left
-  if (mDigital(L2) && mDigital(L1)) {
-    Robot::clawLeft()->setNewState(clawStates::off);
-  } else if (mDigital(L2)) {
+  if (mDigital(DOWN)) {
     Robot::clawLeft()->setNewState(clawStates::clamp);
-  } else if (mDigital(L1)) {
+  } else if (mDigital(RIGHT)) {
     Robot::clawLeft()->setNewState(clawStates::release);
   } else {
-    Robot::clawLeft()->setNewState(clawStates::hold);
+    if (Robot::clawLeft()->getState() != clawStates::clamp) {
+      Robot::clawLeft()->setNewState(clawStates::hold);
+    }
   }
 
   // right
-  if (mDigital(R2) && mDigital(R1)) {
-    Robot::clawRight()->setNewState(clawStates::off);
-  } else if (mDigital(R2)) {
+  if (mDigital(B)) {
     Robot::clawRight()->setNewState(clawStates::clamp);
-  } else if (mDigital(R1)) {
+  } else if (mDigital(Y)) {
     Robot::clawRight()->setNewState(clawStates::release);
   } else {
-    Robot::clawRight()->setNewState(clawStates::hold);
+    if (Robot::clawRight()->getState() != clawStates::clamp) {
+      Robot::clawRight()->setNewState(clawStates::hold);
+    }
   }
 }

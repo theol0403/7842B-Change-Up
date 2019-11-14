@@ -94,6 +94,17 @@ void Lift::loop() {
         lift[0]->moveVoltage(pid[0]->step(getPosition()[0]) * 12000);
         lift[1]->moveVoltage(pid[1]->step(getPosition()[1]) * 12000);
         break;
+
+      case liftStates::calibrate:
+        do {
+          lift[0]->moveVoltage(-12000);
+          lift[1]->moveVoltage(-12000);
+          pros::delay(100);
+        } while (lift[0]->getActualVelocity() > 8 || lift[1]->getActualVelocity() > 8);
+        pros::delay(400);
+        startPos = {lift[0]->getPosition(), lift[1]->getPosition()};
+        state = liftStates::off;
+        break;
     }
 
     //std::cout << "Lift: " << getArmAngle() << std::endl;

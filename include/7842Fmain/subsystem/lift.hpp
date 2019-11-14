@@ -12,7 +12,8 @@ enum class liftStates {
   downSlow,
   hold,
   holdAtPos,
-  bottom
+  bottom,
+  calibrate
 };
 
 class Lift : public StateMachine<liftStates, liftStates::hold> {
