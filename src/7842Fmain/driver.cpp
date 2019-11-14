@@ -12,6 +12,10 @@
     pros::c::controller_get_analog(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_ANALOG_##x))      \
     / 127.0
 
+template <typename T> int sgn(T val) {
+  return (T(0) < val) - (val < T(0));
+}
+
 /***
  *    ______                  _____             _             _ 
  *    | ___ \                /  __ \           | |           | |
@@ -21,7 +25,12 @@
  *    \____/ \__,_|___/\___|  \____/\___/|_| |_|\__|_|  \___/|_|
  */
 void driverBaseControl() {
-  Robot::model()->xArcade(mAnalog(RIGHT_X), mAnalog(RIGHT_Y), mAnalog(LEFT_X));
+  double rightX = mAnalog(RIGHT_X);
+  double rightY = mAnalog(RIGHT_Y);
+  double leftX = mAnalog(LEFT_X);
+
+  Robot::model()->xArcade(
+    std::pow(rightX, 2) * sgn(rightX), std::pow(rightY, 3), std::pow(leftX, 3));
 
   // if (mDigital(A)) autonomous();
 }
