@@ -10,6 +10,8 @@ enum class clawStates {
   release, // pid to open position
   brake, // apply motor brake
   calibrate, // apply motor brake
+  hold,
+  holdAtPos
 };
 
 class Claw : public StateMachine<clawStates, clawStates::brake> {
@@ -23,8 +25,11 @@ class Claw : public StateMachine<clawStates, clawStates::brake> {
   void initialize() override;
   void loop() override;
 
+  double getPosition();
+
   std::shared_ptr<Motor> claw {nullptr};
   std::shared_ptr<IterativePosPIDController> pid {nullptr};
 
   double startPos {0};
+  double holdPos {0};
 };

@@ -18,6 +18,10 @@ void Claw::initialize() {
   startPos = claw->getPosition();
 }
 
+double Claw::getPosition() {
+  return claw->getPosition() - startPos;
+}
+
 void Claw::loop() {
 
   while (true) {
@@ -31,13 +35,13 @@ void Claw::loop() {
       case clawStates::open: claw->moveVoltage(-12000); break;
 
       case clawStates::clamp:
-        pid->setTarget(50);
-        claw->moveVoltage(pid->step(claw->getPosition()) * 12000);
+        pid->setTarget(-5);
+        claw->moveVoltage(pid->step(getPosition()) * 12000);
         break;
 
       case clawStates::release:
-        pid->setTarget(-200);
-        claw->moveVoltage(pid->step(claw->getPosition()) * 12000);
+        pid->setTarget(-230);
+        claw->moveVoltage(pid->step(getPosition()) * 12000);
         break;
 
       case clawStates::brake: claw->moveVelocity(0); break;
@@ -46,13 +50,24 @@ void Claw::loop() {
         do {
           claw->moveVoltage(8000);
           pros::delay(100);
-        } while (claw->getActualVelocity() > 10);
-        claw->moveVoltage(0);
+        } while (claw->getActualVelocity() > 8);
+        pros::delay(400);
         startPos = claw->getPosition();
+        state = clawStates::clamp;
+        break;
+
+      case clawStates::hold:
+        holdPos = getPosition();
+        state = clawStates::holdAtPos;
+        break;
+
+      case clawStates::holdAtPos:
+        pid->setTarget(holdPos);
+        claw->moveVoltage(pid->step(getPosition()) * 12000);
         break;
     }
 
-    std::cout << "claw: " << claw->getPosition() << std::endl;
+    // std::cout << "claw: " << claw->getPosition() << std::endl;
     pros::delay(10);
   }
 }

@@ -75,7 +75,7 @@ void driverDeviceControl() {
   } else if (mDigital(L1)) {
     Robot::clawLeft()->setNewState(clawStates::release);
   } else {
-    Robot::clawLeft()->setNewState(clawStates::brake);
+    Robot::clawLeft()->setNewState(clawStates::hold);
   }
 
   // right
@@ -86,6 +86,6 @@ void driverDeviceControl() {
   } else if (mDigital(R1)) {
     Robot::clawRight()->setNewState(clawStates::release);
   } else {
-    Robot::clawRight()->setNewState(clawStates::brake);
+    Robot::clawRight()->setNewState(clawStates::hold);
   }
 }
