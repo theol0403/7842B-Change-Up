@@ -174,7 +174,7 @@ std::shared_ptr<CustomOdometry> Robot::odom() {
   getDevice(odom);
 }
 
-std::shared_ptr<OdomController> Robot::chassis() {
+std::shared_ptr<OdomXController> Robot::chassis() {
   getDevice(controller);
 }
 

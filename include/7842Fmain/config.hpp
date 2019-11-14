@@ -17,7 +17,7 @@ class Robot {
 
   std::shared_ptr<ThreeEncoderXDriveModel> _model {nullptr};
   std::shared_ptr<CustomOdometry> _odom {nullptr};
-  std::shared_ptr<OdomController> _controller {nullptr};
+  std::shared_ptr<OdomXController> _controller {nullptr};
 
   std::shared_ptr<Lift> _lift {nullptr};
   std::shared_ptr<Claw> _clawLeft {nullptr};
@@ -31,7 +31,7 @@ class Robot {
   static Robot& initialize();
   static std::shared_ptr<ThreeEncoderXDriveModel> model();
   static std::shared_ptr<CustomOdometry> odom();
-  static std::shared_ptr<OdomController> chassis();
+  static std::shared_ptr<OdomXController> chassis();
   static std::shared_ptr<Lift> lift();
   static std::shared_ptr<Claw> clawLeft();
   static std::shared_ptr<Claw> clawRight();
