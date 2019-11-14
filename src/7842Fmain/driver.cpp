@@ -61,9 +61,9 @@ void driverDeviceControl() {
   } else if (mDigital(B)) {
     Robot::lift()->setNewState(moveSlow ? liftStates::downSlow : liftStates::down);
   } else if (mDigital(Y)) {
-    Robot::lift()->setNewState(liftStates::downMedium);
+    Robot::lift()->setNewState(liftStates::down);
   } else if (mDigital(A)) {
-    Robot::lift()->setNewState(liftStates::upMedium);
+    Robot::lift()->setNewState(liftStates::up);
   } else {
     Robot::lift()->setNewState(liftStates::hold);
   }
