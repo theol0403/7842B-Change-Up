@@ -88,22 +88,22 @@ void Robot::_initializeScreen() {
 
   _screen->startTask("Screen");
 
-  _motorWarning = std::make_shared<MotorWarning>();
+  // _motorWarning = std::make_shared<MotorWarning>();
 
-  _motorWarning->addMotor(
-    std::dynamic_pointer_cast<Motor>(_model->getTopLeftMotor()), "TopLeftBase");
-  _motorWarning->addMotor(
-    std::dynamic_pointer_cast<Motor>(_model->getTopRightMotor()), "TopRightBase");
-  _motorWarning->addMotor(
-    std::dynamic_pointer_cast<Motor>(_model->getBottomLeftMotor()), "BottomLeftBase");
-  _motorWarning->addMotor(
-    std::dynamic_pointer_cast<Motor>(_model->getBottomRightMotor()), "BottomRightBase");
+  // _motorWarning->addMotor(
+  //   std::dynamic_pointer_cast<Motor>(_model->getTopLeftMotor()), "TopLeftBase");
+  // _motorWarning->addMotor(
+  //   std::dynamic_pointer_cast<Motor>(_model->getTopRightMotor()), "TopRightBase");
+  // _motorWarning->addMotor(
+  //   std::dynamic_pointer_cast<Motor>(_model->getBottomLeftMotor()), "BottomLeftBase");
+  // _motorWarning->addMotor(
+  //   std::dynamic_pointer_cast<Motor>(_model->getBottomRightMotor()), "BottomRightBase");
 
-  _motorWarning->addMotor(_lift->getLeftMotor(), "Left Lift");
-  _motorWarning->addMotor(_lift->getRightMotor(), "Right Lift");
+  // _motorWarning->addMotor(_lift->getLeftMotor(), "Left Lift");
+  // _motorWarning->addMotor(_lift->getRightMotor(), "Right Lift");
 
-  _motorWarning->addMotor(_clawLeft->getMotor(), "Left Claw");
-  _motorWarning->addMotor(_clawRight->getMotor(), "Right Claw");
+  // _motorWarning->addMotor(_clawLeft->getMotor(), "Left Claw");
+  // _motorWarning->addMotor(_clawRight->getMotor(), "Right Claw");
 
   _screen->makePage<Graph>("Lift")
     .withRange(-250, 900)
@@ -127,7 +127,7 @@ void Robot::_initializeScreen() {
       return _lift->getLeftMotor()->getTemperature() * 15;
     });
 
-  _screen->makePage<ButtonMatrix>("Calibrate")
+  _screen->makePage<ButtonMatrix>("Actions")
     .button(
       "Calibrate Claw",
       [&]() {

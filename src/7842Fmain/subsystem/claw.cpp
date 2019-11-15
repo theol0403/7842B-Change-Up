@@ -35,12 +35,12 @@ void Claw::loop() {
       case clawStates::open: claw->moveVoltage(-12000); break;
 
       case clawStates::clamp:
-        pid->setTarget(-5);
+        pid->setTarget(-85);
         claw->moveVoltage(pid->step(getPosition()) * 12000);
         break;
 
       case clawStates::release:
-        pid->setTarget(-230);
+        pid->setTarget(-340);
         claw->moveVoltage(pid->step(getPosition()) * 6000);
         break;
 

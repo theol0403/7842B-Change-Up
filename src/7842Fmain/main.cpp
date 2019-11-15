@@ -10,6 +10,9 @@
  */
 void initialize() {
   pros::delay(200);
+  // Logger::setDefaultLogger(
+  //   std::make_shared<Logger>(std::make_unique<Timer>(), "/usd/log", Logger::LogLevel::debug));
+
   Robot::initialize();
 }
 

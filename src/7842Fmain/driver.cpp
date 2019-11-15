@@ -30,9 +30,10 @@ void driverBaseControl() {
   double leftX = mAnalog(LEFT_X);
 
   Robot::model()->xArcade(
-    std::pow(rightX, 2) * sgn(rightX), std::pow(rightY, 3), std::pow(leftX, 3));
+    std::pow(rightX, 2) * sgn(rightX), std::pow(rightY, 2) * sgn(rightY),
+    std::pow(leftX, 2) * sgn(leftX));
 
-  if (mDigital(A)) autonomous();
+  if (mDigital(X)) autonomous();
 }
 
 /***
@@ -77,7 +78,7 @@ void driverDeviceControl() {
   // left
   if (mDigital(DOWN)) {
     Robot::clawLeft()->setNewState(clawStates::clamp);
-  } else if (mDigital(RIGHT)) {
+  } else if (mDigital(LEFT)) {
     Robot::clawLeft()->setNewState(clawStates::release);
   } else {
     if (Robot::clawLeft()->getState() != clawStates::clamp) {
@@ -88,7 +89,7 @@ void driverDeviceControl() {
   // right
   if (mDigital(B)) {
     Robot::clawRight()->setNewState(clawStates::clamp);
-  } else if (mDigital(Y)) {
+  } else if (mDigital(A)) {
     Robot::clawRight()->setNewState(clawStates::release);
   } else {
     if (Robot::clawRight()->getState() != clawStates::clamp) {
