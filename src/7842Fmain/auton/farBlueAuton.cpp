@@ -52,4 +52,9 @@ void farBlueAuton() {
   chassis.strafeToPoint(
     {10.5_ft, 9.8_ft}, OdomController::makeAngleCalculator(45_deg), 1,
     OdomController::defaultDriveSettler);
+
+  // back up and turn
+  chassis.strafeToPoint(
+    {9_ft, 10_ft}, OdomController::makeAngleCalculator(-180_deg), 1,
+    OdomController::defaultDriveSettler);
 }
