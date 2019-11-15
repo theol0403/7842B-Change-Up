@@ -109,12 +109,22 @@ void Robot::_initializeScreen() {
     .withRange(-250, 900)
     .withResolution(50)
     .withSeries(
-      "Left mA", LV_COLOR_RED,
+      "Left Lift Power", LV_COLOR_RED,
       [&]() {
         return _lift->getLeftMotor()->getCurrentDraw();
       })
-    .withSeries("Right mA", LV_COLOR_GREEN, [&]() {
-      return _lift->getRightMotor()->getCurrentDraw();
+    .withSeries(
+      "Right Lift Power", LV_COLOR_GREEN,
+      [&]() {
+        return _lift->getRightMotor()->getCurrentDraw();
+      })
+    .withSeries(
+      "Left Lift Temp", LV_COLOR_MAROON,
+      [&]() {
+        return _lift->getLeftMotor()->getTemperature() * 15;
+      })
+    .withSeries("Right Lift Temp", LV_COLOR_TEAL, [&]() {
+      return _lift->getLeftMotor()->getTemperature() * 15;
     });
 
   _screen->makePage<ButtonMatrix>("Calibrate")
@@ -134,6 +144,11 @@ void Robot::_initializeScreen() {
       "Deploy",
       [&]() {
         Robot::get().deploy();
+      })
+    .button(
+      "Autonomous",
+      [&]() {
+        autonomous();
       })
     .build();
 }

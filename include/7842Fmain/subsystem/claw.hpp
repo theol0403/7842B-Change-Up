@@ -14,7 +14,7 @@ enum class clawStates {
   holdAtPos
 };
 
-class Claw : public StateMachine<clawStates, clawStates::brake> {
+class Claw : public StateMachine<clawStates, clawStates::hold> {
 
  public:
   Claw(const std::shared_ptr<Motor>& iclaw, const std::shared_ptr<IterativePosPIDController>& ipid);

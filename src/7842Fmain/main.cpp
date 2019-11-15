@@ -31,6 +31,8 @@ void disabled() {}
  */
 void competition_initialize() {}
 
+void testAuton();
+
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -52,7 +54,8 @@ void autonomous() {
   // Robot::chassis()->driveDistance(1_ft);
   // Robot::chassis()->turnToAngle(90_deg);
   // Robot::odom()->reset();
-  Robot::chassis()->driveToPoint({2_ft, 2_ft}, 2);
+  // Robot::chassis()->driveToPoint({2_ft, 2_ft}, 2);
+  testAuton();
 }
 
 void opcontrol() {

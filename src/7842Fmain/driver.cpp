@@ -32,7 +32,7 @@ void driverBaseControl() {
   Robot::model()->xArcade(
     std::pow(rightX, 2) * sgn(rightX), std::pow(rightY, 3), std::pow(leftX, 3));
 
-  // if (mDigital(A)) autonomous();
+  if (mDigital(A)) autonomous();
 }
 
 /***
