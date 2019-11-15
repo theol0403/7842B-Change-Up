@@ -32,6 +32,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void testAuton();
+void farAuton();
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -55,7 +56,8 @@ void autonomous() {
   // Robot::chassis()->turnToAngle(90_deg);
   // Robot::odom()->reset();
   // Robot::chassis()->driveToPoint({2_ft, 2_ft}, 2);
-  testAuton();
+  // testAuton();
+  farAuton();
 }
 
 void opcontrol() {
