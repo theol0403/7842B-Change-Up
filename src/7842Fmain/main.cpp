@@ -1,6 +1,7 @@
 #include "main.h"
 #include "config.hpp"
 #include "driver.hpp"
+#include "auton.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -34,9 +35,6 @@ void disabled() {}
  */
 void competition_initialize() {}
 
-void testAuton();
-void farAuton();
-
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -49,18 +47,7 @@ void farAuton();
  * from where it left off.
  */
 void autonomous() {
-  // Robot::chassis()->driveDistance(1_ft);
-  // Robot::chassis()->turnToAngle(90_deg);
-  // Robot::chassis()->driveDistance(1_ft);
-  // Robot::chassis()->turnToAngle(180_deg);
-  // Robot::chassis()->driveDistance(1_ft);
-  // Robot::chassis()->turnToAngle(270_deg);
-  // Robot::chassis()->driveDistance(1_ft);
-  // Robot::chassis()->turnToAngle(90_deg);
-  // Robot::odom()->reset();
-  // Robot::chassis()->driveToPoint({2_ft, 2_ft}, 2);
-  // testAuton();
-  farAuton();
+  Robot::selector()->run();
 }
 
 void opcontrol() {

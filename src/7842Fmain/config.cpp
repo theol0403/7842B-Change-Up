@@ -1,4 +1,5 @@
 #include "config.hpp"
+#include "auton.hpp"
 
 /***
  *     _____ _                   _     
@@ -81,6 +82,15 @@ void Robot::_initializeDevices() {
  */
 void Robot::_initializeScreen() {
   _screen = std::make_shared<Screen>(lv_scr_act(), LV_COLOR_ORANGE);
+
+  _selector = dynamic_cast<AutonSelector*>(&_screen->makePage<AutonSelector>("Auton")
+                                              .button("None", []() {})
+                                              .button("FarBlue", farBlueAuton)
+                                              .button("FarRed", farRedAuton)
+                                              .newRow()
+                                              .button("MiddleBlue", middleBlueAuton)
+                                              .button("MiddleRed", middleRedAuton)
+                                              .build());
 
   _screen->makePage<OdomDebug>().attachOdom(_odom).attachResetter([&]() {
     _odom->reset();
