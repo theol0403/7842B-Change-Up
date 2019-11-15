@@ -197,9 +197,9 @@ void Robot::deploy() {
   clawLeft()->setState(clawStates::off);
   clawRight()->setState(clawStates::off);
 
-  lift()->setPosition({200, 200});
-  lift()->setState(liftStates::hold);
-  while (lift()->getError() > 50) {
+  lift()->setPosition({400, 400});
+  lift()->setState(liftStates::holdAtPos);
+  while (std::abs(lift()->getError()) > 100) {
     pros::delay(20);
   }
 

@@ -41,5 +41,5 @@ class Lift : public StateMachine<liftStates, liftStates::hold> {
 
   std::valarray<double> startPos {0, 0};
   std::valarray<double> holdPos {0, 0};
-  std::valarray<double> error {INFINITY, INFINITY};
+  std::valarray<double> error {10000000, 10000000};
 };
