@@ -16,14 +16,14 @@ void farStackBlueAuton() {
     },
     nullptr, "deploy");
 
-  // drive out
+  // drive towards stack
   chassis.strafeToPoint(
-    {8.5_ft, 10.5_ft}, OdomController::makeAngleCalculator(-180_deg), 1,
+    {10_ft, 7.5_ft}, OdomController::makeAngleCalculator(-90_deg), 1,
     OdomController::defaultDriveAngleSettler);
 
-  // drive to stack
+  // drive on top of stack
   chassis.strafeToPoint(
-    {8.5_ft, 9.5_ft}, OdomController::makeAngleCalculator(-180_deg), 1,
+    {9.5_ft, 7.5_ft}, OdomController::makeAngleCalculator(-90_deg), 1,
     OdomController::defaultDriveAngleSettler);
 
   Robot::clawRight()->setState(clawStates::clamp);
