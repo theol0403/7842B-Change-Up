@@ -2,7 +2,7 @@
 
 void farBlueAuton() {
   auto&& chassis = *Robot::chassis();
-  Robot::odom()->setState({11_ft, 10_ft, -180_deg});
+  Robot::odom()->setState({11.3_ft, 10_ft, -180_deg});
 
   // deploy the claw
   Robot::deploy();
@@ -23,7 +23,7 @@ void farBlueAuton() {
 
   // raise lift
   Robot::lift()->setPosition({550, 550});
-  pros::delay(600);
+  pros::delay(800);
 
   // drive to tower
   chassis.strafeToPoint(
@@ -40,19 +40,20 @@ void farBlueAuton() {
 
   // lower lift
   Robot::lift()->setPosition({0, 0});
+  Robot::clawRight()->setState(clawStates::clamp);
 
   // strafe to behind cube while lowering lift
   chassis.strafeToPoint(
-    {7.8_ft, 8.2_ft}, OdomController::makeAngleCalculator(45_deg), 2,
+    {7.5_ft, 8.2_ft}, OdomController::makeAngleCalculator(45_deg), 2,
     OdomController::defaultDriveAngleSettler);
 
   // push cube into corner
   chassis.strafeToPoint(
-    {10.5_ft, 9.8_ft}, OdomController::makeAngleCalculator(45_deg), 1,
+    {10_ft, 9.8_ft}, OdomController::makeAngleCalculator(45_deg), 1,
     OdomController::defaultDriveSettler);
 
   // back up and turn
   chassis.strafeToPoint(
-    {9_ft, 10_ft}, OdomController::makeAngleCalculator(-180_deg), 1,
+    {9.8_ft, 10.2_ft}, OdomController::makeAngleCalculator(-180_deg), 1,
     OdomController::defaultDriveSettler);
 }
