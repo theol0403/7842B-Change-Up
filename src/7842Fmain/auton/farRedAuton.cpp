@@ -18,7 +18,7 @@ void farRedAuton() {
     {2_ft, 9.7_ft}, OdomController::makeAngleCalculator(-180_deg), 1,
     OdomController::defaultDriveSettler);
   // close claw
-  Robot::clawRight()->setState(clawStates::clamp);
+  Robot::clawLeft()->setState(clawStates::clamp);
   pros::delay(300);
 
   // raise lift
@@ -32,7 +32,7 @@ void farRedAuton() {
     OdomController::defaultDriveAngleSettler);
 
   // open claw
-  Robot::clawRight()->setState(clawStates::release);
+  Robot::clawLeft()->setState(clawStates::release);
   pros::delay(400);
 
   // back up
