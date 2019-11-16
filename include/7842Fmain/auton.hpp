@@ -7,4 +7,5 @@ void farRedAuton();
 void middleBlueAuton();
 void middleRedAuton();
 
-void testAuton();
+void farStackBlueAuton();
+void farStackRedAuton();
