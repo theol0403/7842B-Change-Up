@@ -25,7 +25,9 @@ void Robot::_initializeChassis() {
     // limits
     200, 12000);
 
-  _odom = std::make_shared<CustomOdometry>(_model, ChassisScales({2.75_in, 13.2_in, 0.00_in}, 360));
+  // old {2.75_in, 13.2_in, 0.00_in}
+  _odom =
+    std::make_shared<CustomOdometry>(_model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360));
   _odom->startTask("Odometry");
 
   _controller = std::make_shared<OdomXController>(
