@@ -11,7 +11,8 @@ enum class clawStates {
   brake, // apply motor brake
   calibrate, // apply motor brake
   hold,
-  holdAtPos
+  holdAtPos,
+  deploy
 };
 
 class Claw : public StateMachine<clawStates, clawStates::hold> {

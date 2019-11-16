@@ -92,7 +92,8 @@ void Robot::_initializeScreen() {
                                               .newRow()
                                               .button("MiddleBlue", middleBlueAuton)
                                               .button("MiddleRed", middleRedAuton)
-                                              .button("Test", testAuton)
+                                              .button("FarStackBlue", farStackBlueAuton)
+                                              .button("FarStackRed", farStackRedAuton)
                                               .build());
 
   _screen->makePage<OdomDebug>().attachOdom(_odom).attachResetter([&]() {
@@ -223,19 +224,11 @@ AutonSelector* Robot::selector() {
 }
 
 void Robot::deploy() {
-  clawLeft()->setState(clawStates::close);
-  clawRight()->setState(clawStates::close);
+  lift()->setState(liftStates::off);
+  clawLeft()->setState(clawStates::deploy);
+  clawRight()->setState(clawStates::deploy);
   pros::delay(500);
-  clawLeft()->setState(clawStates::off);
-  clawRight()->setState(clawStates::off);
-
-  lift()->setPosition({400, 400});
-  lift()->setState(liftStates::holdAtPos);
-  while (std::abs(lift()->getError()) > 100) {
-    pros::delay(20);
-  }
 
   clawLeft()->setState(clawStates::release);
   clawRight()->setState(clawStates::release);
-  lift()->setState(liftStates::off);
 }

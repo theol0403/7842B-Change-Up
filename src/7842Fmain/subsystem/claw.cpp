@@ -65,6 +65,11 @@ void Claw::loop() {
         pid->setTarget(holdPos);
         claw->moveVoltage(pid->step(getPosition()) * 12000);
         break;
+
+      case clawStates::deploy:
+        holdPos = -200;
+        state = clawStates::holdAtPos;
+        break;
     }
 
     // std::cout << "claw: " << claw->getPosition() << std::endl;
