@@ -23,7 +23,6 @@ void farRedAuton() {
 
   // raise lift
   Robot::lift()->setPosition({550, 550});
-  Robot::lift()->setState(liftStates::holdAtPos);
   pros::delay(600);
 
   // drive to tower
@@ -41,7 +40,6 @@ void farRedAuton() {
 
   // lower lift
   Robot::lift()->setPosition({0, 0});
-  Robot::lift()->setState(liftStates::holdAtPos);
 
   // strafe to behind cube while lowering lift
   chassis.strafeToPoint(

@@ -43,7 +43,6 @@ void middleRedAuton() {
 
   // raise lift
   Robot::lift()->setPosition({300, 300});
-  Robot::lift()->setState(liftStates::holdAtPos);
   pros::delay(500);
 
   // drive in front of single cube
