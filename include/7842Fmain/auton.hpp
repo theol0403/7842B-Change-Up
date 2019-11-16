@@ -6,3 +6,5 @@ void farRedAuton();
 
 void middleBlueAuton();
 void middleRedAuton();
+
+void testAuton();

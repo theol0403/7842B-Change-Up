@@ -92,6 +92,7 @@ void Robot::_initializeScreen() {
                                               .newRow()
                                               .button("MiddleBlue", middleBlueAuton)
                                               .button("MiddleRed", middleRedAuton)
+                                              .button("Test", testAuton)
                                               .build());
 
   _screen->makePage<OdomDebug>().attachOdom(_odom).attachResetter([&]() {
@@ -215,6 +216,10 @@ std::shared_ptr<Claw> Robot::clawLeft() {
 
 std::shared_ptr<Claw> Robot::clawRight() {
   getDevice(clawRight);
+}
+
+AutonSelector* Robot::selector() {
+  getDevice(selector);
 }
 
 void Robot::deploy() {
