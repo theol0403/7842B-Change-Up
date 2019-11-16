@@ -27,7 +27,7 @@ void farRedAuton() {
 
   // drive to tower
   chassis.strafeToPoint(
-    {1.6_ft, 7.5_ft}, OdomController::makeAngleCalculator(-180_deg), 1,
+    {1.6_ft, 7.4_ft}, OdomController::makeAngleCalculator(-180_deg), 1,
     OdomController::defaultDriveAngleSettler);
 
   // open claw
