@@ -31,7 +31,7 @@ void farStackRedAuton() {
 
   Robot::lift()->setPosition({400, 400});
   pros::delay(400);
-  chassis.strafeDistanceAtDirection(8_in, -90_deg);
+  chassis.strafeDistance(8_in, -90_deg);
 
   Robot::lift()->setPosition({-100, -100});
   pros::delay(1000);
