@@ -87,11 +87,13 @@ void Robot::_initializeScreen() {
 
   _selector = dynamic_cast<AutonSelector*>(&_screen->makePage<AutonSelector>("Auton")
                                               .button("None", []() {})
+                                              .newRow()
                                               .button("FarBlue", farBlueAuton)
                                               .button("FarRed", farRedAuton)
                                               .newRow()
                                               .button("MiddleBlue", middleBlueAuton)
                                               .button("MiddleRed", middleRedAuton)
+                                              .newRow()
                                               .button("FarStackBlue", farStackBlueAuton)
                                               .button("FarStackRed", farStackRedAuton)
                                               .build());
@@ -152,6 +154,13 @@ void Robot::_initializeScreen() {
       "Calibrate Lift",
       [&]() {
         _lift->setState(liftStates::calibrate);
+      })
+    .button(
+      "Systems Off",
+      [&]() {
+        _lift->setState(liftStates::off);
+        _clawLeft->setState(clawStates::off);
+        _clawRight->setState(clawStates::off);
       })
     .newRow()
     .button(

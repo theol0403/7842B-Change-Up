@@ -67,7 +67,7 @@ void Claw::loop() {
         break;
 
       case clawStates::deploy:
-        holdPos = -200;
+        holdPos = -100;
         state = clawStates::holdAtPos;
         break;
     }
