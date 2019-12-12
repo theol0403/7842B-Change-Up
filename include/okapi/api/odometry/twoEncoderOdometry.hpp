@@ -67,6 +67,11 @@ class TwoEncoderOdometry : public Odometry {
    */
   std::shared_ptr<ReadOnlyChassisModel> getModel() override;
 
+  /**
+   * @return The internal ChassisScales.
+   */
+  ChassisScales getScales() override;
+
   protected:
   std::shared_ptr<Logger> logger;
   std::unique_ptr<AbstractRate> rate;
@@ -75,6 +80,7 @@ class TwoEncoderOdometry : public Odometry {
   ChassisScales chassisScales;
   OdomState state;
   std::valarray<std::int32_t> newTicks{0, 0, 0}, tickDiff{0, 0, 0}, lastTicks{0, 0, 0};
+  const std::int32_t maximumTickDiff{1000};
 
   /**
    * Does the math, side-effect free, for one odom step.

@@ -26,8 +26,8 @@ void Robot::_initializeChassis() {
     200, 12000);
 
   // old {2.75_in, 13.2_in, 0.00_in}
-  _odom =
-    std::make_shared<CustomOdometry>(_model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360));
+  _odom = std::make_shared<CustomOdometry>(
+    _model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360), TimeUtilFactory().create());
   _odom->startTask("Odometry");
 
   _controller = std::make_shared<OdomXController>(
@@ -41,10 +41,7 @@ void Robot::_initializeChassis() {
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
       0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)),
-    //Strafe PID - To mm
-    std::make_unique<IterativePosPIDController>(
-      0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
-    5_in);
+    TimeUtilFactory().create());
 }
 
 /***
@@ -85,9 +82,9 @@ void Robot::_initializeDevices() {
  *                                    
  */
 void Robot::_initializeScreen() {
-  _screen = std::make_shared<Screen>(lv_scr_act(), LV_COLOR_ORANGE);
+  _screen = std::make_shared<GUI::Screen>(lv_scr_act(), LV_COLOR_ORANGE);
 
-  _selector = dynamic_cast<AutonSelector*>(&_screen->makePage<AutonSelector>("Auton")
+  _selector = dynamic_cast<GUI::Selector*>(&_screen->makePage<GUI::Selector>("Auton")
                                               .button("None", []() {})
                                               .newRow()
                                               .button("FarBlue", farBlueAuton)
@@ -100,7 +97,7 @@ void Robot::_initializeScreen() {
                                               .button("FarStackRed", farStackRedAuton)
                                               .build());
 
-  _screen->makePage<OdomDebug>().attachOdom(_odom).attachResetter([&]() {
+  _screen->makePage<GUI::Odom>().attachOdom(_odom).attachResetter([&]() {
     _odom->reset();
   });
 
@@ -123,7 +120,7 @@ void Robot::_initializeScreen() {
   // _motorWarning->addMotor(_clawLeft->getMotor(), "Left Claw");
   // _motorWarning->addMotor(_clawRight->getMotor(), "Right Claw");
 
-  _screen->makePage<Graph>("Lift")
+  _screen->makePage<GUI::Graph>("Lift")
     .withRange(-250, 900)
     .withResolution(50)
     .withSeries(
@@ -145,7 +142,7 @@ void Robot::_initializeScreen() {
       return _lift->getLeftMotor()->getTemperature() * 15;
     });
 
-  _screen->makePage<ButtonMatrix>("Actions")
+  _screen->makePage<GUI::Actions>("Actions")
     .button(
       "Calibrate Claw",
       [&]() {
@@ -230,7 +227,7 @@ std::shared_ptr<Claw> Robot::clawRight() {
   getDevice(clawRight);
 }
 
-AutonSelector* Robot::selector() {
+GUI::Selector* Robot::selector() {
   getDevice(selector);
 }
 
