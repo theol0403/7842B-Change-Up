@@ -60,8 +60,10 @@ void Robot::_initializeChassis() {
 void Robot::_initializeDevices() {
   _lift = std::make_shared<Lift>(
     std::make_shared<Motor>(-9), std::make_shared<Motor>(10),
-    std::make_shared<IterativePosPIDController>(0.019, 0, 0.0001, 0.3, TimeUtilFactory().create()),
-    std::make_shared<IterativePosPIDController>(0.019, 0, 0.0001, 0.3, TimeUtilFactory().create()));
+    std::make_shared<IterativePosPIDController>(
+      0.025, 0, 0.00, 0.0, TimeUtilFactory().create(), std::make_unique<AverageFilter<50>>()),
+    std::make_shared<IterativePosPIDController>(
+      0.025, 0, 0.00, 0.0, TimeUtilFactory().create(), std::make_unique<AverageFilter<50>>()));
 
   _clawLeft = std::make_shared<Claw>(
     std::make_shared<Motor>(-11),
