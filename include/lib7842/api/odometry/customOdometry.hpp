@@ -1,12 +1,16 @@
 #pragma once
-
 #include "lib7842/api/other/taskWrapper.hpp"
 #include "lib7842/api/positioning/point/state.hpp"
 #include "okapi/api/chassis/model/chassisModel.hpp"
 #include "okapi/api/odometry/odometry.hpp"
 #include "okapi/api/util/logging.hpp"
+#include "okapi/api/util/timeUtil.hpp"
 
 namespace lib7842 {
+
+/**
+ * Odometry algorithm that directly uses 5225A's tracking algorithm. Statemode is assumed to be cartesian.
+ */
 class CustomOdometry : public Odometry, public TaskWrapper {
 public:
   /**
@@ -14,37 +18,43 @@ public:
    *
    * @param imodel         The chassis model for reading sensors.
    * @param ichassisScales The chassis dimensions.
+   * @param itimeUtil      The time utility
    * @param ilogger        The logger
    */
-  CustomOdometry(
-    const std::shared_ptr<ChassisModel>& imodel,
-    const ChassisScales& ichassisScales,
-    const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
+  CustomOdometry(const std::shared_ptr<ChassisModel>& imodel, const ChassisScales& ichassisScales,
+                 const TimeUtil& itimeUtil,
+                 const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
 
   virtual ~CustomOdometry() = default;
 
   /**
-   * Returns the current state.
+   * Return the current state.
+   *
+   * @return The state.
    */
   virtual const State& getState() const;
 
   /**
-   * Sets a new state to be the current state.
+   * Set a new state to be the current state.
+   *
+   * @param istate The state
    */
   virtual void setState(const State& istate);
 
   /**
-   * Resets state to {0, 0, 0}
+   * Reset state to {0, 0, 0}
    */
   virtual void resetState();
 
   /**
-   * Resets sensors and state
+   * Reset sensors and state
    */
   virtual void reset();
 
   /**
-   * Sets the drive and turn scales.
+   * Set the drive and turn scales.
+   *
+   * @param ichassisScales The chassis scales
    */
   void setScales(const ChassisScales& ichassisScales) override;
 
@@ -54,14 +64,18 @@ public:
   void step() override;
 
   /**
+   * Get the chassis model.
+   *
    * @return The internal ChassisModel.
    */
   std::shared_ptr<ReadOnlyChassisModel> getModel() override;
 
   /**
+   * Get the chassis scales.
+   *
    * @return The internal ChassisScales.
    */
-  virtual const ChassisScales& getScales() const;
+  ChassisScales getScales() override;
 
   /**
    * Odometry calculation loop
@@ -69,6 +83,7 @@ public:
   void loop() override;
 
 private:
+  // bass class overrides for polymorphism
   OdomState getState(const StateMode& imode) const override;
   void setState(const OdomState& istate, const StateMode& imode) override;
 
@@ -79,6 +94,7 @@ protected:
   double chassisWidth;
   double middleDistance;
 
+  TimeUtil timeUtil;
   std::shared_ptr<Logger> logger {nullptr};
 
   State state;
