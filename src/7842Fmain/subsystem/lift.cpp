@@ -61,16 +61,6 @@ void Lift::loop() {
         lift[1]->moveVoltage(-10000);
         break;
 
-      case liftStates::upMedium:
-        lift[0]->moveVoltage(8000);
-        lift[1]->moveVoltage(8000);
-        break;
-
-      case liftStates::downMedium:
-        lift[0]->moveVoltage(-7000);
-        lift[1]->moveVoltage(-7000);
-        break;
-
       case liftStates::upSlow:
         lift[0]->moveVelocity(50);
         lift[1]->moveVelocity(50);

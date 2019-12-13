@@ -2,19 +2,7 @@
 #include "main.h"
 #include "7842Fmain/util/statemachine.hpp"
 
-enum class liftStates {
-  off,
-  up,
-  down,
-  upMedium,
-  downMedium,
-  upSlow,
-  downSlow,
-  hold,
-  holdAtPos,
-  bottom,
-  calibrate
-};
+enum class liftStates { off, up, down, upSlow, downSlow, hold, holdAtPos, bottom, calibrate };
 
 class Lift : public StateMachine<liftStates, liftStates::hold> {
 
