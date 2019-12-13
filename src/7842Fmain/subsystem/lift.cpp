@@ -3,9 +3,14 @@
 Lift::Lift(
   const std::shared_ptr<Motor>& ileftLift,
   const std::shared_ptr<Motor>& irightLift,
+  const std::shared_ptr<Potentiometer>& ileftPot,
+  const std::shared_ptr<Potentiometer>& irightPot,
   const std::shared_ptr<IterativePosPIDController>& ilpid,
   const std::shared_ptr<IterativePosPIDController>& irpid) :
-  lift({std::move(ileftLift), std::move(irightLift)}), pid({std::move(ilpid), std::move(irpid)}) {
+  lift({std::move(ileftLift), std::move(irightLift)}),
+  pid({std::move(ilpid), std::move(irpid)}),
+  pot({std::move(ileftPot), std::move(irightPot)}) {
+  pros::delay(100);
   initialize();
   startTask("Lift");
 }
@@ -16,7 +21,7 @@ void Lift::setPosition(const std::valarray<double>& ipos) {
 }
 
 std::valarray<double> Lift::getPosition() const {
-  return std::valarray<double>({lift[0]->getPosition(), lift[1]->getPosition()}) - startPos;
+  return std::valarray<double>({pot[0]->get(), pot[1]->get()}) - startPos;
 }
 
 double Lift::getError() const {
@@ -32,15 +37,17 @@ std::shared_ptr<Motor> Lift::getRightMotor() const {
 }
 
 void Lift::initialize() {
-  lift[0]->setBrakeMode(AbstractMotor::brakeMode::coast);
+  lift[0]->setBrakeMode(AbstractMotor::brakeMode::brake);
   lift[0]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
-  lift[1]->setBrakeMode(AbstractMotor::brakeMode::coast);
+  lift[1]->setBrakeMode(AbstractMotor::brakeMode::brake);
   lift[1]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
 
-  startPos = {lift[0]->getPosition(), lift[1]->getPosition()};
+  startPos = {pot[0]->get(), pot[1]->get()};
 }
 
 void Lift::loop() {
+
+  Timer timer;
 
   while (true) {
 
@@ -72,8 +79,14 @@ void Lift::loop() {
         break;
 
       case liftStates::hold:
-        holdPos = getPosition().sum() / 2.0;
-        state = liftStates::holdAtPos;
+        lift[0]->moveVelocity(0);
+        lift[1]->moveVelocity(0);
+        timer.placeHardMark();
+        if (timer.getDtFromHardMark() > 200_ms) {
+          holdPos = getPosition().sum() / 2.0;
+          state = liftStates::holdAtPos;
+          timer.clearHardMark();
+        }
         break;
 
       case liftStates::holdAtPos:
@@ -98,12 +111,12 @@ void Lift::loop() {
           pros::delay(400);
         } while (lift[0]->getActualVelocity() > 5 || lift[1]->getActualVelocity() > 5);
         pros::delay(400);
-        startPos = {lift[0]->getPosition(), lift[1]->getPosition()};
+        startPos = {pot[0]->get(), pot[1]->get()};
         state = liftStates::off;
         break;
     }
 
-    //std::cout << "Lift: " << getArmAngle() << std::endl;
+    // std::cout << "L: " << getPosition()[0] << ", R: " << getPosition()[1] << std::endl;
     pros::delay(10);
   }
 }

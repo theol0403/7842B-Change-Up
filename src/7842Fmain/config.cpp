@@ -55,11 +55,12 @@ void Robot::_initializeChassis() {
  */
 void Robot::_initializeDevices() {
   _lift = std::make_shared<Lift>(
-    std::make_shared<Motor>(-9), std::make_shared<Motor>(10),
+    std::make_shared<Motor>(9), std::make_shared<Motor>(-10), //
+    std::make_shared<Potentiometer>('g'), std::make_shared<Potentiometer>('h'),
     std::make_shared<IterativePosPIDController>(
-      0.025, 0, 0.00, 0.0, TimeUtilFactory().create(), std::make_unique<AverageFilter<50>>()),
+      0.0025, 0.00, 0.00005, 0.01, TimeUtilFactory().create()),
     std::make_shared<IterativePosPIDController>(
-      0.025, 0, 0.00, 0.0, TimeUtilFactory().create(), std::make_unique<AverageFilter<50>>()));
+      0.0025, 0.00, 0.00005, 0.01, TimeUtilFactory().create()));
 
   // _clawLeft = std::make_shared<Claw>(
   //   std::make_shared<Motor>(-11),
@@ -82,19 +83,6 @@ void Robot::_initializeDevices() {
  */
 void Robot::_initializeScreen() {
   _screen = std::make_shared<GUI::Screen>(lv_scr_act(), LV_COLOR_ORANGE);
-
-  // _selector = dynamic_cast<GUI::Selector*>(&_screen->makePage<GUI::Selector>("Auton")
-  //                                             .button("None", []() {})
-  //                                             .newRow()
-  //                                             .button("FarBlue", farBlueAuton)
-  //                                             .button("FarRed", farRedAuton)
-  //                                             .newRow()
-  //                                             .button("MiddleBlue", middleBlueAuton)
-  //                                             .button("MiddleRed", middleRedAuton)
-  //                                             .newRow()
-  //                                             .button("FarStackBlue", farStackBlueAuton)
-  //                                             .button("FarStackRed", farStackRedAuton)
-  //                                             .build());
 
   _screen->makePage<GUI::Odom>().attachOdom(_odom).attachResetter([&]() {
     _odom->reset();
