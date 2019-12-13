@@ -25,7 +25,6 @@ void Robot::_initializeChassis() {
     // limits
     200, 12000);
 
-  // old {2.75_in, 13.2_in, 0.00_in}
   _odom = std::make_shared<CustomOdometry>(
     _model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360), TimeUtilFactory().create());
   _odom->startTask("Odometry");
@@ -102,23 +101,6 @@ void Robot::_initializeScreen() {
   });
 
   _screen->startTask("Screen");
-
-  // _motorWarning = std::make_shared<MotorWarning>();
-
-  // _motorWarning->addMotor(
-  //   std::dynamic_pointer_cast<Motor>(_model->getTopLeftMotor()), "TopLeftBase");
-  // _motorWarning->addMotor(
-  //   std::dynamic_pointer_cast<Motor>(_model->getTopRightMotor()), "TopRightBase");
-  // _motorWarning->addMotor(
-  //   std::dynamic_pointer_cast<Motor>(_model->getBottomLeftMotor()), "BottomLeftBase");
-  // _motorWarning->addMotor(
-  //   std::dynamic_pointer_cast<Motor>(_model->getBottomRightMotor()), "BottomRightBase");
-
-  // _motorWarning->addMotor(_lift->getLeftMotor(), "Left Lift");
-  // _motorWarning->addMotor(_lift->getRightMotor(), "Right Lift");
-
-  // _motorWarning->addMotor(_clawLeft->getMotor(), "Left Claw");
-  // _motorWarning->addMotor(_clawRight->getMotor(), "Right Claw");
 
   _screen->makePage<GUI::Graph>("Lift")
     .withRange(-250, 900)
