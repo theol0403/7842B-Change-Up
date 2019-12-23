@@ -10,22 +10,21 @@ Lift::Lift(
   lift({std::move(ileftLift), std::move(irightLift)}),
   pid({std::move(ilpid), std::move(irpid)}),
   pot({std::move(ileftPot), std::move(irightPot)}) {
-  pros::delay(100);
+  pros::delay(100); // allow pots to initialize
   initialize();
   startTask("Lift");
 }
 
 void Lift::setPosition(const std::valarray<double>& ipos) {
   holdPos = ipos;
-  error = 10000000;
 }
 
 std::valarray<double> Lift::getPosition() const {
-  return std::valarray<double>({pot[0]->get(), pot[1]->get()}) - startPos;
+  return std::valarray<double>(getRawPosition()) - startPos;
 }
 
 double Lift::getError() const {
-  return std::abs(error).sum() / 2;
+  return std::abs(holdPos - getPosition()).sum() / 2;
 }
 
 std::shared_ptr<Motor> Lift::getLeftMotor() const {
@@ -36,13 +35,17 @@ std::shared_ptr<Motor> Lift::getRightMotor() const {
   return lift[1];
 }
 
+std::valarray<double> Lift::getRawPosition() const {
+  return {pot[0]->get(), pot[1]->get()};
+}
+
 void Lift::initialize() {
   lift[0]->setBrakeMode(AbstractMotor::brakeMode::brake);
   lift[0]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
   lift[1]->setBrakeMode(AbstractMotor::brakeMode::brake);
   lift[1]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
 
-  startPos = {pot[0]->get(), pot[1]->get()};
+  startPos = getRawPosition();
 }
 
 void Lift::loop() {
@@ -78,7 +81,7 @@ void Lift::loop() {
         lift[1]->moveVelocity(-50);
         break;
 
-      case liftStates::hold:
+      case liftStates::brake:
         lift[0]->moveVelocity(0);
         lift[1]->moveVelocity(0);
         timer.placeHardMark();
@@ -94,14 +97,11 @@ void Lift::loop() {
         pid[1]->setTarget(holdPos[1]);
         lift[0]->moveVoltage(pid[0]->step(getPosition()[0]) * 12000);
         lift[1]->moveVoltage(pid[1]->step(getPosition()[1]) * 12000);
-        error = holdPos - getPosition();
         break;
 
-      case liftStates::bottom:
-        pid[0]->setTarget(0);
-        pid[1]->setTarget(0);
-        lift[0]->moveVoltage(pid[0]->step(getPosition()[0]) * 12000);
-        lift[1]->moveVoltage(pid[1]->step(getPosition()[1]) * 12000);
+      case liftStates::aboveCube:
+        holdPos = 100;
+        state = liftStates::holdAtPos;
         break;
 
       case liftStates::calibrate:
@@ -111,7 +111,7 @@ void Lift::loop() {
           pros::delay(400);
         } while (lift[0]->getActualVelocity() > 5 || lift[1]->getActualVelocity() > 5);
         pros::delay(400);
-        startPos = {pot[0]->get(), pot[1]->get()};
+        startPos = getRawPosition();
         state = liftStates::off;
         break;
     }

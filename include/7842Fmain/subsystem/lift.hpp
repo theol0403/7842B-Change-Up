@@ -2,10 +2,31 @@
 #include "main.h"
 #include "7842Fmain/util/statemachine.hpp"
 
-enum class liftStates { off, up, down, upSlow, downSlow, hold, holdAtPos, bottom, calibrate };
+enum class liftStates {
+  off, // all motors off
+  up, // full voltage up
+  down, /// full voltage down
+  upSlow, // low velocity up
+  downSlow, // low velocity down
+  brake, // brake for a small about of time, record position, then hold
+  holdAtPos, // pid to hold desired position
+  aboveCube, // pid to above the cube
+  calibrate, // calibrate the lift position
+};
 
-class Lift : public StateMachine<liftStates, liftStates::hold> {
+// starting off the mode to be brake does not trigger state change
+class Lift : public StateMachine<liftStates, liftStates::brake> {
  public:
+  /**
+   * Constructs a new lift instance.
+   *
+   * @param ileftLift  The ileft lift
+   * @param irightLift The iright lift
+   * @param ileftPot   The ileft pot
+   * @param irightPot  The iright pot
+   * @param ilpid      The ilpid
+   * @param irpid      The irpid
+   */
   Lift(
     const std::shared_ptr<Motor>& ileftLift,
     const std::shared_ptr<Motor>& irightLift,
@@ -14,14 +35,33 @@ class Lift : public StateMachine<liftStates, liftStates::hold> {
     const std::shared_ptr<IterativePosPIDController>& ilpid,
     const std::shared_ptr<IterativePosPIDController>& irpid);
 
+  /**
+   * Sets the desired lift position.
+   *
+   * @param ipos The position
+   */
   void setPosition(const std::valarray<double>& ipos);
+
+  /**
+   * Gets the current lift position.
+   *
+   * @return The position.
+   */
   std::valarray<double> getPosition() const;
+
+  /**
+   * Gets the position error.
+   *
+   * @return The error.
+   */
   double getError() const;
 
   std::shared_ptr<Motor> getLeftMotor() const;
   std::shared_ptr<Motor> getRightMotor() const;
 
  protected:
+  std::valarray<double> getRawPosition() const;
+
   void initialize() override;
   void loop() override;
 
@@ -31,5 +71,4 @@ class Lift : public StateMachine<liftStates, liftStates::hold> {
 
   std::valarray<double> startPos {0, 0};
   std::valarray<double> holdPos {0, 0};
-  std::valarray<double> error {10000000, 10000000};
 };
