@@ -1,5 +1,4 @@
 #include "config.hpp"
-#include "auton.hpp"
 
 /***
  *     _____ _                   _     
@@ -61,14 +60,6 @@ void Robot::_initializeDevices() {
       0.0025, 0.00, 0.00005, 0.01, TimeUtilFactory().create()),
     std::make_shared<IterativePosPIDController>(
       0.0025, 0.00, 0.00005, 0.01, TimeUtilFactory().create()));
-
-  // _clawLeft = std::make_shared<Claw>(
-  //   std::make_shared<Motor>(-11),
-  //   std::make_shared<IterativePosPIDController>(0.008, 0, 0, 0, TimeUtilFactory().create()));
-
-  // _clawRight = std::make_shared<Claw>(
-  //   std::make_shared<Motor>(7),
-  //   std::make_shared<IterativePosPIDController>(0.008, 0, 0, 0, TimeUtilFactory().create()));
 }
 
 /***
@@ -114,12 +105,6 @@ void Robot::_initializeScreen() {
 
   _screen->makePage<GUI::Actions>("Actions")
     .button(
-      "Calibrate Claw",
-      [&]() {
-        _clawLeft->setState(clawStates::calibrate);
-        _clawRight->setState(clawStates::calibrate);
-      })
-    .button(
       "Calibrate Lift",
       [&]() {
         _lift->setState(liftStates::calibrate);
@@ -128,8 +113,6 @@ void Robot::_initializeScreen() {
       "Systems Off",
       [&]() {
         _lift->setState(liftStates::off);
-        _clawLeft->setState(clawStates::off);
-        _clawRight->setState(clawStates::off);
       })
     .newRow()
     .button(
@@ -189,24 +172,8 @@ std::shared_ptr<Lift> Robot::lift() {
   getDevice(lift);
 }
 
-std::shared_ptr<Claw> Robot::clawLeft() {
-  getDevice(clawLeft);
-}
-
-std::shared_ptr<Claw> Robot::clawRight() {
-  getDevice(clawRight);
-}
-
 GUI::Selector* Robot::selector() {
   getDevice(selector);
 }
 
-void Robot::deploy() {
-  lift()->setState(liftStates::off);
-  clawLeft()->setState(clawStates::deploy);
-  clawRight()->setState(clawStates::deploy);
-  pros::delay(500);
-
-  clawLeft()->setState(clawStates::release);
-  clawRight()->setState(clawStates::release);
-}
+void Robot::deploy() {}

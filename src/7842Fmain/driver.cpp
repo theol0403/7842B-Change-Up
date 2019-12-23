@@ -62,34 +62,4 @@ void driverDeviceControl() {
   } else {
     Robot::lift()->setNewState(liftStates::hold);
   }
-
-  // /***
-  //  *     _____ _
-  //  *    /  __ \ |
-  //  *    | /  \/ | __ ___      __
-  //  *    | |   | |/ _` \ \ /\ / /
-  //  *    | \__/\ | (_| |\ V  V /
-  //  *     \____/_|\__,_| \_/\_/
-  //  */
-  // // left
-  // if (mDigital(DOWN)) {
-  //   Robot::clawLeft()->setNewState(clawStates::clamp);
-  // } else if (mDigital(LEFT)) {
-  //   Robot::clawLeft()->setNewState(clawStates::release);
-  // } else {
-  //   if (Robot::clawLeft()->getState() != clawStates::clamp) {
-  //     Robot::clawLeft()->setNewState(clawStates::hold);
-  //   }
-  // }
-
-  // // right
-  // if (mDigital(B)) {
-  //   Robot::clawRight()->setNewState(clawStates::clamp);
-  // } else if (mDigital(A)) {
-  //   Robot::clawRight()->setNewState(clawStates::release);
-  // } else {
-  //   if (Robot::clawRight()->getState() != clawStates::clamp) {
-  //     Robot::clawRight()->setNewState(clawStates::hold);
-  //   }
-  // }
 }

@@ -3,7 +3,6 @@
 
 #include "subsystem/lift.hpp"
 #include "subsystem/claw.hpp"
-#include "util/motorWarning.hpp"
 
 class Robot {
  protected:
@@ -20,12 +19,8 @@ class Robot {
   std::shared_ptr<OdomXController> _controller {nullptr};
 
   std::shared_ptr<Lift> _lift {nullptr};
-  std::shared_ptr<Claw> _clawLeft {nullptr};
-  std::shared_ptr<Claw> _clawRight {nullptr};
 
   std::shared_ptr<GUI::Screen> _screen {nullptr};
-  std::shared_ptr<MotorWarning> _motorWarning {nullptr};
-
   GUI::Selector* _selector {nullptr};
 
  public:
@@ -35,8 +30,6 @@ class Robot {
   static std::shared_ptr<CustomOdometry> odom();
   static std::shared_ptr<OdomXController> chassis();
   static std::shared_ptr<Lift> lift();
-  static std::shared_ptr<Claw> clawLeft();
-  static std::shared_ptr<Claw> clawRight();
 
   static GUI::Selector* selector();
 

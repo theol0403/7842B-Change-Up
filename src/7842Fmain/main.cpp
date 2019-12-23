@@ -1,7 +1,6 @@
 #include "main.h"
 #include "config.hpp"
 #include "driver.hpp"
-#include "auton.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
