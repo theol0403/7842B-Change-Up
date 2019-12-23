@@ -12,10 +12,6 @@
     pros::c::controller_get_analog(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_ANALOG_##x))      \
     / 127.0
 
-template <typename T> int sgn(T val) {
-  return (T(0) < val) - (val < T(0));
-}
-
 /***
  *    ______                  _____             _             _ 
  *    | ___ \                /  __ \           | |           | |
@@ -30,10 +26,10 @@ void driverBaseControl() {
   double leftX = mAnalog(LEFT_X);
 
   Robot::model()->xArcade(
-    std::pow(rightX, 2) * sgn(rightX), std::pow(rightY, 2) * sgn(rightY),
-    std::pow(leftX, 2) * sgn(leftX));
+    std::pow(rightX, 2) * util::sgn(rightX), std::pow(rightY, 2) * util::sgn(rightY),
+    std::pow(leftX, 2) * util::sgn(leftX));
 
-  if (mDigital(X)) autonomous();
+  // if (mDigital(X)) autonomous();
 }
 
 /***
@@ -67,33 +63,33 @@ void driverDeviceControl() {
     Robot::lift()->setNewState(liftStates::hold);
   }
 
-  /***
-   *     _____ _                
-   *    /  __ \ |               
-   *    | /  \/ | __ ___      __
-   *    | |   | |/ _` \ \ /\ / /
-   *    | \__/\ | (_| |\ V  V / 
-   *     \____/_|\__,_| \_/\_/  
-   */
-  // left
-  if (mDigital(DOWN)) {
-    Robot::clawLeft()->setNewState(clawStates::clamp);
-  } else if (mDigital(LEFT)) {
-    Robot::clawLeft()->setNewState(clawStates::release);
-  } else {
-    if (Robot::clawLeft()->getState() != clawStates::clamp) {
-      Robot::clawLeft()->setNewState(clawStates::hold);
-    }
-  }
+  // /***
+  //  *     _____ _
+  //  *    /  __ \ |
+  //  *    | /  \/ | __ ___      __
+  //  *    | |   | |/ _` \ \ /\ / /
+  //  *    | \__/\ | (_| |\ V  V /
+  //  *     \____/_|\__,_| \_/\_/
+  //  */
+  // // left
+  // if (mDigital(DOWN)) {
+  //   Robot::clawLeft()->setNewState(clawStates::clamp);
+  // } else if (mDigital(LEFT)) {
+  //   Robot::clawLeft()->setNewState(clawStates::release);
+  // } else {
+  //   if (Robot::clawLeft()->getState() != clawStates::clamp) {
+  //     Robot::clawLeft()->setNewState(clawStates::hold);
+  //   }
+  // }
 
-  // right
-  if (mDigital(B)) {
-    Robot::clawRight()->setNewState(clawStates::clamp);
-  } else if (mDigital(A)) {
-    Robot::clawRight()->setNewState(clawStates::release);
-  } else {
-    if (Robot::clawRight()->getState() != clawStates::clamp) {
-      Robot::clawRight()->setNewState(clawStates::hold);
-    }
-  }
+  // // right
+  // if (mDigital(B)) {
+  //   Robot::clawRight()->setNewState(clawStates::clamp);
+  // } else if (mDigital(A)) {
+  //   Robot::clawRight()->setNewState(clawStates::release);
+  // } else {
+  //   if (Robot::clawRight()->getState() != clawStates::clamp) {
+  //     Robot::clawRight()->setNewState(clawStates::hold);
+  //   }
+  // }
 }

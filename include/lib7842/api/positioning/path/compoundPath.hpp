@@ -1,33 +1,48 @@
 #pragma once
 #include "abstractPath.hpp"
-#include "simplePath.hpp"
+#include "discretePath.hpp"
 
 namespace lib7842 {
 
+/**
+ * A path that represents a combination of segments that can be interpolated into a SimplePath.
+ */
 class CompoundPath : public AbstractPath {
-
 public:
-  /**
-   * Default Constructors
-   */
   CompoundPath() = default;
-  CompoundPath(const CompoundPath& ipath) = default;
-  virtual ~CompoundPath() = default;
 
-  explicit CompoundPath(const std::shared_ptr<AbstractPath>& ipath);
+  /**
+   * Add a path segment to an existing path.
+   *
+   * @param  isegment The segment.
+   */
+  CompoundPath& add(const std::shared_ptr<AbstractPath>& isegment);
+  CompoundPath& operator+=(const std::shared_ptr<AbstractPath>& isegment);
 
-  CompoundPath& addPath(const std::shared_ptr<AbstractPath>& ipath);
+  /**
+   * Combine two paths together
+   *
+   * @param  isegment The segment
+   */
+  CompoundPath operator+(const std::shared_ptr<AbstractPath>& isegment) &;
+  CompoundPath&& operator+(const std::shared_ptr<AbstractPath>& isegment) &&;
 
   /**
    * Interpolate the path
    *
-   * @param isteps how many points to interpolate per segment, from start (inclusive) to end (exclusive) of segment
+   * @param  isteps how many points to interpolate per segment, from start (inclusive) to end
+   *                (exclusive) of segment.
    * @return generated path
    */
-  SimplePath generate(const int isteps = 1) const override;
+  SimplePath generate(int isteps = 1) const override;
+
+  /**
+   * Implictly convert path to a shared pointer
+   */
+  operator std::shared_ptr<AbstractPath>() & override;
+  operator std::shared_ptr<AbstractPath>() && override;
 
 protected:
-  std::vector<std::shared_ptr<AbstractPath>> paths {};
-}; // namespace lib7842
-
+  std::vector<std::shared_ptr<AbstractPath>> segments {};
+};
 } // namespace lib7842

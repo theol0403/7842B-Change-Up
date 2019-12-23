@@ -25,9 +25,8 @@ void Robot::_initializeChassis() {
     // limits
     200, 12000);
 
-  // old {2.75_in, 13.2_in, 0.00_in}
-  _odom =
-    std::make_shared<CustomOdometry>(_model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360));
+  _odom = std::make_shared<CustomOdometry>(
+    _model, ChassisScales({2.75_in, 12.9473263_in, 0.00_in}, 360), TimeUtilFactory().create());
   _odom->startTask("Odometry");
 
   _controller = std::make_shared<OdomXController>(
@@ -41,10 +40,7 @@ void Robot::_initializeChassis() {
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
       0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)),
-    //Strafe PID - To mm
-    std::make_unique<IterativePosPIDController>(
-      0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
-    5_in);
+    TimeUtilFactory().create());
 }
 
 /***
@@ -59,19 +55,20 @@ void Robot::_initializeChassis() {
  */
 void Robot::_initializeDevices() {
   _lift = std::make_shared<Lift>(
-    std::make_shared<Motor>(-9), std::make_shared<Motor>(10),
+    std::make_shared<Motor>(9), std::make_shared<Motor>(-10), //
+    std::make_shared<Potentiometer>('g'), std::make_shared<Potentiometer>('h'),
     std::make_shared<IterativePosPIDController>(
-      0.025, 0, 0.00, 0.0, TimeUtilFactory().create(), std::make_unique<AverageFilter<50>>()),
+      0.0025, 0.00, 0.00005, 0.01, TimeUtilFactory().create()),
     std::make_shared<IterativePosPIDController>(
-      0.025, 0, 0.00, 0.0, TimeUtilFactory().create(), std::make_unique<AverageFilter<50>>()));
+      0.0025, 0.00, 0.00005, 0.01, TimeUtilFactory().create()));
 
-  _clawLeft = std::make_shared<Claw>(
-    std::make_shared<Motor>(-11),
-    std::make_shared<IterativePosPIDController>(0.008, 0, 0, 0, TimeUtilFactory().create()));
+  // _clawLeft = std::make_shared<Claw>(
+  //   std::make_shared<Motor>(-11),
+  //   std::make_shared<IterativePosPIDController>(0.008, 0, 0, 0, TimeUtilFactory().create()));
 
-  _clawRight = std::make_shared<Claw>(
-    std::make_shared<Motor>(7),
-    std::make_shared<IterativePosPIDController>(0.008, 0, 0, 0, TimeUtilFactory().create()));
+  // _clawRight = std::make_shared<Claw>(
+  //   std::make_shared<Motor>(7),
+  //   std::make_shared<IterativePosPIDController>(0.008, 0, 0, 0, TimeUtilFactory().create()));
 }
 
 /***
@@ -85,45 +82,15 @@ void Robot::_initializeDevices() {
  *                                    
  */
 void Robot::_initializeScreen() {
-  _screen = std::make_shared<Screen>(lv_scr_act(), LV_COLOR_ORANGE);
+  _screen = std::make_shared<GUI::Screen>(lv_scr_act(), LV_COLOR_ORANGE);
 
-  _selector = dynamic_cast<AutonSelector*>(&_screen->makePage<AutonSelector>("Auton")
-                                              .button("None", []() {})
-                                              .newRow()
-                                              .button("FarBlue", farBlueAuton)
-                                              .button("FarRed", farRedAuton)
-                                              .newRow()
-                                              .button("MiddleBlue", middleBlueAuton)
-                                              .button("MiddleRed", middleRedAuton)
-                                              .newRow()
-                                              .button("FarStackBlue", farStackBlueAuton)
-                                              .button("FarStackRed", farStackRedAuton)
-                                              .build());
-
-  _screen->makePage<OdomDebug>().attachOdom(_odom).attachResetter([&]() {
+  _screen->makePage<GUI::Odom>().attachOdom(_odom).attachResetter([&]() {
     _odom->reset();
   });
 
   _screen->startTask("Screen");
 
-  // _motorWarning = std::make_shared<MotorWarning>();
-
-  // _motorWarning->addMotor(
-  //   std::dynamic_pointer_cast<Motor>(_model->getTopLeftMotor()), "TopLeftBase");
-  // _motorWarning->addMotor(
-  //   std::dynamic_pointer_cast<Motor>(_model->getTopRightMotor()), "TopRightBase");
-  // _motorWarning->addMotor(
-  //   std::dynamic_pointer_cast<Motor>(_model->getBottomLeftMotor()), "BottomLeftBase");
-  // _motorWarning->addMotor(
-  //   std::dynamic_pointer_cast<Motor>(_model->getBottomRightMotor()), "BottomRightBase");
-
-  // _motorWarning->addMotor(_lift->getLeftMotor(), "Left Lift");
-  // _motorWarning->addMotor(_lift->getRightMotor(), "Right Lift");
-
-  // _motorWarning->addMotor(_clawLeft->getMotor(), "Left Claw");
-  // _motorWarning->addMotor(_clawRight->getMotor(), "Right Claw");
-
-  _screen->makePage<Graph>("Lift")
+  _screen->makePage<GUI::Graph>("Lift")
     .withRange(-250, 900)
     .withResolution(50)
     .withSeries(
@@ -145,7 +112,7 @@ void Robot::_initializeScreen() {
       return _lift->getLeftMotor()->getTemperature() * 15;
     });
 
-  _screen->makePage<ButtonMatrix>("Actions")
+  _screen->makePage<GUI::Actions>("Actions")
     .button(
       "Calibrate Claw",
       [&]() {
@@ -230,7 +197,7 @@ std::shared_ptr<Claw> Robot::clawRight() {
   getDevice(clawRight);
 }
 
-AutonSelector* Robot::selector() {
+GUI::Selector* Robot::selector() {
   getDevice(selector);
 }
 

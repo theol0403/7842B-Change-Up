@@ -23,10 +23,10 @@ class Robot {
   std::shared_ptr<Claw> _clawLeft {nullptr};
   std::shared_ptr<Claw> _clawRight {nullptr};
 
-  std::shared_ptr<Screen> _screen {nullptr};
+  std::shared_ptr<GUI::Screen> _screen {nullptr};
   std::shared_ptr<MotorWarning> _motorWarning {nullptr};
 
-  AutonSelector* _selector {nullptr};
+  GUI::Selector* _selector {nullptr};
 
  public:
   static Robot& get();
@@ -38,7 +38,7 @@ class Robot {
   static std::shared_ptr<Claw> clawLeft();
   static std::shared_ptr<Claw> clawRight();
 
-  static AutonSelector* selector();
+  static GUI::Selector* selector();
 
   static void deploy();
 };
