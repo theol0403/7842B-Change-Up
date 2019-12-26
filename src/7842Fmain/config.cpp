@@ -60,6 +60,8 @@ void Robot::_initializeDevices() {
       0.0025, 0.00, 0.00005, 0.01, TimeUtilFactory().create()),
     std::make_shared<IterativePosPIDController>(
       0.0025, 0.00, 0.00005, 0.01, TimeUtilFactory().create()));
+
+  _claw = std::make_shared<Claw>(std::make_shared<Motor>(7));
 }
 
 /***
@@ -170,6 +172,10 @@ std::shared_ptr<OdomXController> Robot::chassis() {
 
 std::shared_ptr<Lift> Robot::lift() {
   getDevice(lift);
+}
+
+std::shared_ptr<Claw> Robot::claw() {
+  getDevice(claw);
 }
 
 GUI::Selector* Robot::selector() {

@@ -64,4 +64,20 @@ void driverDeviceControl() {
   } else {
     Robot::lift()->setNewState(liftStates::brake);
   }
+
+  /***
+   *     _____ _
+   *    /  __ \ |
+   *    | /  \/ | __ ___      __
+   *    | |   | |/ _` \ \ /\ / /
+   *    | \__/\ | (_| |\ V  V /
+   *     \____/_|\__,_| \_/\_/
+   */
+  if (mDigital(L2)) {
+    Robot::claw()->setNewState(clawStates::close);
+  } else if (mDigital(L2)) {
+    Robot::claw()->setNewState(clawStates::open);
+  } else {
+    Robot::claw()->setNewState(clawStates::brake);
+  }
 }

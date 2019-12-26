@@ -19,6 +19,7 @@ class Robot {
   std::shared_ptr<OdomXController> _controller {nullptr};
 
   std::shared_ptr<Lift> _lift {nullptr};
+  std::shared_ptr<Claw> _claw {nullptr};
 
   std::shared_ptr<GUI::Screen> _screen {nullptr};
   GUI::Selector* _selector {nullptr};
@@ -30,6 +31,7 @@ class Robot {
   static std::shared_ptr<CustomOdometry> odom();
   static std::shared_ptr<OdomXController> chassis();
   static std::shared_ptr<Lift> lift();
+  static std::shared_ptr<Claw> claw();
 
   static GUI::Selector* selector();
 
