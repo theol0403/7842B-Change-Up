@@ -14,7 +14,6 @@ enum class liftStates {
   calibrate, // calibrate the lift position
 };
 
-// starting off the mode to be brake does not trigger state change
 class Lift : public StateMachine<liftStates, liftStates::brake> {
  public:
   /**

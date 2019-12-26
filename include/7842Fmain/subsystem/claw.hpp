@@ -10,10 +10,19 @@ enum class clawStates {
 };
 
 class Claw : public StateMachine<clawStates, clawStates::brake> {
-
  public:
+  /**
+   * Constructs a new claw instance.
+   *
+   * @param iclaw The claw motor
+   */
   Claw(const std::shared_ptr<Motor>& iclaw);
 
+  /**
+   * Gets the claw motor.
+   *
+   * @return The motor.
+   */
   std::shared_ptr<Motor> getMotor() const;
 
  protected:
