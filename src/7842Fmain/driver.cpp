@@ -51,15 +51,17 @@ void driverDeviceControl() {
    *    | |___| | | | |_ 
    *    \_____/_|_|  \__|
    */
-  if (mDigital(R1)) {
-    Robot::lift()->setNewState(liftStates::up);
-  } else if (mDigital(R2)) {
+  if (mDigital(R1) && mDigital(R2)) {
     Robot::lift()->setNewState(liftStates::down);
-  } else if (mDigital(L1)) {
+  } else if (mDigital(R2)) {
+    Robot::lift()->setNewState(liftStates::aboveCube);
+  } else if (mDigital(R1)) {
+    Robot::lift()->setNewState(liftStates::up);
+  } else if (mDigital(Y)) {
     Robot::lift()->setNewState(liftStates::upSlow);
-  } else if (mDigital(L2)) {
+  } else if (mDigital(B)) {
     Robot::lift()->setNewState(liftStates::downSlow);
   } else {
-    Robot::lift()->setNewState(liftStates::hold);
+    Robot::lift()->setNewState(liftStates::brake);
   }
 }

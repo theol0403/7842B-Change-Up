@@ -116,7 +116,10 @@ void Lift::loop() {
         break;
     }
 
-    // std::cout << "L: " << getPosition()[0] << ", R: " << getPosition()[1] << std::endl;
+    if (timer.repeat(100_ms)) {
+      std::cout << "L: " << getPosition()[0] << ", R: " << getPosition()[1] << std::endl;
+    }
+
     pros::delay(10);
   }
 }
