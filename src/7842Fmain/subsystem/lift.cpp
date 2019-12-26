@@ -52,6 +52,9 @@ void Lift::loop() {
 
   Timer timer;
 
+  const QTime brakeTime = 300_ms;
+  const int aboveCubePos = 300;
+
   while (true) {
 
     switch (state) {
@@ -85,7 +88,7 @@ void Lift::loop() {
         lift[0]->moveVelocity(0);
         lift[1]->moveVelocity(0);
         timer.placeHardMark();
-        if (timer.getDtFromHardMark() > 200_ms) {
+        if (timer.getDtFromHardMark() > brakeTime) {
           holdPos = getPosition().sum() / 2.0;
           state = liftStates::holdAtPos;
           timer.clearHardMark();
@@ -100,7 +103,7 @@ void Lift::loop() {
         break;
 
       case liftStates::aboveCube:
-        holdPos = 100;
+        holdPos = aboveCubePos;
         state = liftStates::holdAtPos;
         break;
 
@@ -116,9 +119,9 @@ void Lift::loop() {
         break;
     }
 
-    if (timer.repeat(100_ms)) {
-      std::cout << "L: " << getPosition()[0] << ", R: " << getPosition()[1] << std::endl;
-    }
+    // if (timer.repeat(100_ms)) {
+    //   std::cout << "L: " << getPosition()[0] << ", R: " << getPosition()[1] << std::endl;
+    // }
 
     pros::delay(10);
   }

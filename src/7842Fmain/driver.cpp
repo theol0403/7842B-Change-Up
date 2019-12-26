@@ -75,7 +75,7 @@ void driverDeviceControl() {
    */
   if (mDigital(L2)) {
     Robot::claw()->setNewState(clawStates::close);
-  } else if (mDigital(L2)) {
+  } else if (mDigital(L1)) {
     Robot::claw()->setNewState(clawStates::open);
   } else {
     Robot::claw()->setNewState(clawStates::brake);
