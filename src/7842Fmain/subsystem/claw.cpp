@@ -1,11 +1,11 @@
 #include "claw.hpp"
 
-Claw::Claw(const std::shared_ptr<Motor>& iclaw) : claw(std::move(iclaw)) {
+Claw::Claw(const std::shared_ptr<AbstractMotor>& iclaw) : claw(iclaw) {
   initialize();
   startTask("Claw");
 }
 
-std::shared_ptr<Motor> Claw::getMotor() const {
+std::shared_ptr<AbstractMotor> Claw::getMotor() const {
   return claw;
 }
 
@@ -27,6 +27,8 @@ void Claw::loop() {
       case clawStates::close: claw->moveVoltage(12000); break;
 
       case clawStates::open: claw->moveVoltage(-12000); break;
+
+      case clawStates::clamp: claw->moveVoltage(8000); break;
     }
 
     // std::cout << "claw: " << claw->getPosition() << std::endl;
