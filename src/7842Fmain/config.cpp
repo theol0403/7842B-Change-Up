@@ -91,18 +91,8 @@ void Robot::_initializeScreen() {
       [&]() {
         return _lift->getLeftMotor()->getCurrentDraw();
       })
-    .withSeries(
-      "Right Lift Power", LV_COLOR_GREEN,
-      [&]() {
-        return _lift->getRightMotor()->getCurrentDraw();
-      })
-    .withSeries(
-      "Left Lift Temp", LV_COLOR_MAROON,
-      [&]() {
-        return _lift->getLeftMotor()->getTemperature() * 15;
-      })
-    .withSeries("Right Lift Temp", LV_COLOR_TEAL, [&]() {
-      return _lift->getLeftMotor()->getTemperature() * 15;
+    .withSeries("Right Lift Power", LV_COLOR_GREEN, [&]() {
+      return _lift->getRightMotor()->getCurrentDraw();
     });
 
   _screen->makePage<GUI::Actions>("Actions")
