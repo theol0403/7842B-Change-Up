@@ -52,7 +52,7 @@ void Lift::loop() {
 
   Timer timer;
 
-  const QTime brakeTime = 300_ms;
+  const QTime brakeTime = 150_ms;
   const int aboveCubePos = 300;
 
   while (true) {
