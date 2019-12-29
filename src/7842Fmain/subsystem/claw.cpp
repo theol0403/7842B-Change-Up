@@ -2,7 +2,7 @@
 
 Claw::Claw(const std::shared_ptr<Motor>& iclaw) : claw(std::move(iclaw)) {
   initialize();
-  startTask("claw");
+  startTask("Claw");
 }
 
 std::shared_ptr<Motor> Claw::getMotor() const {
