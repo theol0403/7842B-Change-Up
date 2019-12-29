@@ -57,9 +57,9 @@ void Robot::_initializeDevices() {
     std::make_shared<Motor>(9), std::make_shared<Motor>(-10), //
     std::make_shared<Potentiometer>('g'), std::make_shared<Potentiometer>('h'),
     std::make_shared<IterativePosPIDController>(
-      0.0025, 0.00, 0.00005, 0.01, TimeUtilFactory().create()),
+      0.002, 0.00, 0.00005, 0.01, TimeUtilFactory().create()),
     std::make_shared<IterativePosPIDController>(
-      0.0025, 0.00, 0.00005, 0.01, TimeUtilFactory().create()));
+      0.002, 0.00, 0.00005, 0.01, TimeUtilFactory().create()));
 
   _claw = std::make_shared<Claw>(std::make_shared<Motor>(-7));
 }
