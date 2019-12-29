@@ -19,18 +19,18 @@ class Lift : public StateMachine<liftStates, liftStates::brake> {
   /**
    * Constructs a new lift instance.
    *
-   * @param ileftLift  The ileft lift
-   * @param irightLift The iright lift
-   * @param ileftPot   The ileft pot
-   * @param irightPot  The iright pot
-   * @param ilpid      The ilpid
-   * @param irpid      The irpid
+   * @param ileftMotor   The left motor
+   * @param irightMotor  The right motor
+   * @param ileftSensor  The left sensor
+   * @param irightSensor The right sensor
+   * @param ilpid        The lpid
+   * @param irpid        The rpid
    */
   Lift(
-    const std::shared_ptr<Motor>& ileftLift,
-    const std::shared_ptr<Motor>& irightLift,
-    const std::shared_ptr<Potentiometer>& ileftPot,
-    const std::shared_ptr<Potentiometer>& irightPot,
+    const std::shared_ptr<AbstractMotor>& ileftMotor,
+    const std::shared_ptr<AbstractMotor>& irightMotor,
+    const std::shared_ptr<RotarySensor>& ileftSensor,
+    const std::shared_ptr<RotarySensor>& irightSensor,
     const std::shared_ptr<IterativePosPIDController>& ilpid,
     const std::shared_ptr<IterativePosPIDController>& irpid);
 
@@ -55,8 +55,8 @@ class Lift : public StateMachine<liftStates, liftStates::brake> {
    */
   double getError() const;
 
-  std::shared_ptr<Motor> getLeftMotor() const;
-  std::shared_ptr<Motor> getRightMotor() const;
+  std::shared_ptr<AbstractMotor> getLeftMotor() const;
+  std::shared_ptr<AbstractMotor> getRightMotor() const;
 
  protected:
   std::valarray<double> getRawPosition() const;
@@ -64,9 +64,9 @@ class Lift : public StateMachine<liftStates, liftStates::brake> {
   void initialize() override;
   void loop() override;
 
-  std::array<std::shared_ptr<Motor>, 2> lift {nullptr, nullptr};
-  std::array<std::shared_ptr<Potentiometer>, 2> pot {nullptr, nullptr};
-  std::array<std::shared_ptr<IterativePosPIDController>, 2> pid {nullptr, nullptr};
+  std::array<std::shared_ptr<AbstractMotor>, 2> motors {nullptr, nullptr};
+  std::array<std::shared_ptr<RotarySensor>, 2> sensors {nullptr, nullptr};
+  std::array<std::shared_ptr<IterativePosPIDController>, 2> pids {nullptr, nullptr};
 
   std::valarray<double> startPos {0, 0};
   std::valarray<double> holdPos {0, 0};

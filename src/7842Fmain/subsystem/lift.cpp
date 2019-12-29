@@ -1,16 +1,14 @@
 #include "lift.hpp"
 
 Lift::Lift(
-  const std::shared_ptr<Motor>& ileftLift,
-  const std::shared_ptr<Motor>& irightLift,
-  const std::shared_ptr<Potentiometer>& ileftPot,
-  const std::shared_ptr<Potentiometer>& irightPot,
+  const std::shared_ptr<AbstractMotor>& ileftMotor,
+  const std::shared_ptr<AbstractMotor>& irightMotor,
+  const std::shared_ptr<RotarySensor>& ileftSensor,
+  const std::shared_ptr<RotarySensor>& irightSensor,
   const std::shared_ptr<IterativePosPIDController>& ilpid,
   const std::shared_ptr<IterativePosPIDController>& irpid) :
-  lift({std::move(ileftLift), std::move(irightLift)}),
-  pid({std::move(ilpid), std::move(irpid)}),
-  pot({std::move(ileftPot), std::move(irightPot)}) {
-  pros::delay(100); // allow pots to initialize
+  motors({ileftMotor, irightMotor}), sensors({ileftSensor, irightSensor}), pids({ilpid, irpid}) {
+  pros::delay(100); // allow sensors to initialize
   initialize();
   startTask("Lift");
 }
@@ -27,23 +25,23 @@ double Lift::getError() const {
   return std::abs(holdPos - getPosition()).sum() / 2;
 }
 
-std::shared_ptr<Motor> Lift::getLeftMotor() const {
-  return lift[0];
+std::shared_ptr<AbstractMotor> Lift::getLeftMotor() const {
+  return motors[0];
 }
 
-std::shared_ptr<Motor> Lift::getRightMotor() const {
-  return lift[1];
+std::shared_ptr<AbstractMotor> Lift::getRightMotor() const {
+  return motors[1];
 }
 
 std::valarray<double> Lift::getRawPosition() const {
-  return {pot[0]->get(), pot[1]->get()};
+  return {sensors[0]->get(), sensors[1]->get()};
 }
 
 void Lift::initialize() {
-  lift[0]->setBrakeMode(AbstractMotor::brakeMode::brake);
-  lift[0]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
-  lift[1]->setBrakeMode(AbstractMotor::brakeMode::brake);
-  lift[1]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
+  motors[0]->setBrakeMode(AbstractMotor::brakeMode::brake);
+  motors[0]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
+  motors[1]->setBrakeMode(AbstractMotor::brakeMode::brake);
+  motors[1]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
 
   startPos = getRawPosition();
 }
@@ -60,33 +58,33 @@ void Lift::loop() {
     switch (state) {
 
       case liftStates::off:
-        lift[0]->moveVoltage(0);
-        lift[1]->moveVoltage(0);
+        motors[0]->moveVoltage(0);
+        motors[1]->moveVoltage(0);
         break;
 
       case liftStates::up:
-        lift[0]->moveVoltage(12000);
-        lift[1]->moveVoltage(12000);
+        motors[0]->moveVoltage(12000);
+        motors[1]->moveVoltage(12000);
         break;
 
       case liftStates::down:
-        lift[0]->moveVoltage(-10000);
-        lift[1]->moveVoltage(-10000);
+        motors[0]->moveVoltage(-10000);
+        motors[1]->moveVoltage(-10000);
         break;
 
       case liftStates::upSlow:
-        lift[0]->moveVelocity(50);
-        lift[1]->moveVelocity(50);
+        motors[0]->moveVelocity(50);
+        motors[1]->moveVelocity(50);
         break;
 
       case liftStates::downSlow:
-        lift[0]->moveVelocity(-50);
-        lift[1]->moveVelocity(-50);
+        motors[0]->moveVelocity(-50);
+        motors[1]->moveVelocity(-50);
         break;
 
       case liftStates::brake:
-        lift[0]->moveVelocity(0);
-        lift[1]->moveVelocity(0);
+        motors[0]->moveVelocity(0);
+        motors[1]->moveVelocity(0);
         timer.placeHardMark();
         if (timer.getDtFromHardMark() > brakeTime) {
           holdPos = getPosition().sum() / 2.0;
@@ -96,10 +94,10 @@ void Lift::loop() {
         break;
 
       case liftStates::holdAtPos:
-        pid[0]->setTarget(holdPos[0]);
-        pid[1]->setTarget(holdPos[1]);
-        lift[0]->moveVoltage(pid[0]->step(getPosition()[0]) * 12000);
-        lift[1]->moveVoltage(pid[1]->step(getPosition()[1]) * 12000);
+        pids[0]->setTarget(holdPos[0]);
+        pids[1]->setTarget(holdPos[1]);
+        motors[0]->moveVoltage(pids[0]->step(getPosition()[0]) * 12000);
+        motors[1]->moveVoltage(pids[1]->step(getPosition()[1]) * 12000);
         break;
 
       case liftStates::aboveCube:
@@ -109,10 +107,10 @@ void Lift::loop() {
 
       case liftStates::calibrate:
         do {
-          lift[0]->moveVoltage(-12000);
-          lift[1]->moveVoltage(-12000);
+          motors[0]->moveVoltage(-12000);
+          motors[1]->moveVoltage(-12000);
           pros::delay(400);
-        } while (lift[0]->getActualVelocity() > 5 || lift[1]->getActualVelocity() > 5);
+        } while (motors[0]->getActualVelocity() > 5 || motors[1]->getActualVelocity() > 5);
         pros::delay(400);
         startPos = getRawPosition();
         state = liftStates::off;
