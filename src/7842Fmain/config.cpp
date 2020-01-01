@@ -55,11 +55,9 @@ void Robot::_initializeChassis() {
 void Robot::_initializeDevices() {
   _lift = std::make_shared<Lift>(
     std::make_shared<Motor>(9), std::make_shared<Motor>(-10), //
-    std::make_shared<Potentiometer>('g'), std::make_shared<Potentiometer>('h'),
-    std::make_shared<IterativePosPIDController>(
-      0.002, 0.00, 0.00005, 0.01, TimeUtilFactory().create()),
-    std::make_shared<IterativePosPIDController>(
-      0.002, 0.00, 0.00005, 0.01, TimeUtilFactory().create()));
+    std::make_shared<IntegratedEncoder>(9), std::make_shared<IntegratedEncoder>(10, true),
+    std::make_shared<IterativePosPIDController>(0.03, 0, 0.00, 0.0, TimeUtilFactory().create()),
+    std::make_shared<IterativePosPIDController>(0.03, 0, 0.00, 0.0, TimeUtilFactory().create()));
 
   _claw = std::make_shared<Claw>(std::make_shared<Motor>(-7));
 }
