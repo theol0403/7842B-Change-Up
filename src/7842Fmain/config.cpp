@@ -66,7 +66,7 @@ void Robot::_initializeDevices() {
     std::make_shared<IterativePosPIDController>(0.03, 0, 0.00, 0.0, TimeUtilFactory().create()),
     std::make_shared<IterativePosPIDController>(0.03, 0, 0.00, 0.0, TimeUtilFactory().create()));
 
-  _intake = std::make_shared<Intake>(std::make_shared<Motor>(-7), std::make_shared<Motor>(8));
+  _intake = std::make_shared<Intake>(std::make_shared<Motor>(-17), std::make_shared<Motor>(18));
 }
 
 /***

@@ -79,9 +79,9 @@ void driverDeviceControl() {
     Robot::intake()->setNewState(intakeStates::intake);
   } else if (mDigital(L1)) {
     Robot::intake()->setNewState(intakeStates::open);
-  } else if (mDigital(right)) {
+  } else if (mDigital(RIGHT)) {
     Robot::intake()->setNewState(intakeStates::openFull);
-  } else if (mDigital(down)) {
+  } else if (mDigital(DOWN)) {
     Robot::intake()->setNewState(intakeStates::intakeSlow);
   } else {
     if (Robot::intake()->getState() != intakeStates::intake) {
