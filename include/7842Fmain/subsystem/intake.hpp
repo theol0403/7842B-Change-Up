@@ -9,6 +9,7 @@ enum class intakeStates {
   open, // motors -80% voltage
   intakeSlow, // motors 80% velocity
   openFull, // motors -100% voltage
+  openSlow, // motors -20% velocity
 };
 
 class Intake : public StateMachine<intakeStates, intakeStates::brake> {

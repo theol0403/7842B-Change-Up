@@ -55,6 +55,11 @@ void Intake::loop() {
         left->moveVoltage(-12000);
         right->moveVoltage(-12000);
         break;
+
+      case intakeStates::openSlow:
+        left->moveVelocity(-30);
+        right->moveVelocity(-30);
+        break;
     }
 
     pros::delay(10);

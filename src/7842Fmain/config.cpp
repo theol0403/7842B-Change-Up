@@ -66,7 +66,7 @@ void Robot::_initializeDevices() {
     std::make_shared<IterativePosPIDController>(0.03, 0, 0.00, 0.0, TimeUtilFactory().create()),
     std::make_shared<IterativePosPIDController>(0.03, 0, 0.00, 0.0, TimeUtilFactory().create()));
 
-  _claw = std::make_shared<Claw>(std::make_shared<Motor>(-7));
+  _intake = std::make_shared<Intake>(std::make_shared<Motor>(-7), std::make_shared<Motor>(8));
 }
 
 /***
@@ -82,7 +82,7 @@ void Robot::_initializeDevices() {
 void Robot::_initializeScreen() {
   _screen = std::make_shared<GUI::Screen>(lv_scr_act(), LV_COLOR_ORANGE);
 
-  _screen->makePage<GUI::Odom>().attachOdom(_odom).attachResetter([&]() {
+  _screen->makePage<GUI::Odom>("Odom").attachOdom(_odom).attachResetter([&]() {
     _odom->reset();
   });
 
@@ -169,8 +169,8 @@ std::shared_ptr<Lift> Robot::lift() {
   getDevice(lift);
 }
 
-std::shared_ptr<Claw> Robot::claw() {
-  getDevice(claw);
+std::shared_ptr<Intake> Robot::intake() {
+  getDevice(intake);
 }
 
 GUI::Selector* Robot::selector() {
