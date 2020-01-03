@@ -52,9 +52,9 @@ void driverDeviceControl() {
    *    \_____/_|_|  \__|
    */
   if (mDigital(R1) && mDigital(R2)) {
-    Robot::lift()->setNewState(liftStates::down);
-  } else if (mDigital(R2)) {
     Robot::lift()->setNewState(liftStates::aboveCube);
+  } else if (mDigital(R2)) {
+    Robot::lift()->setNewState(liftStates::down);
   } else if (mDigital(R1)) {
     Robot::lift()->setNewState(liftStates::up);
   } else if (mDigital(Y)) {
