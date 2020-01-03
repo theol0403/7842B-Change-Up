@@ -42,23 +42,13 @@ void Intake::loop() {
         break;
 
       case intakeStates::open:
-        left->moveVoltage(-10000);
-        right->moveVoltage(-10000);
+        left->moveVoltage(-12000);
+        right->moveVoltage(-12000);
         break;
 
       case intakeStates::intakeSlow:
         left->moveVelocity(150);
         right->moveVelocity(150);
-        break;
-
-      case intakeStates::openFull:
-        left->moveVoltage(-12000);
-        right->moveVoltage(-12000);
-        break;
-
-      case intakeStates::openSlow:
-        left->moveVelocity(-30);
-        right->moveVelocity(-30);
         break;
     }
 
