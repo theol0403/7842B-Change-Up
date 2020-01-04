@@ -50,7 +50,7 @@ void Lift::loop() {
 
   Timer timer;
 
-  const QTime brakeTime = 150_ms;
+  const QTime brakeTime = 250_ms;
   const int aboveCubePos = 50;
 
   while (true) {
@@ -88,8 +88,8 @@ void Lift::loop() {
         timer.placeHardMark();
         if (timer.getDtFromHardMark() > brakeTime) {
           holdPos = getPosition().sum() / 2.0;
-          state = liftStates::holdAtPos;
           timer.clearHardMark();
+          state = liftStates::holdAtPos;
         }
         break;
 
