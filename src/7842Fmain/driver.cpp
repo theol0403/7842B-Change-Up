@@ -73,10 +73,12 @@ void driverDeviceControl() {
    *     _| || | | | || (_| |   <  __/
    *     \___/_| |_|\__\__,_|_|\_\___|
    */
-  if (mDigital(L2)) {
+  if (mDigital(L2) && mDigital(L1)) {
+    Robot::intake()->setNewState(intakeStates::open);
+  } else if (mDigital(L2)) {
     Robot::intake()->setNewState(intakeStates::intake);
   } else if (mDigital(L1)) {
-    Robot::intake()->setNewState(intakeStates::open);
+    Robot::intake()->setNewState(intakeStates::brake);
   } else if (mDigital(DOWN)) {
     Robot::intake()->setNewState(intakeStates::intakeSlow);
   } else {
