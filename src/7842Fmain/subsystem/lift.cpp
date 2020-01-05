@@ -33,6 +33,20 @@ std::shared_ptr<AbstractMotor> Lift::getRightMotor() const {
   return motors[1];
 }
 
+void Lift::setPowerWithBrake(const std::valarray<double>& power) {
+  if (std::abs(power[0]) < 0.02) {
+    motors[0]->moveVelocity(0);
+  } else {
+    motors[0]->moveVoltage(power[0] * 12000);
+  }
+
+  if (std::abs(power[1]) < 0.02) {
+    motors[1]->moveVelocity(0);
+  } else {
+    motors[1]->moveVoltage(power[1] * 12000);
+  }
+}
+
 std::valarray<double> Lift::getRawPosition() const {
   return {sensors[0]->get(), sensors[1]->get()};
 }
@@ -96,8 +110,7 @@ void Lift::loop() {
       case liftStates::holdAtPos:
         pids[0]->setTarget(holdPos[0]);
         pids[1]->setTarget(holdPos[1]);
-        motors[0]->moveVoltage(pids[0]->step(getPosition()[0]) * 12000);
-        motors[1]->moveVoltage(pids[1]->step(getPosition()[1]) * 12000);
+        setPowerWithBrake({pids[0]->step(getPosition()[0]), pids[1]->step(getPosition()[1])});
         break;
 
       case liftStates::aboveCube:

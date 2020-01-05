@@ -58,6 +58,8 @@ class Lift : public StateMachine<liftStates, liftStates::brake> {
   std::shared_ptr<AbstractMotor> getLeftMotor() const;
   std::shared_ptr<AbstractMotor> getRightMotor() const;
 
+  void setPowerWithBrake(const std::valarray<double>& power);
+
  protected:
   std::valarray<double> getRawPosition() const;
 
