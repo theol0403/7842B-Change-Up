@@ -66,24 +66,23 @@ void driverDeviceControl() {
   }
 
   /***
-   *     _____      _        _        
-   *    |_   _|    | |      | |       
-   *      | | _ __ | |_ __ _| | _____ 
-   *      | || '_ \| __/ _` | |/ / _ \
-   *     _| || | | | || (_| |   <  __/
-   *     \___/_| |_|\__\__,_|_|\_\___|
+   *     _____ _
+   *    /  __ \ |
+   *    | /  \/ | __ ___      __
+   *    | |   | |/ _` \ \ /\ / /
+   *    | \__/\ | (_| |\ V  V /
+   *     \____/_|\__,_| \_/\_/
    */
-  if (mDigital(L2) && mDigital(L1)) {
-    Robot::intake()->setNewState(intakeStates::open);
-  } else if (mDigital(L2)) {
-    Robot::intake()->setNewState(intakeStates::intake);
+  if (mDigital(L2)) {
+    Robot::claw()->setNewState(clawStates::close);
   } else if (mDigital(L1)) {
-    Robot::intake()->setNewState(intakeStates::brake);
-  } else if (mDigital(DOWN)) {
-    Robot::intake()->setNewState(intakeStates::intakeSlow);
+    Robot::claw()->setNewState(clawStates::open);
   } else {
-    if (Robot::intake()->getState() != intakeStates::intake) {
-      Robot::intake()->setNewState(intakeStates::brake);
+    auto state = Robot::claw()->getState();
+    if (state == clawStates::open) {
+      Robot::claw()->setNewState(clawStates::brake);
+    } else if (state == clawStates::close) {
+      Robot::claw()->setNewState(clawStates::clamp);
     }
   }
 }

@@ -63,7 +63,7 @@ void Robot::_initializeDevices() {
     std::make_shared<IterativePosPIDController>(0.03, 0, 0.00, 0.01, TimeUtilFactory().create()),
     std::make_shared<IterativePosPIDController>(0.03, 0, 0.00, 0.01, TimeUtilFactory().create()));
 
-  _intake = std::make_shared<Intake>(std::make_shared<Motor>(-6), std::make_shared<Motor>(8));
+  _claw = std::make_shared<Claw>(std::make_shared<Motor>(-7));
 }
 
 /***
@@ -166,8 +166,8 @@ std::shared_ptr<Lift> Robot::lift() {
   getDevice(lift);
 }
 
-std::shared_ptr<Intake> Robot::intake() {
-  getDevice(intake);
+std::shared_ptr<Claw> Robot::claw() {
+  getDevice(claw);
 }
 
 GUI::Selector* Robot::selector() {
