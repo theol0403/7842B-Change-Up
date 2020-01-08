@@ -33,11 +33,3 @@ extern const Vector fourStackCube;
  * @return The robot position
  */
 Vector toClaw(const State& state);
-
-/**
- * Mirror the given coordinates across the field
- */
-QAngle mirror(const QAngle& angle);
-QLength mirror(const QLength& y);
-Vector mirror(const Vector& point);
-State mirror(const State& state);

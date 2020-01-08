@@ -24,23 +24,6 @@ const Vector outerProtectedCube = {2_tile - cubeHalf, 1_tile + cubeHalf};
 const Vector fourStackCube = {2_tile - cubeHalf, 2_tile + cubeHalf};
 
 Vector toClaw(const State& state) {
-  return Vector(state)
-         - Vector {std::sin(state.theta.convert(radian)) * clawOffset,
-                   std::cos(state.theta.convert(radian)) * clawOffset};
-}
-
-QAngle mirror(const QAngle& angle) {
-  return angle * -1;
-}
-
-QLength mirror(const QLength& y) {
-  return 12_ft - y;
-}
-
-Vector mirror(const Vector& point) {
-  return {point.x, mirror(point.y)};
-}
-
-State mirror(const State& state) {
-  return {state.x, mirror(state.y), mirror(state.theta)};
+  return Vector(state) - Vector {std::sin(state.theta.convert(radian)) * clawOffset,
+                                 std::cos(state.theta.convert(radian)) * clawOffset};
 }
