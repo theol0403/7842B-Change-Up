@@ -1,12 +1,11 @@
 #include "lift.hpp"
 
-Lift::Lift(
-  const std::shared_ptr<AbstractMotor>& ileftMotor,
-  const std::shared_ptr<AbstractMotor>& irightMotor,
-  const std::shared_ptr<RotarySensor>& ileftSensor,
-  const std::shared_ptr<RotarySensor>& irightSensor,
-  const std::shared_ptr<IterativePosPIDController>& ilpid,
-  const std::shared_ptr<IterativePosPIDController>& irpid) :
+Lift::Lift(const std::shared_ptr<AbstractMotor>& ileftMotor,
+           const std::shared_ptr<AbstractMotor>& irightMotor,
+           const std::shared_ptr<RotarySensor>& ileftSensor,
+           const std::shared_ptr<RotarySensor>& irightSensor,
+           const std::shared_ptr<IterativePosPIDController>& ilpid,
+           const std::shared_ptr<IterativePosPIDController>& irpid) :
   motors({ileftMotor, irightMotor}), sensors({ileftSensor, irightSensor}), pids({ilpid, irpid}) {
   pros::delay(100); // allow sensors to initialize
   initialize();

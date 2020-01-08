@@ -1,6 +1,6 @@
 #pragma once
-#include "main.h"
 #include "7842Fmain/util/statemachine.hpp"
+#include "main.h"
 
 enum class liftStates {
   off, // all motors off
@@ -15,7 +15,7 @@ enum class liftStates {
 };
 
 class Lift : public StateMachine<liftStates, liftStates::brake> {
- public:
+public:
   /**
    * Constructs a new lift instance.
    *
@@ -26,13 +26,12 @@ class Lift : public StateMachine<liftStates, liftStates::brake> {
    * @param ilpid        The lpid
    * @param irpid        The rpid
    */
-  Lift(
-    const std::shared_ptr<AbstractMotor>& ileftMotor,
-    const std::shared_ptr<AbstractMotor>& irightMotor,
-    const std::shared_ptr<RotarySensor>& ileftSensor,
-    const std::shared_ptr<RotarySensor>& irightSensor,
-    const std::shared_ptr<IterativePosPIDController>& ilpid,
-    const std::shared_ptr<IterativePosPIDController>& irpid);
+  Lift(const std::shared_ptr<AbstractMotor>& ileftMotor,
+       const std::shared_ptr<AbstractMotor>& irightMotor,
+       const std::shared_ptr<RotarySensor>& ileftSensor,
+       const std::shared_ptr<RotarySensor>& irightSensor,
+       const std::shared_ptr<IterativePosPIDController>& ilpid,
+       const std::shared_ptr<IterativePosPIDController>& irpid);
 
   /**
    * Sets the desired lift position.
@@ -60,7 +59,7 @@ class Lift : public StateMachine<liftStates, liftStates::brake> {
 
   void setPowerWithBrake(const std::valarray<double>& power);
 
- protected:
+protected:
   std::valarray<double> getRawPosition() const;
 
   void initialize() override;

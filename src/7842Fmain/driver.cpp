@@ -4,13 +4,13 @@
   pros::c::controller_get_digital(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_DIGITAL_##x)
 
 #define mDigitalPressed(x)                                                                         \
-  pros::c::controller_get_digital_new_press(                                                       \
-    pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_DIGITAL_##x)
+  pros::c::controller_get_digital_new_press(pros::E_CONTROLLER_MASTER,                             \
+                                            pros::E_CONTROLLER_DIGITAL_##x)
 
 #define mAnalog(x)                                                                                 \
   static_cast<double>(                                                                             \
-    pros::c::controller_get_analog(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_ANALOG_##x))      \
-    / 127.0
+    pros::c::controller_get_analog(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_ANALOG_##x)) /    \
+    127.0
 
 /***
  *    ______                  _____             _             _ 
@@ -25,9 +25,9 @@ void driverBaseControl() {
   double rightY = mAnalog(RIGHT_Y);
   double leftX = mAnalog(LEFT_X);
 
-  Robot::model()->xArcade(
-    std::pow(rightX, 2) * util::sgn(rightX), std::pow(rightY, 2) * util::sgn(rightY),
-    std::pow(leftX, 2) * util::sgn(leftX));
+  Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
+                          std::pow(rightY, 2) * util::sgn(rightY),
+                          std::pow(leftX, 2) * util::sgn(leftX));
 
   // if (mDigital(X) && !pros::competition::is_connected()) autonomous();
 }

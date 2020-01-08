@@ -1,6 +1,6 @@
 #pragma once
-#include "main.h"
 #include "7842Fmain/util/statemachine.hpp"
+#include "main.h"
 
 enum class clawStates {
   off, // motor 0 voltage
@@ -11,7 +11,7 @@ enum class clawStates {
 };
 
 class Claw : public StateMachine<clawStates, clawStates::brake> {
- public:
+public:
   /**
    * Constructs a new claw instance.
    *
@@ -26,7 +26,7 @@ class Claw : public StateMachine<clawStates, clawStates::brake> {
    */
   std::shared_ptr<AbstractMotor> getMotor() const;
 
- protected:
+protected:
   void initialize() override;
   void loop() override;
 

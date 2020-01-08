@@ -1,11 +1,11 @@
 #pragma once
 #include "main.h"
 
-#include "subsystem/lift.hpp"
 #include "subsystem/claw.hpp"
+#include "subsystem/lift.hpp"
 
 class Robot {
- protected:
+protected:
   Robot() = default;
   Robot(const Robot& irobot) = delete;
   ~Robot() = default;
@@ -24,7 +24,7 @@ class Robot {
   std::shared_ptr<GUI::Screen> _screen {nullptr};
   GUI::Selector* _selector {nullptr};
 
- public:
+public:
   static Robot& get();
   static Robot& initialize();
   static std::shared_ptr<ThreeEncoderXDriveModel> model();

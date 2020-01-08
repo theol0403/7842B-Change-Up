@@ -24,15 +24,13 @@ void bigRedZone() {
   pros::delay(1000);
 
   // drive to inner protected cube
-  chassis.strafeToPoint(
-    toClaw({innerProtectedCube, -90_deg}), makeAngle(-90_deg), 1,
-    OdomController::defaultDriveAngleSettler);
+  chassis.strafeToPoint(toClaw({innerProtectedCube, -90_deg}), makeAngle(-90_deg), 1,
+                        OdomController::defaultDriveAngleSettler);
 
   // spike cube and raise lift
   pros::delay(1000);
 
   // score cube
-  chassis.strafeToPoint(
-    toClaw({{0.5_ft, 1_ft}, -135_deg}), makeAngle(-135_deg), 1,
-    OdomController::defaultDriveAngleSettler);
+  chassis.strafeToPoint(toClaw({{0.5_ft, 1_ft}, -135_deg}), makeAngle(-135_deg), 1,
+                        OdomController::defaultDriveAngleSettler);
 }

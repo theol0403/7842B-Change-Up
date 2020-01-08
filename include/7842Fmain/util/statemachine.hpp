@@ -12,7 +12,7 @@
 template <typename States, States assumedState = States::off>
 class StateMachine : public TaskWrapper {
 
- public:
+public:
   StateMachine() = default;
   virtual ~StateMachine() = default;
 
@@ -68,7 +68,7 @@ class StateMachine : public TaskWrapper {
     return _isDone;
   }
 
- protected:
+protected:
   /**
    * Override this method to implement setup procedures.
    */
