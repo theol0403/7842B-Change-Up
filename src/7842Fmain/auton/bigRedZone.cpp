@@ -3,7 +3,7 @@
 void bigRedZone(const std::shared_ptr<SideController>& controller, const autonSide& side) {
   auto& chassis = *controller;
   // TODO: measure position
-  Robot::odom()->setState({2.2_ft, 1.8_ft, 0_deg});
+  Robot::odom()->setState(mirror({2.2_ft, 1.8_ft, 0_deg}, side));
 
   // push cube into corner
   chassis.strafeAbsoluteDirection(5_in, -90_deg, makeAngle(0_deg));
