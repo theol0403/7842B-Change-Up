@@ -1,4 +1,5 @@
 #include "main.h"
+#include "sideController.hpp"
 
 /**
  * Constants
@@ -24,7 +25,7 @@ extern const Vector outerProtectedCube;
 
 extern const Vector fourStackCube;
 
-#define makeAngle(x) OdomController::makeAngleCalculator(x)
+#define makeAngle(x) SideController::makeAngleCalculator(x, side)
 
 /**
  * Calculate position of robot for claw to be at given position and angle
@@ -33,3 +34,13 @@ extern const Vector fourStackCube;
  * @return The robot position
  */
 Vector toClaw(const State& state);
+
+/**
+ * Run auton program given side
+ *
+ * @param auton The auton
+ * @param side  The side
+ */
+void runAuton(
+  const std::function<void(const std::shared_ptr<SideController>&, const autonSide&)> auton,
+  const autonSide& side);

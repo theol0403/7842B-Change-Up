@@ -71,10 +71,21 @@ public:
     controller->strafeToPoint(mirror(targetPoint, side), angleCalculator, turnScale, settler);
   }
 
-  static AngleCalculator makeAngleCalculator(const QAngle& angle);
-  static AngleCalculator makeAngleCalculator(const Vector& point);
-  static AngleCalculator makeAngleCalculator(double error);
-  static AngleCalculator makeAngleCalculator();
+  static AngleCalculator makeAngleCalculator(const QAngle& angle, const autonSide& side) {
+    return OdomController::makeAngleCalculator(mirror(angle, side));
+  }
+
+  static AngleCalculator makeAngleCalculator(const Vector& point, const autonSide& side) {
+    return OdomController::makeAngleCalculator(mirror(point, side));
+  }
+
+  static AngleCalculator makeAngleCalculator(double error, const autonSide& side) {
+    return OdomController::makeAngleCalculator(error);
+  }
+
+  static AngleCalculator makeAngleCalculator() {
+    return OdomController::makeAngleCalculator();
+  };
 
 protected:
   std::shared_ptr<OdomXController> controller;

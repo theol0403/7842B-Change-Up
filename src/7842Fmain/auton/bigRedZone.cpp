@@ -1,7 +1,7 @@
 #include "7842Fmain/auton.hpp"
 
-void bigRedZone() {
-  auto& chassis = *Robot::chassis();
+void bigRedZone(const std::shared_ptr<SideController>& controller, const autonSide& side) {
+  auto& chassis = *controller;
   // TODO: measure position
   Robot::odom()->setState({2.2_ft, 1.8_ft, 0_deg});
 
