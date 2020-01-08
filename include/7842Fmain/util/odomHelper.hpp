@@ -6,6 +6,7 @@
 extern const QLength clawOffset;
 
 extern const QLength cubeWidth;
+extern const QLength cubeHalf;
 extern const QLength fieldWidth;
 extern const QLength towerBaseWidth;
 extern const QLength zoneWidth;
@@ -16,6 +17,10 @@ extern const Vector closeTower;
 extern const Vector leftTower;
 extern const Vector middleTower;
 extern const Vector rightTower;
+extern const Vector allianceTower;
+
+extern const Vector innerProtectedCube;
+extern const Vector outerProtectedCube;
 
 /**
  * Calculate position of robot for claw to be at given position and angle
