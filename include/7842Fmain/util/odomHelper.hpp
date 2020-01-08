@@ -22,6 +22,8 @@ extern const Vector allianceTower;
 extern const Vector innerProtectedCube;
 extern const Vector outerProtectedCube;
 
+#define makeAngle(x) OdomController::makeAngleCalculator(x)
+
 /**
  * Calculate position of robot for claw to be at given position and angle
  *
