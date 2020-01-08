@@ -21,6 +21,8 @@ const Vector allianceTower = {fieldWidth, 1.5_tile};
 const Vector innerProtectedCube = {1_tile - cubeHalf, 1_tile + cubeHalf};
 const Vector outerProtectedCube = {2_tile - cubeHalf, 1_tile + cubeHalf};
 
+const Vector fourStackCube = {2_tile - cubeHalf, 2_tile + cubeHalf};
+
 Vector toClaw(const State& state) {
   return Vector(state)
          - Vector {std::sin(state.theta.convert(radian)) * clawOffset,

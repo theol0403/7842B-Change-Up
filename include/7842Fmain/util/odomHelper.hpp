@@ -22,6 +22,8 @@ extern const Vector allianceTower;
 extern const Vector innerProtectedCube;
 extern const Vector outerProtectedCube;
 
+extern const Vector fourStackCube;
+
 #define makeAngle(x) OdomController::makeAngleCalculator(x)
 
 /**
