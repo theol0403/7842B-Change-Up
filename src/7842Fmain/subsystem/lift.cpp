@@ -12,6 +12,11 @@ Lift::Lift(const std::shared_ptr<AbstractMotor>& ileftMotor,
   startTask("Lift");
 }
 
+void Lift::goToPosition(double ipos) {
+  setPosition({ipos, ipos});
+  state = liftStates::holdAtPos;
+}
+
 void Lift::setPosition(const std::valarray<double>& ipos) {
   holdPos = ipos;
 }
@@ -122,7 +127,7 @@ void Lift::loop() {
           motors[0]->moveVoltage(-12000);
           motors[1]->moveVoltage(-12000);
           pros::delay(400);
-        } while (motors[0]->getActualVelocity() > 5 || motors[1]->getActualVelocity() > 5);
+        } while (motors[0]->getActualVelocity() > 15 || motors[1]->getActualVelocity() > 15);
         pros::delay(400);
         startPos = getRawPosition();
         state = liftStates::off;

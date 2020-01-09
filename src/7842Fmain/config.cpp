@@ -7,9 +7,7 @@
  *    | /  \/ |__   __ _ ___ ___ _ ___ 
  *    | |   | '_ \ / _` / __/ __| / __|
  *    | \__/\ | | | (_| \__ \__ \ \__ \
- *     \____/_| |_|\__,_|___/___/_|___/
- *                                     
- *                                     
+ *     \____/_| |_|\__,_|___/___/_|___/                                   
  */
 void Robot::_initializeChassis() {
   _model = std::make_shared<ThreeEncoderXDriveModel>(
@@ -49,9 +47,7 @@ void Robot::_initializeChassis() {
  *    | | | |_____   ___  ___ ___  ___ 
  *    | | | / _ \ \ / / |/ __/ _ \/ __|
  *    | |/ /  __/\ V /| | (_|  __/\__ \
- *    |___/ \___| \_/ |_|\___\___||___/
- *                                     
- *                                     
+ *    |___/ \___| \_/ |_|\___\___||___/                              
  */
 void Robot::_initializeDevices() {
 
@@ -73,9 +69,7 @@ void Robot::_initializeDevices() {
  *    \ `--.  ___ _ __ ___  ___ _ __  
  *     `--. \/ __| '__/ _ \/ _ \ '_ \ 
  *    /\__/ / (__| | |  __/  __/ | | |
- *    \____/ \___|_|  \___|\___|_| |_|
- *                                    
- *                                    
+ *    \____/ \___|_|  \___|\___|_| |_|                              
  */
 void Robot::_initializeScreen() {
   _screen = std::make_shared<GUI::Screen>(lv_scr_act(), LV_COLOR_ORANGE);

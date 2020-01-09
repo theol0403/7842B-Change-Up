@@ -34,6 +34,13 @@ public:
        const std::shared_ptr<IterativePosPIDController>& irpid);
 
   /**
+   * Goes to position
+   *
+   * @param ipos The position
+   */
+  void goToPosition(double ipos);
+
+  /**
    * Sets the desired lift position.
    *
    * @param ipos The position
