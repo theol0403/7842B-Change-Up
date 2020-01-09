@@ -7,6 +7,7 @@ const QLength clawOffset {1_ft}; // TODO: adjust claw offset
 const QLength cubeWidth {5.5_in};
 const QLength cubeHalf {cubeWidth / 2};
 const QLength fieldWidth {6_tile};
+const QLength towerBaseWidth {7.8_in};
 const QLength zoneWidth {10_in};
 const QLength bigZoneLength {15.5_in};
 const QLength barrierWidth {2_in};

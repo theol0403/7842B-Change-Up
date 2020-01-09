@@ -1,8 +1,7 @@
 #include "7842Fmain/auton.hpp"
 
-void bigZone(const std::shared_ptr<SideController>& controller) {
-  auto& chassis = *controller;
-  auto& side = chassis.getSide();
+void bigZoneGrabStack(const std::shared_ptr<SideController>& controller) {
+  extractChassis(controller); // add chassis and side to scope
 
   // TODO: measure position
   Robot::odom()->setState(mirror({1_ft, 9.8_ft, 90_deg}, side));
@@ -16,14 +15,17 @@ void bigZone(const std::shared_ptr<SideController>& controller) {
   // spike cube and raise lift
   pros::delay(1000);
 
-  // set max voltage while lift is up
-  Robot::model()->setMaxVoltage(8000);
+  slowDown(); // set max voltage while lift is up
   // drive to cube stack
   chassis.strafeToPoint(toClaw({fourStackCube, 90_deg}), makeAngle(90_deg));
-  Robot::model()->setMaxVoltage(12000);
+  speedUp();
 
   // spike stack and raise lift a bit
   pros::delay(1000);
+}
+
+void bigZoneGrabProtectedAndScore(const std::shared_ptr<SideController>& controller) {
+  extractChassis(controller); // add chassis and side to scope
 
   // drive to inner protected cube
   chassis.strafeToPoint(toClaw({innerProtectedCube, 0_deg}), makeAngle(0_deg));
@@ -33,4 +35,12 @@ void bigZone(const std::shared_ptr<SideController>& controller) {
 
   // score cube
   chassis.strafeToPoint(toClaw({{0.5_ft, 11.5_ft}, -45_deg}), makeAngle(-45_deg));
+}
+
+void bigZone(const std::shared_ptr<SideController>& controller) {
+  extractChassis(controller); // add chassis and side to scope
+
+  bigZoneGrabStack(controller);
+
+  bigZoneGrabProtectedAndScore(controller);
 }

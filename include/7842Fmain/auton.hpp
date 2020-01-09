@@ -12,4 +12,17 @@ inline void runAuton(const std::function<void(const std::shared_ptr<SideControll
   auton(std::make_shared<SideController>(Robot::chassis(), side));
 }
 
+/**
+ * Autons
+ */
 void bigZone(const std::shared_ptr<SideController>& controller);
+void bigZoneTower(const std::shared_ptr<SideController>& controller);
+
+/**
+ * Actions
+ */
+void bigZoneGrabStack(const std::shared_ptr<SideController>& controller);
+void bigZoneGrabProtectedAndScore(const std::shared_ptr<SideController>& controller);
+
+void slowDown();
+void speedUp();
