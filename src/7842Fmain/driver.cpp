@@ -29,7 +29,7 @@ void driverBaseControl() {
                           std::pow(rightY, 2) * util::sgn(rightY),
                           std::pow(leftX, 2) * util::sgn(leftX));
 
-  // if (mDigital(X) && !pros::competition::is_connected()) autonomous();
+  if (mDigital(X) && !pros::competition::is_connected()) autonomous();
 }
 
 /***
