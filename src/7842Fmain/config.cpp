@@ -1,4 +1,5 @@
 #include "config.hpp"
+#include "auton.hpp"
 
 /***
  *     _____ _                   _     
@@ -98,6 +99,22 @@ void Robot::_initializeScreen() {
     .button("Deploy", [&]() { Robot::get().deploy(); })
     .button("Autonomous", [&]() { autonomous(); })
     .build();
+
+  using sides = SideController::sides;
+
+  _selector = dynamic_cast<GUI::Selector*>( //
+    &_screen->makePage<GUI::Selector>("Auton")
+       .button("None", []() {})
+       .newRow()
+       .button("bigZoneRed", []() { runAuton(bigZone, sides::red); })
+       .button("bigZoneBlue", []() { runAuton(bigZone, sides::blue); })
+       .newRow()
+       .button("bigZoneTowerRed", []() { runAuton(bigZoneTower, sides::red); })
+       .button("bigZoneTowerBlue", []() { runAuton(bigZoneTower, sides::blue); })
+       .newRow()
+       .button("bigZoneGrabStackRed", []() { runAuton(bigZoneGrabStack, sides::red); })
+       .button("bigZoneGrabStackBlue", []() { runAuton(bigZoneGrabStack, sides::blue); })
+       .build());
 }
 
 /***
