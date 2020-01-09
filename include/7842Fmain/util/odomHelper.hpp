@@ -9,7 +9,6 @@ extern const QLength clawOffset;
 extern const QLength cubeWidth;
 extern const QLength cubeHalf;
 extern const QLength fieldWidth;
-extern const QLength towerBaseWidth;
 extern const QLength zoneWidth;
 extern const QLength bigZoneLength;
 extern const QLength barrierWidth;
@@ -34,13 +33,3 @@ extern const Vector fourStackCube;
  * @return The robot position
  */
 Vector toClaw(const State& state);
-
-/**
- * Run auton program given side
- *
- * @param auton The auton
- * @param side  The side
- */
-void runAuton(
-  const std::function<void(const std::shared_ptr<SideController>&, const autonSide&)> auton,
-  const autonSide& side);

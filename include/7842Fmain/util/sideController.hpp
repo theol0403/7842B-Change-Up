@@ -8,14 +8,14 @@ enum class autonSide { red, blue };
 QAngle mirror(const QAngle& angle, const autonSide& side) {
   return side == autonSide::red ? angle : angle * -1;
 }
-QLength mirror(const QLength& y, const autonSide& side) {
-  return side == autonSide::red ? y : 12_ft - y;
+QLength mirror(const QLength& x, const autonSide& side) {
+  return side == autonSide::red ? x : 12_ft - x;
 }
 Vector mirror(const Vector& point, const autonSide& side) {
-  return {point.x, mirror(point.y, side)};
+  return {mirror(point.x, side), point.y};
 }
 State mirror(const State& state, const autonSide& side) {
-  return {state.x, mirror(state.y, side), mirror(state.theta, side)};
+  return {mirror(state.x, side), state.y, mirror(state.theta, side)};
 }
 
 class SideController {
@@ -85,6 +85,14 @@ public:
 
   static AngleCalculator makeAngleCalculator() {
     return OdomController::makeAngleCalculator();
+  };
+
+  std::shared_ptr<OdomXController>& getController() {
+    return controller;
+  }
+
+  autonSide& getSide() {
+    return side;
   };
 
 protected:
