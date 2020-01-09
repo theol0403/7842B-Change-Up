@@ -26,13 +26,11 @@ void bigZone(const std::shared_ptr<SideController>& controller) {
   pros::delay(1000);
 
   // drive to inner protected cube
-  chassis.strafeToPoint(toClaw({innerProtectedCube, 0_deg}), makeAngle(0_deg), 1,
-                        OdomController::defaultDriveAngleSettler);
+  chassis.strafeToPoint(toClaw({innerProtectedCube, 0_deg}), makeAngle(0_deg));
 
   // spike cube and raise lift
   pros::delay(1000);
 
   // score cube
-  chassis.strafeToPoint(toClaw({{0.5_ft, 11.5_ft}, -45_deg}), makeAngle(-45_deg), 1,
-                        OdomController::defaultDriveAngleSettler);
+  chassis.strafeToPoint(toClaw({{0.5_ft, 11.5_ft}, -45_deg}), makeAngle(-45_deg));
 }

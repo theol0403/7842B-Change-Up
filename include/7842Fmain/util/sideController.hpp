@@ -39,19 +39,19 @@ public:
   }
 
   void driveToPoint(const Vector& targetPoint, double turnScale = 1,
-                    const Settler& settler = OdomController::defaultDriveSettler) {
+                    const Settler& settler = OdomController::defaultDriveAngleSettler) {
     controller->driveToPoint(mirror(targetPoint, side), turnScale, settler);
   }
 
   void driveToPoint2(const Vector& targetPoint, double turnScale = 1,
-                     const Settler& settler = OdomController::defaultDriveSettler) {
+                     const Settler& settler = OdomController::defaultDriveAngleSettler) {
     controller->driveToPoint2(mirror(targetPoint, side), turnScale, settler);
   }
 
   void strafeRelativeDirection(const QLength& distance, const QAngle& direction,
                                const AngleCalculator& angleCalculator = makeAngleCalculator(),
                                double turnScale = 1,
-                               const Settler& settler = OdomController::defaultDriveSettler) {
+                               const Settler& settler = OdomController::defaultDriveAngleSettler) {
     controller->strafeRelativeDirection(distance, mirror(direction, side), angleCalculator,
                                         turnScale, settler);
   }
@@ -59,7 +59,7 @@ public:
   void strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
                                const AngleCalculator& angleCalculator = makeAngleCalculator(),
                                double turnScale = 1,
-                               const Settler& settler = OdomController::defaultDriveSettler) {
+                               const Settler& settler = OdomController::defaultDriveAngleSettler) {
     controller->strafeAbsoluteDirection(distance, mirror(direction, side), angleCalculator,
                                         turnScale, settler);
   }
@@ -67,7 +67,7 @@ public:
   void strafeToPoint(const Vector& targetPoint,
                      const AngleCalculator& angleCalculator = makeAngleCalculator(),
                      double turnScale = 1,
-                     const Settler& settler = OdomController::defaultDriveSettler) {
+                     const Settler& settler = OdomController::defaultDriveAngleSettler) {
     controller->strafeToPoint(mirror(targetPoint, side), angleCalculator, turnScale, settler);
   }
 
