@@ -1,26 +1,10 @@
 #include "main.h"
 
-enum class autonSide { red, blue };
-
-/**
- * Mirror the given coordinates across the field
- */
-QAngle mirror(const QAngle& angle, const autonSide& side) {
-  return side == autonSide::red ? angle : angle * -1;
-}
-QLength mirror(const QLength& x, const autonSide& side) {
-  return side == autonSide::red ? x : 12_ft - x;
-}
-Vector mirror(const Vector& point, const autonSide& side) {
-  return {mirror(point.x, side), point.y};
-}
-State mirror(const State& state, const autonSide& side) {
-  return {mirror(state.x, side), state.y, mirror(state.theta, side)};
-}
-
 class SideController {
 public:
-  SideController(const std::shared_ptr<OdomXController>& icontroller, const autonSide& iside) :
+  enum class sides { red, blue };
+
+  SideController(const std::shared_ptr<OdomXController>& icontroller, const sides& iside) :
     controller(icontroller), side(iside) {}
 
   void turnToAngle(const QAngle& angle, const Turner& turner = OdomController::pointTurn,
@@ -71,15 +55,15 @@ public:
     controller->strafeToPoint(mirror(targetPoint, side), angleCalculator, turnScale, settler);
   }
 
-  static AngleCalculator makeAngleCalculator(const QAngle& angle, const autonSide& side) {
+  static AngleCalculator makeAngleCalculator(const QAngle& angle, const sides& side) {
     return OdomController::makeAngleCalculator(mirror(angle, side));
   }
 
-  static AngleCalculator makeAngleCalculator(const Vector& point, const autonSide& side) {
+  static AngleCalculator makeAngleCalculator(const Vector& point, const sides& side) {
     return OdomController::makeAngleCalculator(mirror(point, side));
   }
 
-  static AngleCalculator makeAngleCalculator(double error, const autonSide& side) {
+  static AngleCalculator makeAngleCalculator(double error, const sides& side) {
     return OdomController::makeAngleCalculator(error);
   }
 
@@ -91,11 +75,30 @@ public:
     return controller;
   }
 
-  autonSide& getSide() {
+  sides& getSide() {
     return side;
   };
 
+  /**
+   * Mirror the given coordinates across the field
+   */
+  static QAngle mirror(const QAngle& angle, const sides& side) {
+    return side == sides::red ? angle : angle * -1;
+  }
+
+  static QLength mirror(const QLength& x, const sides& side) {
+    return side == sides::red ? x : 12_ft - x;
+  }
+
+  static Vector mirror(const Vector& point, const sides& side) {
+    return {mirror(point.x, side), point.y};
+  }
+
+  static State mirror(const State& state, const sides& side) {
+    return {mirror(state.x, side), state.y, mirror(state.theta, side)};
+  }
+
 protected:
   std::shared_ptr<OdomXController> controller;
-  autonSide side = autonSide::red;
+  sides side = sides::red;
 };

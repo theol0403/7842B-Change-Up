@@ -8,7 +8,7 @@
  * @param side  The side
  */
 inline void runAuton(const std::function<void(const std::shared_ptr<SideController>)> auton,
-                     const autonSide& side) {
+                     const SideController::sides& side) {
   auton(std::make_shared<SideController>(Robot::chassis(), side));
 }
 

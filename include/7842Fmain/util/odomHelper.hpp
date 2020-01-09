@@ -25,6 +25,7 @@ extern const Vector outerProtectedCube;
 extern const Vector fourStackCube;
 
 #define makeAngle(x) SideController::makeAngleCalculator(x, side)
+#define mirror SideController::mirror
 
 /**
  * Calculate position of robot for claw to be at given position and angle
