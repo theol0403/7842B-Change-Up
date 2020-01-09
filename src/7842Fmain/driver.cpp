@@ -12,6 +12,8 @@
     pros::c::controller_get_analog(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_ANALOG_##x)) /    \
     127.0
 
+#define setNewDeviceState(device, state) Robot::device()->setNewState(device##States::state);
+
 /***
  *    ______                  _____             _             _ 
  *    | ___ \                /  __ \           | |           | |
@@ -52,17 +54,17 @@ void driverDeviceControl() {
    *    \_____/_|_|  \__|
    */
   if (mDigital(R1) && mDigital(R2)) {
-    Robot::lift()->setNewState(liftStates::aboveCube);
+    setNewDeviceState(lift, aboveCube);
   } else if (mDigital(R2)) {
-    Robot::lift()->setNewState(liftStates::down);
+    setNewDeviceState(lift, down);
   } else if (mDigital(R1)) {
-    Robot::lift()->setNewState(liftStates::up);
+    setNewDeviceState(lift, up);
   } else if (mDigital(Y)) {
-    Robot::lift()->setNewState(liftStates::upSlow);
+    setNewDeviceState(lift, upSlow);
   } else if (mDigital(B)) {
-    Robot::lift()->setNewState(liftStates::downSlow);
+    setNewDeviceState(lift, downSlow);
   } else {
-    Robot::lift()->setNewState(liftStates::brake);
+    setNewDeviceState(lift, brake);
   }
 
   /***
@@ -74,15 +76,15 @@ void driverDeviceControl() {
    *     \____/_|\__,_| \_/\_/
    */
   if (mDigital(L2)) {
-    Robot::claw()->setNewState(clawStates::close);
+    setNewDeviceState(claw, close);
   } else if (mDigital(L1)) {
-    Robot::claw()->setNewState(clawStates::open);
+    setNewDeviceState(claw, open);
   } else {
     auto state = Robot::claw()->getState();
     if (state == clawStates::open) {
-      Robot::claw()->setNewState(clawStates::brake);
+      setNewDeviceState(claw, brake);
     } else if (state == clawStates::close) {
-      Robot::claw()->setNewState(clawStates::clamp);
+      setNewDeviceState(claw, clamp);
     }
   }
 }
