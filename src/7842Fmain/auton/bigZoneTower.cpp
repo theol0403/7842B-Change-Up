@@ -1,7 +1,7 @@
 #include "7842Fmain/auton.hpp"
 
 void bigZoneTower(const std::shared_ptr<SideController>& controller) {
-  extractChassis(controller); // add chassis and side to scope
+  auto&& [chassis, side] = extractChassis(controller);
 
   bigZoneGrabStack(controller);
 

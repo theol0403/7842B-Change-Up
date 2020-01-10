@@ -28,9 +28,7 @@ extern const Vector fourStackCube;
 #define makeAngle(x) SideController::makeAngleCalculator(x, side)
 #define mirror SideController::mirror
 
-#define extractChassis(controller)                                                                 \
-  auto& chassis = *controller;                                                                     \
-  auto& side = chassis.getSide();
+#define extractChassis(controller) std::make_pair(*controller, controller->getSide());
 
 /**
  * Calculate position of robot for claw to be at given position and angle
@@ -43,4 +41,4 @@ Vector toClaw(const State& state);
 /**
  * Create an async task from a function
  */
-#define asyncTask(x) pros::Task([](void*) { x }, nullptr, "deploy");
+#define asyncTask(x) pros::Task([](void*) { x }, nullptr, "asyncTasj");
