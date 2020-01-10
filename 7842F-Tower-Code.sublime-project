@@ -2,7 +2,14 @@
 	"folders":
 	[
 		{
-			"path": "."
+			"path": ".",
+			"folder_exclude_patterns":
+			[
+				"/home/theol/Documents/github/7842F-Tower-Code/bin",
+				"/home/theol/Documents/github/7842F-Tower-Code/.d",
+				"/home/theol/Documents/github/7842F-Tower-Code/.lsp-cache",
+				"/home/theol/Documents/github/7842F-Tower-Code/.ccls-cache"
+			],
 		}
 	],
 
