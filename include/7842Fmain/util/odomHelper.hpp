@@ -39,3 +39,8 @@ extern const Vector fourStackCube;
  * @return The robot position
  */
 Vector toClaw(const State& state);
+
+/**
+ * Create an async task from a function
+ */
+#define asyncTask(x) pros::Task([](void*) { x }, nullptr, "deploy");

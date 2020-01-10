@@ -6,6 +6,9 @@ void bigZoneGrabStack(const std::shared_ptr<SideController>& controller) {
   // TODO: measure position
   Robot::odom()->setState(mirror({1_ft, 9.8_ft, 90_deg}, side));
 
+  // deploy robot
+  asyncTask(Robot::get().deploy(); Robot::lift()->goToPosition(Lift::aboveCubePos););
+
   // push cube into corner
   chassis.strafeAbsoluteDirection(5_in, 0_deg, makeAngle(90_deg));
 
@@ -13,7 +16,9 @@ void bigZoneGrabStack(const std::shared_ptr<SideController>& controller) {
   chassis.strafeToPoint(toClaw({outerProtectedCube, 90_deg}), makeAngle(90_deg));
 
   // spike cube and raise lift
-  pros::delay(1000);
+  Robot::lift()->setState(liftStates::down);
+  pros::delay(500);
+  Robot::lift()->goToPosition(Lift::fourStackPos);
 
   slowDown(); // set max voltage while lift is up
   // drive to cube stack
@@ -21,7 +26,9 @@ void bigZoneGrabStack(const std::shared_ptr<SideController>& controller) {
   speedUp();
 
   // spike stack and raise lift a bit
+  Robot::lift()->setState(liftStates::down);
   pros::delay(1000);
+  Robot::lift()->goToPosition(Lift::aboveCubePos);
 }
 
 void bigZoneGrabProtectedAndScore(const std::shared_ptr<SideController>& controller) {
@@ -31,7 +38,9 @@ void bigZoneGrabProtectedAndScore(const std::shared_ptr<SideController>& control
   chassis.strafeToPoint(toClaw({innerProtectedCube, 0_deg}), makeAngle(0_deg));
 
   // spike cube and raise lift
-  pros::delay(1000);
+  Robot::lift()->setState(liftStates::down);
+  pros::delay(500);
+  Robot::lift()->goToPosition(Lift::aboveCubePos);
 
   // score cube
   chassis.strafeToPoint(toClaw({{0.5_ft, 11.5_ft}, -45_deg}), makeAngle(-45_deg));
