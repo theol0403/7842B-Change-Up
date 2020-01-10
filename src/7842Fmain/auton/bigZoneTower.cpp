@@ -21,7 +21,7 @@ void bigZoneTower(const std::shared_ptr<SideController>& controller) {
 
   slowDown(); // set max voltage while lift is up
   // drive to cube stack
-  chassis.strafeToPoint(toClaw({middleTower, 90_deg}), makeAngle(90_deg));
+  chassis.strafeToPoint(toClaw({leftTower, 90_deg}), makeAngle(90_deg));
 
   // open and close claw
   pros::delay(1000);
