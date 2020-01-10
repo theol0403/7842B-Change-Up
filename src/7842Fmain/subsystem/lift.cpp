@@ -31,6 +31,10 @@ std::valarray<double> Lift::getPosition() const {
   return std::valarray<double>(getRawPosition()) - startPos;
 }
 
+double Lift::getHeight() const {
+  return getPosition().sum() / 2;
+}
+
 double Lift::getError() const {
   return std::abs(holdPos - getPosition()).sum() / 2;
 }

@@ -64,6 +64,13 @@ public:
   std::valarray<double> getPosition() const;
 
   /**
+   * Gets the average position of both lift motors.
+   *
+   * @return The height.
+   */
+  double getHeight() const;
+
+  /**
    * Gets the position error.
    *
    * @return The error.

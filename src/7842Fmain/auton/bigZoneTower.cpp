@@ -11,12 +11,13 @@ void bigZoneTower(const std::shared_ptr<SideController>& controller) {
   chassis.strafeToPoint(toClaw({towerCube, 90_deg}), makeAngle(90_deg));
 
   // spike cube
-  pros::delay(1000);
+  spikeCube();
+  Robot::lift()->goToPosition(Lift::smallTowerPos);
 
   // back up
   chassis.strafeToPoint({3.5_ft, 9_ft}, makeAngle(90_deg));
 
-  // raise lift
+  // wait for lift to raise
   pros::delay(1000);
 
   slowDown(); // set max voltage while lift is up
@@ -24,10 +25,20 @@ void bigZoneTower(const std::shared_ptr<SideController>& controller) {
   chassis.strafeToPoint(toClaw({leftTower, 90_deg}), makeAngle(90_deg));
 
   // open and close claw
-  pros::delay(1000);
+  Robot::claw()->setState(clawStates::open);
+  pros::delay(500);
+  Robot::claw()->setState(clawStates::close);
+
+  // raise lift a bit
+  Robot::lift()->goToPosition(Lift::smallTowerPos + 20);
+  pros::delay(500);
+  Robot::claw()->setState(clawStates::clamp);
 
   // back up
   chassis.strafeToPoint({3.5_ft, 9_ft}, makeAngle(90_deg));
+
+  // lower lift
+  Robot::lift()->goToPosition(Lift::aboveCubePos);
 
   speedUp();
 

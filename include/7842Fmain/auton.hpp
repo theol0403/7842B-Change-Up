@@ -26,3 +26,5 @@ void bigZoneGrabProtectedAndScore(const std::shared_ptr<SideController>& control
 
 void slowDown();
 void speedUp();
+
+void spikeCube();
