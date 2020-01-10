@@ -1,5 +1,11 @@
 #include "lift.hpp"
 
+const double Lift::aboveCubePos {50};
+const double Lift::fourStackPos {100};
+const double Lift::smallTowerPos {100};
+const double Lift::mediumTowerPos {150};
+const double Lift::middleTowerPos {200};
+
 Lift::Lift(const std::shared_ptr<AbstractMotor>& ileftMotor,
            const std::shared_ptr<AbstractMotor>& irightMotor,
            const std::shared_ptr<RotarySensor>& ileftSensor,
@@ -69,7 +75,6 @@ void Lift::loop() {
   Timer timer;
 
   const QTime brakeTime = 250_ms;
-  const int aboveCubePos = 50;
 
   while (true) {
 

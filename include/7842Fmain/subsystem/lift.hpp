@@ -17,6 +17,15 @@ enum class liftStates {
 class Lift : public StateMachine<liftStates, liftStates::brake> {
 public:
   /**
+   * Constants
+   */
+  static const double aboveCubePos;
+  static const double fourStackPos;
+  static const double smallTowerPos;
+  static const double mediumTowerPos;
+  static const double middleTowerPos;
+
+  /**
    * Constructs a new lift instance.
    *
    * @param ileftMotor   The left motor
@@ -61,9 +70,25 @@ public:
    */
   double getError() const;
 
+  /**
+   * Get the left motor.
+   *
+   * @return The left motor.
+   */
   std::shared_ptr<AbstractMotor> getLeftMotor() const;
+
+  /**
+   * Get the right motor.
+   *
+   * @return The right motor.
+   */
   std::shared_ptr<AbstractMotor> getRightMotor() const;
 
+  /**
+   * Set the motor power for the lift, and brake if the power is within a range.
+   *
+   * @param power The power
+   */
   void setPowerWithBrake(const std::valarray<double>& power);
 
 protected:
