@@ -1,7 +1,7 @@
 #include "7842Fmain/auton.hpp"
 
 void bigZoneGrabStack(const std::shared_ptr<SideController>& controller) {
-  auto&& [chassis, side] = extractChassis(controller);
+  auto&& [chassis, side] = getChassis();
 
   // TODO: measure position
   Robot::odom()->setState(mirror({1_ft, 9.8_ft, 90_deg}, side));
@@ -31,7 +31,7 @@ void bigZoneGrabStack(const std::shared_ptr<SideController>& controller) {
 }
 
 void bigZoneGrabProtectedAndScore(const std::shared_ptr<SideController>& controller) {
-  auto&& [chassis, side] = extractChassis(controller);
+  auto&& [chassis, side] = getChassis();
 
   // drive to inner protected cube
   chassis.strafeToPoint(toClaw({innerProtectedCube, 0_deg}), makeAngle(0_deg));
@@ -45,7 +45,7 @@ void bigZoneGrabProtectedAndScore(const std::shared_ptr<SideController>& control
 }
 
 void bigZone(const std::shared_ptr<SideController>& controller) {
-  auto&& [chassis, side] = extractChassis(controller);
+  auto&& [chassis, side] = getChassis();
 
   bigZoneGrabStack(controller);
 

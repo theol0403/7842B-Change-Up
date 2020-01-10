@@ -28,7 +28,7 @@ extern const Vector fourStackCube;
 #define makeAngle(x) SideController::makeAngleCalculator(x, side)
 #define mirror SideController::mirror
 
-#define extractChassis(controller) std::make_pair(*controller, controller->getSide());
+#define getChassis() std::make_pair(*controller, controller->getSide());
 
 /**
  * Calculate position of robot for claw to be at given position and angle
