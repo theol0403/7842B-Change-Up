@@ -34,7 +34,7 @@ void Robot::_initializeChassis() {
       0.012, 0.0002, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 150_ms)),
     //Turn PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.023, 0.00, 0.0004, 0, TimeUtilFactory::withSettledUtilParams(.5, .3, 100_ms)),
+      0.05, 0.002, 0.0006, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
       0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(3, 2, 100_ms)),
