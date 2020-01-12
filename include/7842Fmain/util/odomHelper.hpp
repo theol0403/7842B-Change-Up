@@ -41,4 +41,4 @@ Vector toClaw(const State& state);
 /**
  * Create an async task from a function
  */
-#define asyncTask(x) pros::Task([](void*) { x }, nullptr, "asyncTasj");
+#define asyncTask(x) pros::Task([](void*) { x }, nullptr, "asyncTask");

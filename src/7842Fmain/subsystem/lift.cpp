@@ -48,13 +48,13 @@ std::shared_ptr<AbstractMotor> Lift::getRightMotor() const {
 }
 
 void Lift::setPowerWithBrake(const std::valarray<double>& power) {
-  if (std::abs(power[0]) < 0.02) {
+  if (std::abs(power[0]) < 0.05) {
     motors[0]->moveVelocity(0);
   } else {
     motors[0]->moveVoltage(power[0] * 12000);
   }
 
-  if (std::abs(power[1]) < 0.02) {
+  if (std::abs(power[1]) < 0.05) {
     motors[1]->moveVelocity(0);
   } else {
     motors[1]->moveVoltage(power[1] * 12000);
@@ -78,7 +78,7 @@ void Lift::loop() {
 
   Timer timer;
 
-  const QTime brakeTime = 250_ms;
+  const QTime brakeTime = 200_ms;
 
   while (true) {
 

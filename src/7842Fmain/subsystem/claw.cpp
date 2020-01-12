@@ -28,7 +28,7 @@ void Claw::loop() {
 
       case clawStates::open: claw->moveVoltage(-12000); break;
 
-      case clawStates::clamp: claw->moveVoltage(8000); break;
+      case clawStates::clamp: claw->moveVoltage(1000); break;
     }
 
     pros::delay(10);
