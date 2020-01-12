@@ -2,7 +2,7 @@
 
 using namespace lib7842::units;
 
-const QLength clawOffset {1_ft}; // TODO: adjust claw offset
+const QLength clawOffset {1_ft + 2_in}; // TODO: adjust claw offset
 
 const QLength cubeWidth {5.5_in};
 const QLength cubeHalf {cubeWidth / 2};
@@ -22,6 +22,13 @@ const Vector innerProtectedCube {1_tile + cubeHalf, 5_tile + cubeHalf};
 const Vector outerProtectedCube {1_tile + cubeHalf, 4_tile + cubeHalf};
 
 const Vector fourStackCube {2_tile + cubeHalf, 4_tile + cubeHalf};
+
+const PursuitLimits defaultLimits {
+  0.2_mps, // min and start vel
+  1.8_mps2, // accel
+  0.8_mps, // max vel
+  40_mps // k
+};
 
 Vector toClaw(const State& state) {
   return Vector(state) - Vector {std::sin(state.theta.convert(radian)) * clawOffset,

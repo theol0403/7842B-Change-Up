@@ -25,6 +25,11 @@ extern const Vector outerProtectedCube;
 
 extern const Vector fourStackCube;
 
+extern const PursuitLimits defaultLimits;
+
+/**
+ * Utility functions
+ */
 #define makeAngle(x) SideController::makeAngleCalculator(x, side)
 #define mirror SideController::mirror
 
