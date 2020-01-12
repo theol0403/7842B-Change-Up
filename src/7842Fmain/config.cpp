@@ -31,7 +31,7 @@ void Robot::_initializeChassis() {
     _model, _odom,
     //Distance PID - To mm
     std::make_unique<IterativePosPIDController>(
-      0.015, 0.0002, 0.0002, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 100_ms)),
+      0.012, 0.0002, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 150_ms)),
     //Turn PID - To Degree
     std::make_unique<IterativePosPIDController>(
       0.03, 0.00, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
