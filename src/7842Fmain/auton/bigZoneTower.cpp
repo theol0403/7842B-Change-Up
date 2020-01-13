@@ -5,7 +5,7 @@ void bigZoneTower(const std::shared_ptr<SideController>& controller) {
 
   bigZoneGrabStack(controller);
 
-  Vector towerCube {9_ft, 6_ft - (towerBaseWidth + cubeHalf)};
+  Vector towerCube {6_ft - (towerBaseWidth / 2 + cubeHalf), 9_ft};
 
   // drive to cube in front of tower
   chassis.strafeToPoint(toClaw({towerCube, 90_deg}), makeAngle(90_deg));
@@ -15,7 +15,7 @@ void bigZoneTower(const std::shared_ptr<SideController>& controller) {
   Robot::lift()->goToPosition(Lift::smallTowerPos);
 
   // back up
-  chassis.strafeToPoint({3.5_ft, 9_ft}, makeAngle(90_deg));
+  chassis.strafeToPoint({3_ft, 9_ft}, makeAngle(90_deg));
 
   // wait for lift to raise
   pros::delay(1000);
@@ -30,12 +30,12 @@ void bigZoneTower(const std::shared_ptr<SideController>& controller) {
   Robot::claw()->setState(clawStates::close);
 
   // raise lift a bit
-  Robot::lift()->goToPosition(Lift::smallTowerPos + 20);
+  Robot::lift()->goToPosition(Lift::smallTowerPos + 200);
   pros::delay(500);
   Robot::claw()->setState(clawStates::clamp);
 
   // back up
-  chassis.strafeToPoint({3.5_ft, 9_ft}, makeAngle(90_deg));
+  chassis.strafeToPoint({3_ft, 9_ft}, makeAngle(0_deg));
 
   // lower lift
   Robot::lift()->goToPosition(Lift::aboveCubePos);
