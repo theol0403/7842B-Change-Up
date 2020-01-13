@@ -98,8 +98,8 @@ void Lift::loop() {
         break;
 
       case liftStates::upSlow:
-        motors[0]->moveVelocity(50);
-        motors[1]->moveVelocity(50);
+        motors[0]->moveVelocity(80);
+        motors[1]->moveVelocity(80);
         break;
 
       case liftStates::downSlow:
