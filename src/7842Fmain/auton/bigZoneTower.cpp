@@ -3,7 +3,9 @@
 void bigZoneTower(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
-  bigZoneGrabStack(controller);
+  bigPreloadOuterProtected(controller);
+
+  bigGrabStack(controller);
 
   Vector towerCube {6_ft - (towerBaseWidth / 2 + cubeHalf), 9_ft};
 
@@ -42,5 +44,5 @@ void bigZoneTower(const std::shared_ptr<SideController>& controller) {
 
   speedUp();
 
-  bigZoneGrabProtectedAndScore(controller);
+  bigInnerProtectedScore(controller);
 }

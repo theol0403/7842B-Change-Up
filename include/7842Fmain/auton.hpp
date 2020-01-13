@@ -22,8 +22,9 @@ void testAuton(const std::shared_ptr<SideController>& controller);
 /**
  * Actions
  */
-void bigZoneGrabStack(const std::shared_ptr<SideController>& controller);
-void bigZoneGrabProtectedAndScore(const std::shared_ptr<SideController>& controller);
+void bigPreloadOuterProtected(const std::shared_ptr<SideController>& controller);
+void bigGrabStack(const std::shared_ptr<SideController>& controller);
+void bigInnerProtectedScore(const std::shared_ptr<SideController>& controller);
 
 void slowDown();
 void speedUp();

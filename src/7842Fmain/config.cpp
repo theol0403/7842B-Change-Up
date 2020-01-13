@@ -112,9 +112,6 @@ void Robot::_initializeScreen() {
        .button("bigZoneTowerRed", []() { runAuton(bigZoneTower, sides::red); })
        .button("bigZoneTowerBlue", []() { runAuton(bigZoneTower, sides::blue); })
        .newRow()
-       .button("bigZoneGrabStackRed", []() { runAuton(bigZoneGrabStack, sides::red); })
-       .button("bigZoneGrabStackBlue", []() { runAuton(bigZoneGrabStack, sides::blue); })
-       .newRow()
        .button("testRed", []() { runAuton(testAuton, sides::red); })
        .button("testBlue", []() { runAuton(testAuton, sides::blue); })
        .build());

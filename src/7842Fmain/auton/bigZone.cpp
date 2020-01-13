@@ -1,6 +1,6 @@
 #include "7842Fmain/auton.hpp"
 
-void bigZoneGrabStack(const std::shared_ptr<SideController>& controller) {
+void bigPreloadOuterProtected(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   // TODO: measure position
@@ -18,6 +18,12 @@ void bigZoneGrabStack(const std::shared_ptr<SideController>& controller) {
 
   // spike cube and raise lift
   spikeCube();
+  Robot::lift()->goToPosition(Lift::aboveCubePos);
+}
+
+void bigGrabStack(const std::shared_ptr<SideController>& controller) {
+  auto&& [chassis, side] = getChassis();
+
   Robot::lift()->goToPosition(Lift::fourStackPos);
 
   slowDown(); // set max voltage while lift is up
@@ -30,7 +36,7 @@ void bigZoneGrabStack(const std::shared_ptr<SideController>& controller) {
   Robot::lift()->goToPosition(Lift::aboveCubePos);
 }
 
-void bigZoneGrabProtectedAndScore(const std::shared_ptr<SideController>& controller) {
+void bigInnerProtectedScore(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   // drive to inner protected cube
@@ -47,7 +53,9 @@ void bigZoneGrabProtectedAndScore(const std::shared_ptr<SideController>& control
 void bigZone(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
-  bigZoneGrabStack(controller);
+  bigPreloadOuterProtected(controller);
 
-  bigZoneGrabProtectedAndScore(controller);
+  bigGrabStack(controller);
+
+  bigInnerProtectedScore(controller);
 }
