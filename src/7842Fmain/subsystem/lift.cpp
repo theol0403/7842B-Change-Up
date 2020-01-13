@@ -76,10 +76,7 @@ void Lift::initialize() {
 
 void Lift::loop() {
 
-  Timer timer;
   Rate rate;
-
-  const QTime brakeTime = 0_ms;
 
   while (true) {
 
@@ -113,12 +110,8 @@ void Lift::loop() {
       case liftStates::brake:
         motors[0]->moveVelocity(0);
         motors[1]->moveVelocity(0);
-        timer.placeHardMark();
-        if (timer.getDtFromHardMark() > brakeTime) {
-          holdPos = getPosition().sum() / 2.0;
-          timer.clearHardMark();
-          state = liftStates::holdAtPos;
-        }
+        holdPos = getPosition().sum() / 2.0;
+        state = liftStates::holdAtPos;
         break;
 
       case liftStates::holdAtPos:
