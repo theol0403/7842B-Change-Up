@@ -17,6 +17,7 @@ protected:
   std::shared_ptr<ThreeEncoderXDriveModel> _model {nullptr};
   std::shared_ptr<CustomOdometry> _odom {nullptr};
   std::shared_ptr<OdomXController> _controller {nullptr};
+  std::shared_ptr<PathFollower> _follower {nullptr};
 
   std::shared_ptr<Lift> _lift {nullptr};
   std::shared_ptr<Claw> _claw {nullptr};
@@ -30,6 +31,7 @@ public:
   static std::shared_ptr<ThreeEncoderXDriveModel> model();
   static std::shared_ptr<CustomOdometry> odom();
   static std::shared_ptr<OdomXController> chassis();
+  static std::shared_ptr<PathFollower> follower();
   static std::shared_ptr<Lift> lift();
   static std::shared_ptr<Claw> claw();
 

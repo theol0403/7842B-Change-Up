@@ -23,8 +23,9 @@ void Robot::_initializeChassis() {
     // limits
     200, 12000);
 
-  _odom = std::make_shared<CustomOdometry>(
-    _model, ChassisScales({2.75_in, 13.068229_in, 0.00_in}, 360), TimeUtilFactory().create());
+  ChassisScales scales({2.75_in, 13.068229_in, 0.00_in}, 360);
+
+  _odom = std::make_shared<CustomOdometry>(_model, scales, TimeUtilFactory().create());
   _odom->startTask("Odometry");
 
   _controller = std::make_shared<OdomXController>(
@@ -39,6 +40,9 @@ void Robot::_initializeChassis() {
     std::make_unique<IterativePosPIDController>(
       0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(3, 2, 100_ms)),
     TimeUtilFactory().create());
+
+  _follower =
+    std::make_shared<PathFollower>(_model, _odom, scales, 1_ft, TimeUtilFactory().create());
 }
 
 /***
@@ -108,6 +112,9 @@ void Robot::_initializeScreen() {
        .newRow()
        .button("bigZoneGrabStackRed", []() { runAuton(bigZoneGrabStack, sides::red); })
        .button("bigZoneGrabStackBlue", []() { runAuton(bigZoneGrabStack, sides::blue); })
+       .newRow()
+       .button("testRed", []() { runAuton(testAuton, sides::red); })
+       .button("testBlue", []() { runAuton(testAuton, sides::blue); })
        .build());
 }
 
@@ -149,6 +156,10 @@ std::shared_ptr<CustomOdometry> Robot::odom() {
 
 std::shared_ptr<OdomXController> Robot::chassis() {
   getDevice(controller);
+}
+
+std::shared_ptr<PathFollower> Robot::follower() {
+  getDevice(follower);
 }
 
 std::shared_ptr<Lift> Robot::lift() {
