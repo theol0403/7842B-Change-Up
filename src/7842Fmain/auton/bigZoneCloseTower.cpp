@@ -13,8 +13,6 @@ void bigZoneCloseTower(const std::shared_ptr<SideController>& controller) {
 
   // open and close claw
   Robot::claw()->setState(clawStates::open);
-  pros::delay(500);
-  Robot::claw()->setState(clawStates::close);
 
   // raise lift a bit
   Robot::lift()->goToPosition(Lift::mediumTowerPos + 200);
