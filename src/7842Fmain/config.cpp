@@ -61,8 +61,10 @@ void Robot::_initializeDevices() {
   _lift = std::make_shared<Lift>(
     leftLift, rightLift, //
     std::make_shared<IntegratedEncoder>(9), std::make_shared<IntegratedEncoder>(10, true),
-    std::make_shared<IterativePosPIDController>(0.03, 0, 0.00, 0.01, TimeUtilFactory().create()),
-    std::make_shared<IterativePosPIDController>(0.03, 0, 0.00, 0.01, TimeUtilFactory().create()));
+    std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
+                                                TimeUtilFactory().create()),
+    std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
+                                                TimeUtilFactory().create()));
 
   _claw = std::make_shared<Claw>(std::make_shared<Motor>(-7));
 }
@@ -100,7 +102,7 @@ void Robot::_initializeScreen() {
 
   using sides = SideController::sides;
 
-  _selector = dynamic_cast<GUI::Selector*>( //
+  _selector = static_cast<GUI::Selector*>( //
     &_screen->makePage<GUI::Selector>("Auton")
        .button("None", []() {})
        .newRow()

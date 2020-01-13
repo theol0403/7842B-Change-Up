@@ -16,6 +16,8 @@ void Claw::initialize() {
 
 void Claw::loop() {
 
+  Rate rate;
+
   while (true) {
 
     switch (state) {
@@ -31,6 +33,6 @@ void Claw::loop() {
       case clawStates::clamp: claw->moveVoltage(1000); break;
     }
 
-    pros::delay(10);
+    rate.delayUntil(5);
   }
 }

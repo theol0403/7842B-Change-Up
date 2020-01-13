@@ -48,13 +48,13 @@ std::shared_ptr<AbstractMotor> Lift::getRightMotor() const {
 }
 
 void Lift::setPowerWithBrake(const std::valarray<double>& power) {
-  if (std::abs(power[0]) < 0.05) {
+  if (std::abs(power[0]) <= 0.05) {
     motors[0]->moveVelocity(0);
   } else {
     motors[0]->moveVoltage(power[0] * 12000);
   }
 
-  if (std::abs(power[1]) < 0.05) {
+  if (std::abs(power[1]) <= 0.05) {
     motors[1]->moveVelocity(0);
   } else {
     motors[1]->moveVoltage(power[1] * 12000);
@@ -77,8 +77,9 @@ void Lift::initialize() {
 void Lift::loop() {
 
   Timer timer;
+  Rate rate;
 
-  const QTime brakeTime = 200_ms;
+  const QTime brakeTime = 0_ms;
 
   while (true) {
 
@@ -133,11 +134,12 @@ void Lift::loop() {
 
       case liftStates::calibrate:
         do {
-          motors[0]->moveVoltage(-12000);
-          motors[1]->moveVoltage(-12000);
-          pros::delay(400);
-        } while (motors[0]->getActualVelocity() > 15 || motors[1]->getActualVelocity() > 15);
-        pros::delay(400);
+          motors[0]->moveVoltage(-4000);
+          motors[1]->moveVoltage(-4000);
+          pros::delay(200);
+        } while (std::abs(motors[0]->getActualVelocity()) > 30 ||
+                 std::abs(motors[1]->getActualVelocity()) > 30);
+        pros::delay(200);
         startPos = getRawPosition();
         state = liftStates::off;
         break;
@@ -147,6 +149,6 @@ void Lift::loop() {
     //   std::cout << "L: " << getPosition()[0] << ", R: " << getPosition()[1] << std::endl;
     // }
 
-    pros::delay(10);
+    rate.delayUntil(3);
   }
 }
