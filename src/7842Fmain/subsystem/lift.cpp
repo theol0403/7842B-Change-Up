@@ -1,10 +1,10 @@
 #include "lift.hpp"
 
 const double Lift::aboveCubePos {500};
-const double Lift::fourStackPos {800};
-const double Lift::smallTowerPos {800};
-const double Lift::mediumTowerPos {1200};
-const double Lift::middleTowerPos {1600};
+const double Lift::fourStackPos {1450};
+const double Lift::smallTowerPos {1360};
+const double Lift::mediumTowerPos {1600};
+const double Lift::middleTowerPos {2300};
 
 Lift::Lift(const std::shared_ptr<AbstractMotor>& ileftMotor,
            const std::shared_ptr<AbstractMotor>& irightMotor,
@@ -107,7 +107,7 @@ void Lift::loop() {
         motors[1]->moveVelocity(-50);
         break;
 
-      case liftStates::brake:
+      case liftStates::brakeAndHold:
         motors[0]->moveVelocity(0);
         motors[1]->moveVelocity(0);
         holdPos = getPosition().sum() / 2.0;

@@ -8,13 +8,13 @@ enum class liftStates {
   down, /// full voltage down
   upSlow, // low velocity up
   downSlow, // low velocity down
-  brake, // brake for a small about of time, record position, then hold
+  brakeAndHold, // brake for a small about of time, record position, then hold
   holdAtPos, // pid to hold desired position
   aboveCube, // pid to above the cube
   calibrate, // calibrate the lift position
 };
 
-class Lift : public StateMachine<liftStates, liftStates::brake> {
+class Lift : public StateMachine<liftStates, liftStates::brakeAndHold> {
 public:
   /**
    * Constants
