@@ -20,7 +20,7 @@ Lift::Lift(const std::shared_ptr<AbstractMotor>& ileftMotor,
 
 void Lift::goToPosition(double ipos) {
   setPosition({ipos, ipos});
-  state = liftStates::holdAtPos;
+  setState(liftStates::holdAtPos);
 }
 
 void Lift::setPosition(const std::valarray<double>& ipos) {
@@ -80,7 +80,8 @@ void Lift::loop() {
 
   while (true) {
 
-    switch (state) {
+    stateLock.take(TIMEOUT_MAX);
+    switch (state.load(std::memory_order_acquire)) {
 
       case liftStates::off:
         motors[0]->moveVoltage(0);
@@ -111,7 +112,7 @@ void Lift::loop() {
         motors[0]->moveVelocity(0);
         motors[1]->moveVelocity(0);
         holdPos = getPosition().sum() / 2.0;
-        state = liftStates::holdAtPos;
+        state.store(liftStates::holdAtPos, std::memory_order_release);
         break;
 
       case liftStates::holdAtPos:
@@ -122,7 +123,7 @@ void Lift::loop() {
 
       case liftStates::aboveCube:
         holdPos = aboveCubePos;
-        state = liftStates::holdAtPos;
+        state.store(liftStates::holdAtPos, std::memory_order_release);
         break;
 
       case liftStates::calibrate:
@@ -134,14 +135,16 @@ void Lift::loop() {
                  std::abs(motors[1]->getActualVelocity()) > 30);
         pros::delay(200);
         startPos = getRawPosition();
-        state = liftStates::off;
+        state.store(liftStates::off, std::memory_order_release);
         break;
     }
+
+    stateLock.give();
 
     // if (timer.repeat(100_ms)) {
     //   std::cout << "L: " << getPosition()[0] << ", R: " << getPosition()[1] << std::endl;
     // }
 
-    rate.delayUntil(3);
+    rate.delayUntil(5);
   }
 }

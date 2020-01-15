@@ -1,5 +1,6 @@
 #pragma once
 #include "main.h"
+#include <atomic>
 
 /**
  * State machine helper class.
@@ -22,7 +23,9 @@ public:
    * @param istate The state
    */
   virtual void setState(const States& istate) {
-    state = istate;
+    stateLock.take(TIMEOUT_MAX);
+    state.store(istate, std::memory_order_release);
+    stateLock.give();
   }
 
   /**
@@ -31,10 +34,12 @@ public:
    * @param istate The istate
    */
   virtual void setStateBlocking(const States& istate) {
-    _isDone = false;
-    state = istate;
+    stateLock.take(TIMEOUT_MAX);
+    _isDone.store(false, std::memory_order_release);
+    state.store(istate, std::memory_order_release);
+    stateLock.give();
     while (!isDone()) {
-      pros::delay(20);
+      pros::delay(10);
     };
   }
 
@@ -44,10 +49,12 @@ public:
    * @param istate The state
    */
   virtual void setNewState(const States& istate) {
-    if (istate != lastState) {
-      state = istate;
-      lastState = istate;
+    stateLock.take(TIMEOUT_MAX);
+    if (state.load(std::memory_order_acquire) != lastState.load(std::memory_order_acquire)) {
+      state.store(istate, std::memory_order_release);
+      lastState.store(istate, std::memory_order_release);
     }
+    stateLock.give();
   }
 
   /**
@@ -56,7 +63,9 @@ public:
    * @return The state.
    */
   virtual const States& getState() const {
-    return state;
+    stateLock.take(TIMEOUT_MAX);
+    return state.load(std::memory_order_acquire);
+    stateLock.give();
   }
 
   /**
@@ -65,7 +74,9 @@ public:
    * @return The state.
    */
   virtual bool isDone() const {
-    return _isDone;
+    stateLock.take(TIMEOUT_MAX);
+    return _isDone.load(std::memory_order_acquire);
+    stateLock.give();
   }
 
 protected:
@@ -80,11 +91,15 @@ protected:
   void loop() override = 0;
 
   virtual void setDone() {
-    _isDone = true;
+    stateLock.take(TIMEOUT_MAX);
+    _isDone.store(true, std::memory_order_release);
+    stateLock.give();
   }
 
-  States state {States::off};
-  States lastState {assumedState};
+  std::atomic<States> state {States::off};
+  std::atomic<States> lastState {assumedState};
 
-  bool _isDone = false;
+  pros::Mutex stateLock {};
+
+  std::atomic<bool> _isDone = false;
 };
