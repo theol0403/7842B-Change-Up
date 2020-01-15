@@ -91,9 +91,7 @@ protected:
   void loop() override = 0;
 
   virtual void setDone() {
-    stateLock.take(TIMEOUT_MAX);
     _isDone.store(true, std::memory_order_release);
-    stateLock.give();
   }
 
   std::atomic<States> state {States::off};
