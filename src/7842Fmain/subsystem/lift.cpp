@@ -1,6 +1,6 @@
 #include "lift.hpp"
 
-const double Lift::aboveCubePos {500};
+const double Lift::aboveCubePos {800};
 const double Lift::fourStackPos {1450};
 const double Lift::smallTowerPos {1360};
 const double Lift::mediumTowerPos {1600};

@@ -30,9 +30,9 @@ void Claw::loop() {
 
       case clawStates::open: claw->moveVoltage(-12000); break;
 
-      case clawStates::clamp: claw->moveVoltage(1000); break;
+      case clawStates::clamp: claw->moveVoltage(0); break;
     }
 
-    rate.delayUntil(5);
+    rate.delayUntil(10);
   }
 }
