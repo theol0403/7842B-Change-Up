@@ -62,7 +62,7 @@ public:
    *
    * @return The state.
    */
-  virtual const States& getState() const {
+  virtual const States& getState() {
     stateLock.take(TIMEOUT_MAX);
     return state.load(std::memory_order_acquire);
     stateLock.give();
@@ -73,7 +73,7 @@ public:
    *
    * @return The state.
    */
-  virtual bool isDone() const {
+  virtual bool isDone() {
     stateLock.take(TIMEOUT_MAX);
     return _isDone.load(std::memory_order_acquire);
     stateLock.give();
