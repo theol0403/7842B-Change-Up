@@ -115,8 +115,8 @@ void Robot::_initializeScreen() {
        .button("bigCloseTowerRed", []() { runAuton(bigZoneCloseTower, sides::red); })
        .button("bigCloseTowerBlue", []() { runAuton(bigZoneCloseTower, sides::blue); })
        .newRow()
-       .button("testRed", []() { runAuton(testAuton, sides::red); })
-       .button("testBlue", []() { runAuton(testAuton, sides::blue); })
+       .button("outerProtectedRed", []() { runAuton(bigPreloadOuterProtected, sides::red); })
+       .button("outerProtectedBlue", []() { runAuton(bigPreloadOuterProtected, sides::blue); })
        .build());
 }
 
