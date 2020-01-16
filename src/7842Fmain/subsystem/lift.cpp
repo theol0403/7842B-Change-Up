@@ -121,7 +121,7 @@ void Lift::loop() {
         break;
 
       case liftStates::aboveCube:
-        holdPos = aboveCubePos;
+        holdPos = 600;
         state = liftStates::holdAtPos;
         break;
 

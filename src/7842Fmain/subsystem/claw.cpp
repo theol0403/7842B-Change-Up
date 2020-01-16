@@ -23,7 +23,7 @@ void Claw::loop() {
     switch (state) {
 
       case clawStates::off:
-        claw->setBrakeMode(AbstractMotor::brakeMode::brake);
+        claw->setBrakeMode(AbstractMotor::brakeMode::coast);
         claw->moveVoltage(0);
         break;
 
