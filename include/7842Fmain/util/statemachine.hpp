@@ -23,9 +23,9 @@ public:
    * @param istate The state
    */
   virtual void setState(const States& istate) {
-    stateLock.take(TIMEOUT_MAX);
+    // stateLock.take(TIMEOUT_MAX);
     state.store(istate, std::memory_order_release);
-    stateLock.give();
+    // stateLock.give();
   }
 
   /**
@@ -34,10 +34,10 @@ public:
    * @param istate The istate
    */
   virtual void setStateBlocking(const States& istate) {
-    stateLock.take(TIMEOUT_MAX);
+    // stateLock.take(TIMEOUT_MAX);
     _isDone.store(false, std::memory_order_release);
     state.store(istate, std::memory_order_release);
-    stateLock.give();
+    // stateLock.give();
     while (!isDone()) {
       pros::delay(10);
     };
@@ -49,12 +49,12 @@ public:
    * @param istate The state
    */
   virtual void setNewState(const States& istate) {
-    stateLock.take(TIMEOUT_MAX);
+    // stateLock.take(TIMEOUT_MAX);
     if (state.load(std::memory_order_acquire) != lastState.load(std::memory_order_acquire)) {
       state.store(istate, std::memory_order_release);
       lastState.store(istate, std::memory_order_release);
     }
-    stateLock.give();
+    // stateLock.give();
   }
 
   /**
@@ -63,9 +63,9 @@ public:
    * @return The state.
    */
   virtual const States getState() {
-    stateLock.take(TIMEOUT_MAX);
+    // stateLock.take(TIMEOUT_MAX);
     auto istate = state.load(std::memory_order_acquire);
-    stateLock.give();
+    // stateLock.give();
     return istate;
   }
 
@@ -75,9 +75,9 @@ public:
    * @return The state.
    */
   virtual bool isDone() {
-    stateLock.take(TIMEOUT_MAX);
+    // stateLock.take(TIMEOUT_MAX);
     auto iisDone = _isDone.load(std::memory_order_acquire);
-    stateLock.give();
+    // stateLock.give();
     return iisDone;
   }
 
@@ -99,7 +99,7 @@ protected:
   std::atomic<States> state {States::off};
   std::atomic<States> lastState {assumedState};
 
-  pros::Mutex stateLock {};
+  // pros::Mutex stateLock {};
 
   std::atomic<bool> _isDone = false;
 };

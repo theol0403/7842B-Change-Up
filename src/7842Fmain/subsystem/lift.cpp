@@ -80,7 +80,7 @@ void Lift::loop() {
 
   while (true) {
 
-    stateLock.take(TIMEOUT_MAX);
+    // stateLock.take(TIMEOUT_MAX);
     switch (state.load(std::memory_order_acquire)) {
 
       case liftStates::off:
@@ -139,7 +139,7 @@ void Lift::loop() {
         break;
     }
 
-    stateLock.give();
+    // stateLock.give();
 
     // if (timer.repeat(100_ms)) {
     //   std::cout << "L: " << getPosition()[0] << ", R: " << getPosition()[1] << std::endl;

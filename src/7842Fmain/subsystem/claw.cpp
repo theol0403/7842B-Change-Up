@@ -20,7 +20,7 @@ void Claw::loop() {
 
   while (true) {
 
-    stateLock.take(TIMEOUT_MAX);
+    // stateLock.take(TIMEOUT_MAX);
     switch (state.load(std::memory_order_acquire)) {
 
       case clawStates::off: claw->moveVoltage(0); break;
@@ -33,7 +33,7 @@ void Claw::loop() {
 
       case clawStates::clamp: claw->moveVoltage(0); break;
     }
-    stateLock.give();
+    // stateLock.give();
 
     rate.delayUntil(10);
   }
