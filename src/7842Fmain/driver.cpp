@@ -87,4 +87,12 @@ void driverDeviceControl() {
       setNewDeviceState(claw, clamp);
     }
   }
+
+  // if (mDigital(L2)) {
+  //   claw->moveVoltage(12000)
+  // } else if (mDigital(L1)) {
+  //   claw->moveVoltage(-12000);
+  // } else {
+  //   claw->moveVelocity(0);
+  // }
 }
