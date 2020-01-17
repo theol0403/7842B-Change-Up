@@ -3,19 +3,16 @@
 void testAuton(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
-  chassis.strafeToPoint({0_ft, 5_ft}, [&](const OdomController& odom) {
-    if (odom.distanceToPoint({0_ft, 5_ft}) < 2.5_ft) {
-      return util::rollAngle180(45_deg - Robot::odom()->getState().theta);
-    } else {
-      return util::rollAngle180(0_deg - Robot::odom()->getState().theta);
-    }
-  });
+  Robot::odom()->setState(mirror({0_ft, 0_ft, 0_deg}, side));
 
-  chassis.strafeToPoint(toClaw({2_ft, 6_ft, 45_deg}), makeAngle(45_deg));
+  Robot::lift()->goToPosition(Lift::fourStackPos);
 
-  auto path = SimplePath({Robot::odom()->getState(), {0_ft, 4_ft}, {0_ft, 0_ft}})
-                .generate(1_cm)
-                .smoothen(.01, 1e-8 * meter);
+  slowDown(); // set max voltage while lift is up
+  // drive to cube stack
+  chassis.strafeToPoint(toClaw({0_ft, 3_ft, 0_deg}), makeAngle(0_deg));
+  speedUp();
 
-  Robot::follower()->followPath(PathGenerator::generate(path, defaultLimits), true);
+  // spike stack and raise lift a bit
+  spikeCube();
+  Robot::lift()->goToPosition(Lift::aboveCubePos);
 }

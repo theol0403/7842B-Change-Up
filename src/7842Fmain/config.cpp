@@ -38,7 +38,7 @@ void Robot::_initializeChassis() {
       0.05, 0.002, 0.0006, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.02, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(3, 2, 100_ms)),
+      0.03, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)),
     TimeUtilFactory().create());
 
   _follower =
@@ -117,6 +117,9 @@ void Robot::_initializeScreen() {
        .newRow()
        .button("outerProtectedRed", []() { runAuton(bigPreloadOuterProtected, sides::red); })
        .button("outerProtectedBlue", []() { runAuton(bigPreloadOuterProtected, sides::blue); })
+       .newRow()
+       .button("TestRed", []() { runAuton(testAuton, sides::red); })
+       .button("TestBlue", []() { runAuton(testAuton, sides::blue); })
        .build());
 }
 
