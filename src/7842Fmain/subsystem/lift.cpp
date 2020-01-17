@@ -1,9 +1,9 @@
 #include "lift.hpp"
 
 const double Lift::aboveCubePos {800};
-const double Lift::fourStackPos {1450};
-const double Lift::smallTowerPos {1360};
-const double Lift::mediumTowerPos {1600};
+const double Lift::fourStackPos {1700};
+const double Lift::smallTowerPos {14000};
+const double Lift::mediumTowerPos {1800};
 const double Lift::middleTowerPos {2300};
 
 Lift::Lift(const std::shared_ptr<AbstractMotor>& ileftMotor,
