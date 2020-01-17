@@ -63,6 +63,10 @@ void driverDeviceControl() {
     setNewDeviceState(lift, upSlow);
   } else if (mDigital(B)) {
     setNewDeviceState(lift, downSlow);
+  } else if (mDigital(RIGHT)) {
+    setNewDeviceState(lift, upMedium);
+  } else if (mDigital(DOWN)) {
+    setNewDeviceState(lift, downMedium);
   } else {
     setNewDeviceState(lift, brakeAndHold);
   }
