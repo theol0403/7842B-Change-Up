@@ -1,23 +1,35 @@
 #include "7842Fmain/auton.hpp"
 
-void bigPreloadOuterProtected(const std::shared_ptr<SideController>& controller) {
+void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   // TODO: measure position
   Robot::odom()->setState(mirror({9_in, 9.8_ft, 90_deg}, side));
-  chassis.strafeAbsoluteDirection(4_in, 110_deg, makeAngle(90_deg));
+
+  // drive forward a bit
+  chassis.strafeAbsoluteDirection(4_in, 100_deg, makeAngle(90_deg));
+
+  // push cube into goal
+  chassis.strafeAbsoluteDirection(6_in, 0_deg, makeAngle(90_deg));
+
+  // go above inner protected
+  chassis.strafeToPoint(toClaw({innerProtectedCube, 90_deg}), makeAngle(90_deg));
 
   // deploy robot
   asyncTask(Robot::get().deploy(); Robot::lift()->goToPosition(Lift::aboveCubePos););
   Robot::claw()->setState(clawStates::clamp);
 
-  // push cube into corner
-  chassis.strafeAbsoluteDirection(6_in, 0_deg, makeAngle(90_deg));
+  // wait for robot to deploy
+  pros::delay(500);
 
-  // drive to first cube
+  // grab inner cube
+  spikeCube();
+  Robot::lift()->goToPosition(Lift::aboveCubePos);
+
+  // drive to outer cube
   chassis.strafeToPoint(toClaw({outerProtectedCube, 90_deg}), makeAngle(90_deg));
 
-  // spike cube and raise lift
+  // spike cube
   spikeCube();
   Robot::lift()->goToPosition(Lift::aboveCubePos);
 }
@@ -34,18 +46,11 @@ void bigGrabStack(const std::shared_ptr<SideController>& controller) {
 
   // spike stack and raise lift a bit
   spikeCube();
-  Robot::lift()->goToPosition(Lift::aboveCubePos);
+  Robot::lift()->goToPosition(Lift::aboveCubePos + 50);
 }
 
-void bigInnerProtectedScore(const std::shared_ptr<SideController>& controller) {
+void bigScore(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
-
-  // drive to inner protected cube
-  chassis.strafeToPoint(toClaw({innerProtectedCube, 0_deg}), makeAngle(0_deg));
-
-  // spike cube and raise lift
-  spikeCube();
-  Robot::lift()->goToPosition(Lift::aboveCubePos);
 
   // score cube
   chassis.strafeToPoint(toClaw({{1_ft - 2_in, 11.5_ft}, -45_deg}), makeAngle(-45_deg));
@@ -66,9 +71,9 @@ void bigInnerProtectedScore(const std::shared_ptr<SideController>& controller) {
 void bigZone(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
-  bigPreloadOuterProtected(controller);
+  bigPreloadProtected(controller);
 
   bigGrabStack(controller);
 
-  bigInnerProtectedScore(controller);
+  bigScore(controller);
 }

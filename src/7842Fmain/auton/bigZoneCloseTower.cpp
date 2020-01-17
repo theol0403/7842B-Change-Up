@@ -3,7 +3,7 @@
 void bigZoneCloseTower(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
-  bigPreloadOuterProtected(controller);
+  bigPreloadProtected(controller);
 
   Robot::lift()->goToPosition(Lift::mediumTowerPos);
   slowDown();
@@ -21,5 +21,5 @@ void bigZoneCloseTower(const std::shared_ptr<SideController>& controller) {
 
   bigGrabStack(controller);
 
-  bigInnerProtectedScore(controller);
+  bigScore(controller);
 }

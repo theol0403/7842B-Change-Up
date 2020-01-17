@@ -23,9 +23,9 @@ void testAuton(const std::shared_ptr<SideController>& controller);
 /**
  * Actions
  */
-void bigPreloadOuterProtected(const std::shared_ptr<SideController>& controller);
+void bigPreloadProtected(const std::shared_ptr<SideController>& controller);
 void bigGrabStack(const std::shared_ptr<SideController>& controller);
-void bigInnerProtectedScore(const std::shared_ptr<SideController>& controller);
+void bigScore(const std::shared_ptr<SideController>& controller);
 
 void slowDown();
 void speedUp();
