@@ -32,13 +32,13 @@ void Robot::_initializeChassis() {
     _model, _odom,
     //Distance PID - To mm
     std::make_unique<IterativePosPIDController>(
-      0.012, 0.0002, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 150_ms)),
+      0.013, 0.00025, 0.0003, 0, TimeUtilFactory::withSettledUtilParams(10, 10, 150_ms)),
     //Turn PID - To Degree
     std::make_unique<IterativePosPIDController>(
       0.05, 0.002, 0.0006, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.03, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(4, 2, 100_ms)),
+      0.03, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(5, 2, 100_ms)),
     TimeUtilFactory().create());
 
   _follower =
