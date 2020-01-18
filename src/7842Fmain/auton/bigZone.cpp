@@ -56,7 +56,8 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
 
   Robot::lift()->goToPosition(400);
 
-  // push preload
+  // move to goal
+  speedUp();
   chassis.strafeToPoint(toClaw({{1_ft - 2.5_in, 11.5_ft + 0.5_in}, -45_deg}), makeAngle(-45_deg));
 
   Robot::claw()->setState(clawStates::open);
