@@ -37,9 +37,11 @@ void Claw::loop() {
       case clawStates::open: claw->moveVoltage(-12000); break;
 
       case clawStates::clamp:
-        claw->setBrakeMode(AbstractMotor::brakeMode::coast);
-        claw->moveVoltage(0);
+        claw->setBrakeMode(AbstractMotor::brakeMode::brake);
+        claw->moveVelocity(0);
         break;
+
+      case clawStates::closeMedium: claw->moveVoltage(6000); break;
     }
 
     rate.delayUntil(10);

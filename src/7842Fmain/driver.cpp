@@ -63,10 +63,6 @@ void driverDeviceControl() {
     setNewDeviceState(lift, upSlow);
   } else if (mDigital(B)) {
     setNewDeviceState(lift, downSlow);
-  } else if (mDigital(RIGHT)) {
-    setNewDeviceState(lift, upMedium);
-  } else if (mDigital(DOWN)) {
-    setNewDeviceState(lift, downMedium);
   } else {
     setNewDeviceState(lift, brakeAndHold);
   }
@@ -83,11 +79,13 @@ void driverDeviceControl() {
     setNewDeviceState(claw, close);
   } else if (mDigital(L1)) {
     setNewDeviceState(claw, open);
+  } else if (mDigital(DOWN)) {
+    setNewDeviceState(claw, closeMedium);
   } else {
     auto state = Robot::claw()->getState();
     if (state == clawStates::open) {
       setNewDeviceState(claw, brake);
-    } else if (state == clawStates::close) {
+    } else if (state == clawStates::close || state == clawStates::closeMedium) {
       setNewDeviceState(claw, clamp);
     }
   }

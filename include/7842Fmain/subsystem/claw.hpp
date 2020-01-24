@@ -8,6 +8,7 @@ enum class clawStates {
   close, // motor 100% voltage
   open, // motor -100% voltage
   clamp, // constant close voltage
+  closeMedium // hold close
 };
 
 class Claw : public StateMachine<clawStates, clawStates::brake> {
