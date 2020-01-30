@@ -69,14 +69,7 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
 
   // back up
   chassis.strafeAbsoluteDirection(1_ft, 135_deg, makeAngle(-45_deg));
-
-  // wait for lift
-  pros::delay(1000);
-
-  // go back to above stack
-  slowDown();
-  chassis.strafeToPoint(toClaw({{1_ft - 2_in, 11.5_ft}, -45_deg}), makeAngle(-45_deg));
-  speedUp();
+  Robot::lift()->setState(liftStates::brakeAndHold);
 }
 
 void bigZone(const std::shared_ptr<SideController>& controller) {
