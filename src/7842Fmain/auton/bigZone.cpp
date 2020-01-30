@@ -10,22 +10,21 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   chassis.strafeAbsoluteDirection(2_in, 100_deg, makeAngle(90_deg));
 
   // push cube into goal
-  chassis.strafeAbsoluteDirection(7.5_in, -10_deg, makeAngle(90_deg));
+  chassis.strafeAbsoluteDirection(7_in, -10_deg, makeAngle(90_deg));
 
   // go above inner protected
   chassis.strafeToPoint(toClaw({innerProtectedCube, 90_deg}), makeAngle(90_deg));
 
   // deploy robot
-  asyncTask(Robot::get().deploy(); Robot::lift()->goToPosition(Lift::aboveCubePos););
-  Robot::claw()->setState(clawStates::clamp);
+  asyncTask(Robot::get().deploy(); Robot::claw()->setState(clawStates::close););
 
   // wait for robot to deploy
-  pros::delay(500);
+  pros::delay(1000);
 
   // grab inner protected cube
   spikeCube();
+  Robot::claw()->setState(clawStates::clamp);
   Robot::lift()->goToPosition(Lift::aboveCubePos);
-  pros::delay(200);
 
   // drive to outer cube
   chassis.strafeToPoint(toClaw({outerProtectedCube, 90_deg}), makeAngle(90_deg));

@@ -2,7 +2,7 @@
 
 using namespace lib7842::units;
 
-const QLength clawOffset {1_ft + 3_in}; // TODO: adjust claw offset
+const QLength clawOffset {1_ft + 3.5_in}; // TODO: adjust claw offset
 
 const QLength cubeWidth {5.5_in};
 const QLength cubeHalf {cubeWidth / 2};

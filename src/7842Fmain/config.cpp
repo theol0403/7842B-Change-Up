@@ -179,4 +179,8 @@ GUI::Selector* Robot::selector() {
   getDevice(selector);
 }
 
-void Robot::deploy() {}
+void Robot::deploy() {
+  claw()->setState(clawStates::open);
+  pros::delay(500);
+  claw()->setState(clawStates::off);
+}
