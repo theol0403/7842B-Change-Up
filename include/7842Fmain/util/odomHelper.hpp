@@ -31,6 +31,8 @@ extern const PursuitLimits defaultLimits;
  * Utility functions
  */
 #define makeAngle(x) SideController::makeAngleCalculator(x, side)
+#define makeSettle OdomController::makeSettler
+
 #define mirror SideController::mirror
 
 #define getChassis() std::make_pair(*controller, controller->getSide());

@@ -93,8 +93,8 @@ void Lift::loop() {
         break;
 
       case liftStates::down:
-        motors[0]->moveVoltage(-10000);
-        motors[1]->moveVoltage(-10000);
+        motors[0]->moveVoltage(-12000);
+        motors[1]->moveVoltage(-12000);
         break;
 
       case liftStates::upSlow:

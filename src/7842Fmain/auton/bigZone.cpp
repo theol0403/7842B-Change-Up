@@ -7,10 +7,10 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   Robot::odom()->setState(mirror({9_in, 9.8_ft, 90_deg}, side));
 
   // drive forward a bit
-  chassis.strafeAbsoluteDirection(2_in, 100_deg, makeAngle(90_deg));
+  chassis.strafeAbsoluteDirection(4_in, 100_deg, makeAngle(90_deg), 1, makeSettle(2_in));
 
   // push cube into goal
-  chassis.strafeAbsoluteDirection(7_in, -10_deg, makeAngle(90_deg));
+  chassis.strafeAbsoluteDirection(9_in, -10_deg, makeAngle(90_deg), 1, makeSettle(2_in));
 
   // go above inner protected
   chassis.strafeToPoint(toClaw({innerProtectedCube, 90_deg}), makeAngle(90_deg));
@@ -24,7 +24,7 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   // grab inner protected cube
   spikeCube();
   Robot::claw()->setState(clawStates::clamp);
-  Robot::lift()->goToPosition(Lift::aboveCubePos);
+  Robot::lift()->goToPosition(700);
 
   // drive to outer cube
   chassis.strafeToPoint(toClaw({outerProtectedCube, 90_deg}), makeAngle(90_deg));
