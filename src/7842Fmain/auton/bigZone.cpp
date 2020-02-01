@@ -1,10 +1,11 @@
 #include "7842Fmain/auton.hpp"
+using namespace lib7842::units;
 
 void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   // TODO: measure position
-  Robot::odom()->setState(mirror({8.9_in, 9.75_ft, 90_deg}, side));
+  Robot::odom()->setState(mirror({9_in, 9.75_ft, 90_deg}, side));
 
   // drive forward a bit
   chassis.strafeAbsoluteDirection(4.5_in, 100_deg, makeAngle(90_deg), 1, makeSettle(2_in));
@@ -20,8 +21,6 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
 
   // wait for robot to deploy
   pros::delay(500);
-  chassis.strafeAbsoluteDirection(4_in, 100_deg, makeAngle(90_deg), 1, makeSettle(2_in));
-  pros::delay(600);
 
   // grab inner protected cube
   spikeCube();
@@ -44,20 +43,26 @@ void bigGrabStack(const std::shared_ptr<SideController>& controller) {
 
   slowDown(); // set max voltage while lift is up
   // drive to cube stack
-  chassis.strafeToPoint(toClaw({fourStackCube, 90_deg}), makeAngle(90_deg));
+  chassis.strafeToPoint(toClaw({{2_tile + cubeHalf - 0.8_in, 4_tile + cubeHalf}, 90_deg}),
+                        makeAngle(90_deg));
   speedUp();
 
   // spike stack and raise lift a bit
 
+  // start lower
+  Robot::claw()->setState(clawStates::off);
   Robot::lift()->setState(liftStates::down);
-  while (Robot::lift()->getHeight() > 500) {
-    pros::delay(10);
-  }
-  Robot::lift()->setState(liftStates::up);
-  pros::delay(400);
+  pros::delay(500);
+  Robot::claw()->setState(clawStates::brake);
 
-  Robot::lift()->setState(liftStates::down);
+  // stagger
   while (Robot::lift()->getHeight() > 50) {
+    if (std::abs(Robot::lift()->getLeftMotor()->getActualVelocity()) > 5) {
+      Robot::lift()->setState(liftStates::down);
+    } else {
+      Robot::lift()->setState(liftStates::up);
+      pros::delay(400);
+    }
     pros::delay(10);
   }
 
@@ -69,7 +74,7 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   // lift
-  Robot::lift()->goToPosition(400);
+  Robot::lift()->goToPosition(500);
 
   // move to goal
   speedUp();
