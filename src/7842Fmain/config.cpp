@@ -181,6 +181,6 @@ GUI::Selector* Robot::selector() {
 
 void Robot::deploy() {
   claw()->setState(clawStates::open);
-  pros::delay(500);
+  pros::delay(400);
   claw()->setState(clawStates::off);
 }

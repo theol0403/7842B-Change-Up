@@ -4,7 +4,7 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   // TODO: measure position
-  Robot::odom()->setState(mirror({8.95_in, 9.75_ft, 90_deg}, side));
+  Robot::odom()->setState(mirror({8.9_in, 9.75_ft, 90_deg}, side));
 
   // drive forward a bit
   chassis.strafeAbsoluteDirection(4.5_in, 100_deg, makeAngle(90_deg), 1, makeSettle(2_in));
@@ -20,7 +20,7 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
 
   // wait for robot to deploy
   pros::delay(500);
-  chassis.strafeAbsoluteDirection(3_in, 100_deg, makeAngle(90_deg), 1, makeSettle(2_in));
+  chassis.strafeAbsoluteDirection(4_in, 100_deg, makeAngle(90_deg), 1, makeSettle(2_in));
   pros::delay(600);
 
   // grab inner protected cube
@@ -57,7 +57,7 @@ void bigGrabStack(const std::shared_ptr<SideController>& controller) {
   pros::delay(400);
 
   Robot::lift()->setState(liftStates::down);
-  while (Robot::lift()->getHeight() > 60) {
+  while (Robot::lift()->getHeight() > 50) {
     pros::delay(10);
   }
 
@@ -74,7 +74,7 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   // move to goal
   speedUp();
   chassis.strafeToPoint(toClaw({{1_ft - 2.5_in, 11.5_ft + 0.5_in}, -45_deg}), makeAngle(-45_deg));
-  pros::delay(100);
+  pros::delay(400);
 
   Robot::claw()->setState(clawStates::open);
   pros::delay(500);
