@@ -1,8 +1,12 @@
 #include "7842Fmain/auton.hpp"
 using namespace lib7842::units;
 
+Timer timer;
+
 void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
+
+  timer.placeMark();
 
   // TODO: measure position
   Robot::odom()->setState(mirror({9_in, 9.75_ft, 90_deg}, side));
@@ -43,7 +47,7 @@ void bigGrabStack(const std::shared_ptr<SideController>& controller) {
 
   slowDown(); // set max voltage while lift is up
   // drive to cube stack
-  chassis.strafeToPoint(toClaw({{2_tile + cubeHalf - 0.8_in, 4_tile + cubeHalf}, 90_deg}),
+  chassis.strafeToPoint(toClaw({{2_tile + cubeHalf - 0.9_in, 4_tile + cubeHalf}, 90_deg}),
                         makeAngle(90_deg));
   speedUp();
 
@@ -63,6 +67,9 @@ void bigGrabStack(const std::shared_ptr<SideController>& controller) {
       Robot::lift()->setState(liftStates::up);
       pros::delay(400);
     }
+
+    if (timer.getDtFromMark() > 11_s) { break; }
+
     pros::delay(10);
   }
 
