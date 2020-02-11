@@ -12,10 +12,11 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   Robot::odom()->setState(mirror({9_in, 9.75_ft, 90_deg}, side));
 
   // drive forward a bit
-  chassis.strafeAbsoluteDirection(4.5_in, 100_deg, makeAngle(90_deg), 1, makeSettle(2_in));
+  chassis.strafeAbsoluteDirection(4.5_in, 100_deg, makeAngle(90_deg), 1,
+                                  Settler().distanceErr(2_in));
 
   // push cube into goal
-  chassis.strafeAbsoluteDirection(9_in, -10_deg, makeAngle(90_deg), 1, makeSettle(2_in));
+  chassis.strafeAbsoluteDirection(9_in, -10_deg, makeAngle(90_deg), 1, Settler().distanceErr(2_in));
 
   // go above inner protected
   chassis.strafeToPoint(toClaw({innerProtectedCube, 90_deg}), makeAngle(90_deg));

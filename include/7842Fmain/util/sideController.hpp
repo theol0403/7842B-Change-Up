@@ -8,51 +8,52 @@ public:
     controller(icontroller), side(iside) {}
 
   void turnToAngle(const QAngle& angle, const Turner& turner = OdomController::pointTurn,
-                   const Settler& settler = OdomController::defaultTurnSettler) {
-    controller->turnToAngle(mirror(angle, side), turner, settler);
+                   Settler&& settler = Trigger().turnSettled()) {
+    controller->turnToAngle(mirror(angle, side), turner, std::move(settler));
   }
 
   void turnAngle(const QAngle& angle, const Turner& turner = OdomController::pointTurn,
-                 const Settler& settler = OdomController::defaultTurnSettler) {
-    controller->turnAngle(mirror(angle, side), turner, settler);
+                 Settler&& settler = Trigger().turnSettled()) {
+    controller->turnAngle(mirror(angle, side), turner, std::move(settler));
   }
 
   void turnToPoint(const Vector& point, const Turner& turner = OdomController::pointTurn,
-                   const Settler& settler = OdomController::defaultTurnSettler) {
-    controller->turnToPoint(mirror(point, side), turner, settler);
+                   Settler&& settler = Trigger().turnSettled()) {
+    controller->turnToPoint(mirror(point, side), turner, std::move(settler));
   }
 
   void driveToPoint(const Vector& targetPoint, double turnScale = 1,
-                    const Settler& settler = OdomController::defaultDriveAngleSettler) {
-    controller->driveToPoint(mirror(targetPoint, side), turnScale, settler);
+                    Settler&& settler = Settler().distanceSettled().angleSettled()) {
+    controller->driveToPoint(mirror(targetPoint, side), turnScale, std::move(settler));
   }
 
   void driveToPoint2(const Vector& targetPoint, double turnScale = 1,
-                     const Settler& settler = OdomController::defaultDriveAngleSettler) {
-    controller->driveToPoint2(mirror(targetPoint, side), turnScale, settler);
+                     Settler&& settler = Settler().distanceSettled().angleSettled()) {
+    controller->driveToPoint2(mirror(targetPoint, side), turnScale, std::move(settler));
   }
 
   void strafeRelativeDirection(const QLength& distance, const QAngle& direction,
                                const AngleCalculator& angleCalculator = makeAngleCalculator(),
                                double turnScale = 1,
-                               const Settler& settler = OdomController::defaultDriveAngleSettler) {
+                               Settler&& settler = Settler().distanceSettled().angleSettled()) {
     controller->strafeRelativeDirection(distance, mirror(direction, side), angleCalculator,
-                                        turnScale, settler);
+                                        turnScale, std::move(settler));
   }
 
   void strafeAbsoluteDirection(const QLength& distance, const QAngle& direction,
                                const AngleCalculator& angleCalculator = makeAngleCalculator(),
                                double turnScale = 1,
-                               const Settler& settler = OdomController::defaultDriveAngleSettler) {
+                               Settler&& settler = Settler().distanceSettled().angleSettled()) {
     controller->strafeAbsoluteDirection(distance, mirror(direction, side), angleCalculator,
-                                        turnScale, settler);
+                                        turnScale, std::move(settler));
   }
 
   void strafeToPoint(const Vector& targetPoint,
                      const AngleCalculator& angleCalculator = makeAngleCalculator(),
                      double turnScale = 1,
-                     const Settler& settler = OdomController::defaultDriveAngleSettler) {
-    controller->strafeToPoint(mirror(targetPoint, side), angleCalculator, turnScale, settler);
+                     Settler&& settler = Settler().distanceSettled().angleSettled()) {
+    controller->strafeToPoint(mirror(targetPoint, side), angleCalculator, turnScale,
+                              std::move(settler));
   }
 
   static AngleCalculator makeAngleCalculator(const QAngle& angle, const sides& side) {
