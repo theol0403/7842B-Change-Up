@@ -49,25 +49,25 @@ Motor arm(15);
 
 void driverDeviceControl() {
 
-  if (mDigital(R2)) {
+  if (mDigital(L2)) {
     rollers.moveVoltage(12000);
-  } else if (mDigital(R1)) {
+  } else if (mDigital(L1)) {
     rollers.moveVoltage(-12000);
   } else {
     rollers.moveVoltage(0);
   }
 
-  if (mDigital(L2)) {
+  if (mDigital(X)) {
     tipper.moveVoltage(12000);
-  } else if (mDigital(L1)) {
+  } else if (mDigital(B)) {
     tipper.moveVoltage(-12000);
   } else {
     tipper.moveVoltage(0);
   }
 
-  if (mDigital(X)) {
+  if (mDigital(R1)) {
     arm.moveVoltage(12000);
-  } else if (mDigital(B)) {
+  } else if (mDigital(R2)) {
     arm.moveVoltage(-12000);
   } else {
     arm.moveVoltage(0);
