@@ -43,4 +43,24 @@ void driverBaseControl() {
  *    |___/ \___| \_/ |_|\___\___|  \____/\___/|_| |_|\__|_|  \___/|_|
  */
 
-void driverDeviceControl() {}
+MotorGroup rollers(7, -8);
+Motor angler(9);
+
+void driverDeviceControl() {
+
+  if (mDigital(R2)) {
+    rollers.moveVoltage(12000);
+  } else if (mDigital(R1)) {
+    rollers.moveVoltage(-12000);
+  } else {
+    rollers.moveVoltage(0);
+  }
+
+  if (mDigital(L2)) {
+    angler.moveVoltage(12000);
+  } else if (mDigital(L1)) {
+    angler.moveVoltage(-12000);
+  } else {
+    angler.moveVoltage(0);
+  }
+}
