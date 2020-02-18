@@ -43,8 +43,9 @@ void driverBaseControl() {
  *    |___/ \___| \_/ |_|\___\___|  \____/\___/|_| |_|\__|_|  \___/|_|
  */
 
-MotorGroup rollers(7, -8);
-Motor angler(9);
+MotorGroup rollers(-5, 9);
+Motor tipper(14);
+Motor arm(15);
 
 void driverDeviceControl() {
 
@@ -57,10 +58,18 @@ void driverDeviceControl() {
   }
 
   if (mDigital(L2)) {
-    angler.moveVoltage(12000);
+    tipper.moveVoltage(12000);
   } else if (mDigital(L1)) {
-    angler.moveVoltage(-12000);
+    tipper.moveVoltage(-12000);
   } else {
-    angler.moveVoltage(0);
+    tipper.moveVoltage(0);
+  }
+
+  if (mDigital(X)) {
+    arm.moveVoltage(12000);
+  } else if (mDigital(B)) {
+    arm.moveVoltage(-12000);
+  } else {
+    arm.moveVoltage(0);
   }
 }
