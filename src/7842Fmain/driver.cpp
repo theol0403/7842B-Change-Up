@@ -15,7 +15,7 @@
 #define setNewDeviceState(device, state) Robot::device()->setNewState(device##States::state);
 
 /***
- *    ______                  _____             _             _ 
+ *    ______                  _____             _             _
  *    | ___ \                /  __ \           | |           | |
  *    | |_/ / __ _ ___  ___  | /  \/ ___  _ __ | |_ _ __ ___ | |
  *    | ___ \/ _` / __|/ _ \ | |    / _ \| '_ \| __| '__/ _ \| |
@@ -35,7 +35,7 @@ void driverBaseControl() {
 }
 
 /***
- *    ______           _            _____             _             _ 
+ *    ______           _            _____             _             _
  *    |  _  \         (_)          /  __ \           | |           | |
  *    | | | |_____   ___  ___ ___  | /  \/ ___  _ __ | |_ _ __ ___ | |
  *    | | | / _ \ \ / / |/ __/ _ \ | |    / _ \| '_ \| __| '__/ _ \| |
@@ -45,7 +45,7 @@ void driverBaseControl() {
 
 MotorGroup rollers({-5, 9});
 Motor tipper(14);
-Motor arm(15);
+Motor arm(-15);
 
 void driverDeviceControl() {
 
