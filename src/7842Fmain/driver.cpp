@@ -43,7 +43,7 @@ void driverBaseControl() {
  *    |___/ \___| \_/ |_|\___\___|  \____/\___/|_| |_|\__|_|  \___/|_|
  */
 
-MotorGroup rollers(-5, 9);
+MotorGroup rollers({-5, 9});
 Motor tipper(14);
 Motor arm(15);
 
