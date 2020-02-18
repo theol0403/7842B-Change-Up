@@ -70,14 +70,6 @@ void Robot::_initializeScreen() {
 
   _screen->startTask("Screen");
 
-  _screen->makePage<GUI::Graph>("Lift")
-    .withRange(-250, 900)
-    .withResolution(50)
-    .withSeries("Left Lift Power", LV_COLOR_RED,
-                [&]() { return _lift->getLeftMotor()->getCurrentDraw(); })
-    .withSeries("Right Lift Power", LV_COLOR_GREEN,
-                [&]() { return _lift->getRightMotor()->getCurrentDraw(); });
-
   _screen->makePage<GUI::Actions>("Actions")
     .button("Nothing", [&]() {})
     .button("Deploy", [&]() { Robot::get().deploy(); })
