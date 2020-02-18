@@ -17,9 +17,9 @@ void Robot::_initializeChassis() {
     std::make_shared<Motor>(-3), //
     std::make_shared<Motor>(4), //
     // sensors
-    std::make_shared<ADIEncoder>(3, 4, true), //
     std::make_shared<ADIEncoder>(5, 6), //
-    std::make_shared<ADIEncoder>(1, 2, true), //
+    std::make_shared<ADIEncoder>(1, 2), //
+    std::make_shared<ADIEncoder>(3, 4), //
     // limits
     200, 12000);
 
@@ -53,21 +53,7 @@ void Robot::_initializeChassis() {
  *    | |/ /  __/\ V /| | (_|  __/\__ \
  *    |___/ \___| \_/ |_|\___\___||___/                              
  */
-void Robot::_initializeDevices() {
-
-  auto leftLift = std::make_shared<Motor>(9);
-  auto rightLift = std::make_shared<Motor>(-10);
-
-  _lift = std::make_shared<Lift>(
-    leftLift, rightLift, //
-    std::make_shared<IntegratedEncoder>(9), std::make_shared<IntegratedEncoder>(10, true),
-    std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
-                                                TimeUtilFactory().create()),
-    std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
-                                                TimeUtilFactory().create()));
-
-  _claw = std::make_shared<Claw>(std::make_shared<Motor>(-8));
-}
+void Robot::_initializeDevices() {}
 
 /***
  *     _____                          
@@ -93,9 +79,7 @@ void Robot::_initializeScreen() {
                 [&]() { return _lift->getRightMotor()->getCurrentDraw(); });
 
   _screen->makePage<GUI::Actions>("Actions")
-    .button("Calibrate Lift", [&]() { _lift->setState(liftStates::calibrate); })
-    .button("Systems Off", [&]() { _lift->setState(liftStates::off); })
-    .newRow()
+    .button("Nothing", [&]() {})
     .button("Deploy", [&]() { Robot::get().deploy(); })
     .button("Autonomous", [&]() { autonomous(); })
     .build();
@@ -103,24 +87,7 @@ void Robot::_initializeScreen() {
   using sides = SideController::sides;
 
   _selector = static_cast<GUI::Selector*>( //
-    &_screen->makePage<GUI::Selector>("Auton")
-       .button("None", []() {})
-       .newRow()
-       .button("bigRed", []() { runAuton(bigZone, sides::red); })
-       .button("bigBlue", []() { runAuton(bigZone, sides::blue); })
-       .newRow()
-       .button("bigTowerRed", []() { runAuton(bigZoneTower, sides::red); })
-       .button("bigTowerBlue", []() { runAuton(bigZoneTower, sides::blue); })
-       .newRow()
-       .button("bigCloseTowerRed", []() { runAuton(bigZoneCloseTower, sides::red); })
-       .button("bigCloseTowerBlue", []() { runAuton(bigZoneCloseTower, sides::blue); })
-       .newRow()
-       .button("outerProtectedRed", []() { runAuton(bigPreloadProtected, sides::red); })
-       .button("outerProtectedBlue", []() { runAuton(bigPreloadProtected, sides::blue); })
-       .newRow()
-       .button("TestRed", []() { runAuton(testAuton, sides::red); })
-       .button("TestBlue", []() { runAuton(testAuton, sides::blue); })
-       .build());
+    &_screen->makePage<GUI::Selector>("Auton").button("None", []() {}).build());
 }
 
 /***
@@ -167,22 +134,8 @@ std::shared_ptr<PathFollower> Robot::follower() {
   getDevice(follower);
 }
 
-std::shared_ptr<Lift> Robot::lift() {
-  getDevice(lift);
-}
-
-std::shared_ptr<Claw> Robot::claw() {
-  getDevice(claw);
-}
-
 GUI::Selector* Robot::selector() {
   getDevice(selector);
 }
 
-void Robot::deploy() {
-  claw()->setState(clawStates::open);
-  lift()->setState(liftStates::upMedium);
-  pros::delay(300);
-  claw()->setState(clawStates::off);
-  lift()->setState(liftStates::off);
-}
+void Robot::deploy() {}
