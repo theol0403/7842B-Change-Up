@@ -49,6 +49,8 @@ Motor arm(-15);
 
 void driverDeviceControl() {
 
+  arm.setBrakeMode(AbstractMotor::brakeMode::hold);
+
   if (mDigital(L2)) {
     rollers.moveVoltage(12000);
   } else if (mDigital(L1)) {
@@ -70,6 +72,6 @@ void driverDeviceControl() {
   } else if (mDigital(R2)) {
     arm.moveVoltage(-12000);
   } else {
-    arm.moveVoltage(0);
+    arm.moveVelocity(0);
   }
 }
