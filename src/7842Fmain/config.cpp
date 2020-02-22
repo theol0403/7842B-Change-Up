@@ -12,10 +12,10 @@
 void Robot::_initializeChassis() {
   _model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
-    std::make_shared<Motor>(1), //
-    std::make_shared<Motor>(-2), //
-    std::make_shared<Motor>(-3), //
-    std::make_shared<Motor>(4), //
+    std::make_shared<Motor>(2), // top left
+    std::make_shared<Motor>(-8), // top right
+    std::make_shared<Motor>(-3), // bottom right
+    std::make_shared<Motor>(6), // bottom left
     // sensors
     std::make_shared<ADIEncoder>(3, 4, true), //
     std::make_shared<ADIEncoder>(5, 6), //
@@ -55,18 +55,18 @@ void Robot::_initializeChassis() {
  */
 void Robot::_initializeDevices() {
 
-  auto leftLift = std::make_shared<Motor>(9);
-  auto rightLift = std::make_shared<Motor>(-10);
+  auto leftLift = std::make_shared<Motor>(14);
+  auto rightLift = std::make_shared<Motor>(-12);
 
   _lift = std::make_shared<Lift>(
     leftLift, rightLift, //
-    std::make_shared<IntegratedEncoder>(9), std::make_shared<IntegratedEncoder>(10, true),
+    std::make_shared<IntegratedEncoder>(14), std::make_shared<IntegratedEncoder>(12, true),
     std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
                                                 TimeUtilFactory().create()),
     std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
                                                 TimeUtilFactory().create()));
 
-  _claw = std::make_shared<Claw>(std::make_shared<Motor>(-8));
+  _claw = std::make_shared<Claw>(std::make_shared<Motor>(-13));
 }
 
 /***
