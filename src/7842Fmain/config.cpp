@@ -17,9 +17,9 @@ void Robot::_initializeChassis() {
     std::make_shared<Motor>(-3), // bottom right
     std::make_shared<Motor>(6), // bottom left
     // sensors
-    std::make_shared<ADIEncoder>(3, 4, true), //
-    std::make_shared<ADIEncoder>(5, 6), //
     std::make_shared<ADIEncoder>(1, 2, true), //
+    std::make_shared<ADIEncoder>(5, 6, true), //
+    std::make_shared<ADIEncoder>(3, 4, true), //
     // limits
     200, 12000);
 
