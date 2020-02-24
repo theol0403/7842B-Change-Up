@@ -79,26 +79,7 @@ void Robot::_initializeDevices() {
  */
 void Robot::_initializeScreen() {
   _screen = std::make_shared<GUI::Screen>(lv_scr_act(), LV_COLOR_ORANGE);
-
-  _screen->makePage<GUI::Odom>("Odom").attachOdom(_odom).attachResetter([&]() { _odom->reset(); });
-
   _screen->startTask("Screen");
-
-  _screen->makePage<GUI::Graph>("Lift")
-    .withRange(-250, 900)
-    .withResolution(50)
-    .withSeries("Left Lift Power", LV_COLOR_RED,
-                [&]() { return _lift->getLeftMotor()->getCurrentDraw(); })
-    .withSeries("Right Lift Power", LV_COLOR_GREEN,
-                [&]() { return _lift->getRightMotor()->getCurrentDraw(); });
-
-  _screen->makePage<GUI::Actions>("Actions")
-    .button("Calibrate Lift", [&]() { _lift->setState(liftStates::calibrate); })
-    .button("Systems Off", [&]() { _lift->setState(liftStates::off); })
-    .newRow()
-    .button("Deploy", [&]() { Robot::get().deploy(); })
-    .button("Autonomous", [&]() { autonomous(); })
-    .build();
 
   using sides = SideController::sides;
 
@@ -115,6 +96,24 @@ void Robot::_initializeScreen() {
        .button("TestRed", []() { runAuton(testAuton, sides::red); })
        .button("TestBlue", []() { runAuton(testAuton, sides::blue); })
        .build());
+
+  _screen->makePage<GUI::Actions>("Actions")
+    .button("Calibrate Lift", [&]() { _lift->setState(liftStates::calibrate); })
+    .button("Systems Off", [&]() { _lift->setState(liftStates::off); })
+    .newRow()
+    .button("Deploy", [&]() { Robot::get().deploy(); })
+    .button("Autonomous", [&]() { autonomous(); })
+    .build();
+
+  _screen->makePage<GUI::Odom>("Odom").attachOdom(_odom).attachResetter([&]() { _odom->reset(); });
+
+  _screen->makePage<GUI::Graph>("Lift")
+    .withRange(-250, 900)
+    .withResolution(50)
+    .withSeries("Left Lift Power", LV_COLOR_RED,
+                [&]() { return _lift->getLeftMotor()->getCurrentDraw(); })
+    .withSeries("Right Lift Power", LV_COLOR_GREEN,
+                [&]() { return _lift->getRightMotor()->getCurrentDraw(); });
 }
 
 /***
