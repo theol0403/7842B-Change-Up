@@ -16,8 +16,6 @@ inline void runAuton(const std::function<void(const std::shared_ptr<SideControll
  * Autons
  */
 void bigZone(const std::shared_ptr<SideController>& controller);
-void bigZoneTower(const std::shared_ptr<SideController>& controller);
-void bigZoneCloseTower(const std::shared_ptr<SideController>& controller);
 void testAuton(const std::shared_ptr<SideController>& controller);
 
 /**
