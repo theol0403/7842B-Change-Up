@@ -52,27 +52,8 @@ void bigGrabStack(const std::shared_ptr<SideController>& controller) {
                         makeAngle(90_deg));
   speedUp();
 
-  // spike stack and raise lift a bit
-
-  // start lower
-  Robot::claw()->setState(clawStates::off);
-  Robot::lift()->setState(liftStates::down);
-  pros::delay(500);
-  Robot::claw()->setState(clawStates::brake);
-
-  // stagger
-  while (Robot::lift()->getHeight() > 50) {
-    if (std::abs(Robot::lift()->getLeftMotor()->getActualVelocity()) > 5) {
-      Robot::lift()->setState(liftStates::down);
-    } else {
-      Robot::lift()->setState(liftStates::up);
-      pros::delay(400);
-    }
-
-    if (timer.getDtFromMark() > 11_s) { break; }
-
-    pros::delay(10);
-  }
+  // spike stack
+  spikeFourStack();
 
   // ignore
   Robot::lift()->goToPosition(Lift::aboveCubePos);
@@ -107,7 +88,15 @@ void bigZone(const std::shared_ptr<SideController>& controller) {
 
   bigPreloadProtected(controller);
 
-  // bigGrabStack(controller);
+  bigGrabStack(controller);
+
+  bigScore(controller);
+}
+
+void bigZoneNoFourStack(const std::shared_ptr<SideController>& controller) {
+  auto&& [chassis, side] = getChassis();
+
+  bigPreloadProtected(controller);
 
   bigScore(controller);
 }
