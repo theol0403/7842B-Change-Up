@@ -137,8 +137,8 @@ void Lift::loop() {
 
       case liftStates::calibrate:
         do {
-          motors[0]->moveVoltage(-4000);
-          motors[1]->moveVoltage(-4000);
+          motors[0]->moveVoltage(-5000);
+          motors[1]->moveVoltage(-5000);
           pros::delay(200);
         } while (std::abs(motors[0]->getActualVelocity()) > 30 ||
                  std::abs(motors[1]->getActualVelocity()) > 30);

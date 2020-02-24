@@ -27,6 +27,8 @@ void driverBaseControl() {
   double rightY = mAnalog(RIGHT_Y);
   double leftX = mAnalog(LEFT_X);
 
+  if (mDigital(A)) { rightY += 0.5; }
+
   Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
                           std::pow(rightY, 2) * util::sgn(rightY),
                           std::pow(leftX, 2) * util::sgn(leftX));
