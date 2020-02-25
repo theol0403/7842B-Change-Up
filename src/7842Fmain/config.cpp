@@ -12,7 +12,7 @@
 void Robot::_initializeChassis() {
   _model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
-    std::make_shared<Motor>(2), // top left
+    std::make_shared<Motor>(1), // top left
     std::make_shared<Motor>(-8), // top right
     std::make_shared<Motor>(-3), // bottom right
     std::make_shared<Motor>(6), // bottom left

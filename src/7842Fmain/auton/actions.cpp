@@ -27,13 +27,13 @@ void spikeFourStack() {
 
   // stagger
   while (Robot::lift()->getHeight() > 100) {
-    if (std::abs(Robot::lift()->getLeftMotor()->getActualVelocity()) > 5) {
+    if (std::abs(Robot::lift()->getLeftMotor()->getActualVelocity()) > 30) {
       Robot::lift()->setState(liftStates::down);
-      Robot::model()->arcade(0.2, 0);
+      Robot::model()->arcade(0.3, 0);
     } else {
       Robot::lift()->setState(liftStates::up);
       Robot::model()->arcade(-0.4, 0);
-      pros::delay(500);
+      pros::delay(600);
     }
 
     pros::delay(10);
