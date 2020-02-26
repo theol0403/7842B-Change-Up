@@ -8,8 +8,6 @@ enum class liftStates {
   down, /// full voltage down
   upSlow, // low velocity up
   downSlow, // low velocity down
-  upMedium, // medium velocity up
-  downMedium, // medium velocity down
   brakeAndHold, // brake for a small about of time, record position, then hold
   holdAtPos, // pid to hold desired position
   aboveCube, // pid to above the cube

@@ -118,16 +118,6 @@ void Lift::loop() {
         motors[1]->moveVelocity(-50);
         break;
 
-      case liftStates::upMedium:
-        motors[0]->moveVelocity(130);
-        motors[1]->moveVelocity(130);
-        break;
-
-      case liftStates::downMedium:
-        motors[0]->moveVelocity(-100);
-        motors[1]->moveVelocity(-100);
-        break;
-
       case liftStates::brakeAndHold:
         enableBrake();
         motors[0]->moveVelocity(0);
