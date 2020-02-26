@@ -38,7 +38,7 @@ void Robot::_initializeChassis() {
       0.045, 0.002, 0.0006, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.035, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(5, 2, 100_ms)),
+      0.04, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(2, 1, 100_ms)),
     TimeUtilFactory().create());
 
   Settler::setDefaultAbort(TimeUtilFactory::withSettledUtilParams(2, 1, 1500_ms));
