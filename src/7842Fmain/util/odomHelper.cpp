@@ -25,8 +25,8 @@ const Vector fourStackCube {2_tile + cubeHalf, 4_tile + cubeHalf};
 
 const PursuitLimits defaultLimits {
   0.2_mps, // min and start vel
-  1.8_mps2, // accel
-  0.8_mps, // max vel
+  1.5_mps2, // accel
+  0.7_mps, // max vel
   40_mps // k
 };
 

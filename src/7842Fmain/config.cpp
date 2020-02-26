@@ -23,7 +23,7 @@ void Robot::_initializeChassis() {
     // limits
     200, 12000);
 
-  ChassisScales scales({2.75_in, 13.068229_in, 0.5_in, 2.75_in * 1.02}, 360);
+  ChassisScales scales({2.75_in, 11.39_in, 0_in, 2.75_in}, 360);
 
   _odom = std::make_shared<CustomOdometry>(_model, scales, TimeUtilFactory().create());
   _odom->startTask("Odometry");
@@ -42,7 +42,8 @@ void Robot::_initializeChassis() {
     TimeUtilFactory().create());
 
   _follower =
-    std::make_shared<PathFollower>(_model, _odom, scales, 1_ft, TimeUtilFactory().create());
+    std::make_shared<PathFollower>(_model, _odom, ChassisScales {{2.75_in, 12_in}, imev5GreenTPR},
+                                   0.8_ft, TimeUtilFactory().create());
 }
 
 /***
