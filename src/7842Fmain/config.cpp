@@ -58,13 +58,12 @@ void Robot::_initializeDevices() {
   auto leftLift = std::make_shared<Motor>(14);
   auto rightLift = std::make_shared<Motor>(-12);
 
-  _lift = std::make_shared<Lift>(
-    leftLift, rightLift, //
-    std::make_shared<IntegratedEncoder>(14), std::make_shared<IntegratedEncoder>(12, true),
-    std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
-                                                TimeUtilFactory().create()),
-    std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
-                                                TimeUtilFactory().create()));
+  _lift =
+    std::make_shared<Lift>(leftLift, rightLift, leftLift->getEncoder(), rightLift->getEncoder(),
+                           std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
+                                                                       TimeUtilFactory().create()),
+                           std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
+                                                                       TimeUtilFactory().create()));
 
   _claw = std::make_shared<Claw>(std::make_shared<Motor>(-13));
 }
