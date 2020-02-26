@@ -100,6 +100,9 @@ public:
    */
   void setPowerWithBrake(const std::valarray<double>& power);
 
+  void enableBrake();
+  void disableBrake();
+
 protected:
   std::valarray<double> getRawPosition() const;
 

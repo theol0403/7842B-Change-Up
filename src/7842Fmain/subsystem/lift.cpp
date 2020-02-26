@@ -48,6 +48,7 @@ std::shared_ptr<AbstractMotor> Lift::getRightMotor() const {
 }
 
 void Lift::setPowerWithBrake(const std::valarray<double>& power) {
+  enableBrake();
   if (std::abs(power[0]) <= 0.05) {
     motors[0]->moveVelocity(0);
   } else {
@@ -61,15 +62,24 @@ void Lift::setPowerWithBrake(const std::valarray<double>& power) {
   }
 }
 
+void Lift::enableBrake() {
+  motors[0]->setBrakeMode(AbstractMotor::brakeMode::brake);
+  motors[1]->setBrakeMode(AbstractMotor::brakeMode::brake);
+}
+
+void Lift::disableBrake() {
+  motors[0]->setBrakeMode(AbstractMotor::brakeMode::coast);
+  motors[1]->setBrakeMode(AbstractMotor::brakeMode::coast);
+}
+
 std::valarray<double> Lift::getRawPosition() const {
   return {sensors[0]->get(), sensors[1]->get()};
 }
 
 void Lift::initialize() {
-  motors[0]->setBrakeMode(AbstractMotor::brakeMode::brake);
   motors[0]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
-  motors[1]->setBrakeMode(AbstractMotor::brakeMode::brake);
   motors[1]->setEncoderUnits(AbstractMotor::encoderUnits::degrees);
+  enableBrake();
 
   startPos = getRawPosition();
 }
@@ -83,6 +93,7 @@ void Lift::loop() {
     switch (state) {
 
       case liftStates::off:
+        disableBrake();
         motors[0]->moveVoltage(0);
         motors[1]->moveVoltage(0);
         break;
@@ -118,6 +129,7 @@ void Lift::loop() {
         break;
 
       case liftStates::brakeAndHold:
+        enableBrake();
         motors[0]->moveVelocity(0);
         motors[1]->moveVelocity(0);
         holdPos = getPosition().sum() / 2.0;
