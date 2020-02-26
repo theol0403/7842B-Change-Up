@@ -9,14 +9,15 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   timer.placeMark();
 
   // TODO: measure position
-  Robot::odom()->setState(mirror({9_in, 9.75_ft, 90_deg}, side));
+  Robot::odom()->setState(mirror({10_in, 9.8_ft, 90_deg}, side));
 
   // drive forward a bit
-  chassis.strafeAbsoluteDirection(4.5_in, 100_deg, makeAngle(90_deg), 1,
-                                  Settler().distanceErr(2_in));
+  chassis.strafeAbsoluteDirection(3_in, 100_deg, makeAngle(90_deg), 1, Settler().distanceErr(2_in));
 
   // push cube into goal
-  chassis.strafeAbsoluteDirection(9_in, -5_deg, makeAngle(90_deg), 1, Settler().distanceErr(2_in));
+  chassis.strafeAbsoluteDirection(
+    8_in, -5_deg, makeAngle(90_deg), 1.5,
+    Settler().distanceErr(2_in).maxTime(1000_ms, TimeUtilFactory().create()));
 
   // go above inner protected
   chassis.strafeToPoint(toClaw({innerProtectedCube, 90_deg}), makeAngle(90_deg));
@@ -41,7 +42,7 @@ void bigGrabStack(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   Robot::lift()->goToPosition(Lift::fourStackPos);
-  pros::delay(1000);
+  pros::delay(1500);
 
   slowDown(); // set max voltage while lift is up
   // drive to cube stack
@@ -64,7 +65,7 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
 
   // move to goal
   speedUp();
-  chassis.strafeToPoint(toClaw({{1_ft - 2.5_in, 11.5_ft + 0.5_in}, -45_deg}), makeAngle(-45_deg));
+  chassis.strafeToPoint(toClaw({{1_ft - 5_in, 11.5_ft + 2_in}, -45_deg}), makeAngle(-45_deg));
   pros::delay(500);
 
   Robot::claw()->setState(clawStates::open);

@@ -38,10 +38,10 @@ void Robot::_initializeChassis() {
       0.045, 0.002, 0.0006, 0, TimeUtilFactory::withSettledUtilParams(2, 2, 100_ms)),
     //Angle PID - To Degree
     std::make_unique<IterativePosPIDController>(
-      0.03, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(5, 2, 100_ms)),
+      0.035, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(5, 2, 100_ms)),
     TimeUtilFactory().create());
 
-  Settler::setDefaultAbort(TimeUtilFactory::withSettledUtilParams(2, 1, 1000_ms));
+  Settler::setDefaultAbort(TimeUtilFactory::withSettledUtilParams(2, 1, 1500_ms));
 
   _follower =
     std::make_shared<PathFollower>(_model, _odom, ChassisScales {{2.75_in, 12_in}, imev5GreenTPR},

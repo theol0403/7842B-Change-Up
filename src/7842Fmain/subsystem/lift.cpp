@@ -1,7 +1,7 @@
 #include "lift.hpp"
 
-const double Lift::aboveCubePos {900};
-const double Lift::fourStackPos {1800};
+const double Lift::aboveCubePos {1000};
+const double Lift::fourStackPos {2000};
 const double Lift::smallTowerPos {14000};
 const double Lift::mediumTowerPos {1800};
 const double Lift::middleTowerPos {2300};
@@ -133,7 +133,7 @@ void Lift::loop() {
         break;
 
       case liftStates::aboveCube:
-        holdPos = 600;
+        holdPos = 1000;
         state = liftStates::holdAtPos;
         break;
 
