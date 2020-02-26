@@ -41,6 +41,8 @@ void Robot::_initializeChassis() {
       0.03, 0, 0, 0, TimeUtilFactory::withSettledUtilParams(5, 2, 100_ms)),
     TimeUtilFactory().create());
 
+  Settler::setDefaultAbort(TimeUtilFactory::withSettledUtilParams(2, 1, 1000_ms));
+
   _follower =
     std::make_shared<PathFollower>(_model, _odom, ChassisScales {{2.75_in, 12_in}, imev5GreenTPR},
                                    0.8_ft, TimeUtilFactory().create());
