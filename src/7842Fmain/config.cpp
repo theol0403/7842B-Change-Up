@@ -173,9 +173,10 @@ GUI::Selector* Robot::selector() {
 }
 
 void Robot::deploy() {
-  claw()->setState(clawStates::open);
-  lift()->setState(liftStates::upMedium);
+  claw()->setState(clawStates::close);
+  lift()->setState(liftStates::up);
   pros::delay(300);
   claw()->setState(clawStates::off);
+  pros::delay(500);
   lift()->setState(liftStates::off);
 }
