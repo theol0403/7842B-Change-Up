@@ -13,7 +13,7 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
 
   // push cube into goal
   util::strafeVector(Robot::model(), 1, 0, -85_deg);
-  pros::delay(500);
+  pros::delay(400);
   Robot::model()->tank(0, 0);
 
   // go above inner protected
@@ -43,7 +43,7 @@ void bigGrabStack(const std::shared_ptr<SideController>& controller) {
 
   slowDown(); // set max voltage while lift is up
   // drive to cube stack
-  chassis.strafeToPoint(toClaw({{2_tile + cubeHalf, 4_tile + cubeHalf}, 180_deg}),
+  chassis.strafeToPoint(toClaw({{2_tile + cubeHalf, 4_tile + cubeHalf + 3_in}, 180_deg}),
                         makeAngle(180_deg));
   speedUp();
 
@@ -62,20 +62,20 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
 
   // move to goal
   speedUp();
-  chassis.strafeToPoint({4_ft, 11_ft}, makeAngle(-90_deg), 1, Settler().distanceErr(3_in));
-  chassis.strafeToPoint(toClaw({{1_ft, 11.5_ft}, -90_deg}), makeAngle(-90_deg));
+  chassis.strafeToPoint({4_ft, 10.5_ft}, makeAngle(-90_deg), 1, Settler().distanceErr(4_in));
+  chassis.strafeToPoint(toClaw({{1_ft, 11.8_ft}, -40_deg}), makeAngle(-40_deg));
   pros::delay(500);
 
   Robot::claw()->setState(clawStates::open);
-  pros::delay(700);
+  pros::delay(1000);
   Robot::claw()->setState(clawStates::brake);
 
-  // raise lift
-  Robot::lift()->goToPosition(1000);
-  pros::delay(100);
+  // // raise lift
+  // Robot::lift()->goToPosition(1000);
+  // pros::delay(100);
 
-  // back up
-  chassis.strafeAbsoluteDirection(0.5_ft, 135_deg, makeAngle(-45_deg));
+  // // back up
+  // chassis.strafeAbsoluteDirection(0.5_ft, 135_deg, makeAngle(-45_deg));
   Robot::lift()->setState(liftStates::off);
 }
 
