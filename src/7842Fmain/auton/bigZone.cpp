@@ -1,12 +1,8 @@
 #include "7842Fmain/auton.hpp"
 using namespace lib7842::units;
 
-Timer timer;
-
-void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
+void bigPreloadInner(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
-
-  timer.placeMark();
 
   // TODO: measure position
   Robot::odom()->setState(mirror({10_in, 9.8_ft, 90_deg}, side));
@@ -26,20 +22,37 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   // grab inner protected cube
   spikeCube();
   Robot::lift()->goToPosition(Lift::aboveCubePos);
+}
 
-  // // drive to outer cube
-  // chassis.strafeToPoint(toClaw({outerProtectedCube, 180_deg}), makeAngle(180_deg));
+void bigInnerToOuter(const std::shared_ptr<SideController>& controller) {
+  auto&& [chassis, side] = getChassis();
 
-  // // spike cube
-  // spikeCube();
-  // Robot::lift()->goToPosition(Lift::aboveCubePos);
+  // drive to outer cube
+  chassis.strafeToPoint(toClaw({outerProtectedCube, 180_deg}), makeAngle(180_deg));
+
+  // spike cube
+  spikeCube();
+  Robot::lift()->goToPosition(Lift::aboveCubePos);
+}
+
+void bigInnerToStack(const std::shared_ptr<SideController>& controller) {
+  auto&& [chassis, side] = getChassis();
+
+  // drive towards stack
+  Robot::lift()->goToPosition(Lift::fourStackPos);
+  chassis.strafeToPoint({3_ft, 10_ft}, makeAngle(180_deg), 1, Settler().distanceErr(4_in));
+}
+
+void bigOuterToStack(const std::shared_ptr<SideController>& controller) {
+  auto&& [chassis, side] = getChassis();
+
+  // drive towards stack
+  Robot::lift()->goToPosition(Lift::fourStackPos);
+  chassis.strafeToPoint({3_ft, 10_ft}, makeAngle(180_deg), 1, Settler().distanceErr(4_in));
 }
 
 void bigGrabStack(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
-
-  Robot::lift()->goToPosition(Lift::fourStackPos);
-  chassis.strafeToPoint({3_ft, 10_ft}, makeAngle(180_deg), 1, Settler().distanceErr(4_in));
 
   slowDown(); // set max voltage while lift is up
   // drive to cube stack
@@ -79,10 +92,26 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   Robot::lift()->setState(liftStates::off);
 }
 
-void bigZone(const std::shared_ptr<SideController>& controller) {
+void bigZone6(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
-  bigPreloadProtected(controller);
+  bigPreloadInner(controller);
+
+  bigInnerToStack(controller);
+
+  bigGrabStack(controller);
+
+  bigScore(controller);
+}
+
+void bigZone7(const std::shared_ptr<SideController>& controller) {
+  auto&& [chassis, side] = getChassis();
+
+  bigPreloadInner(controller);
+
+  bigInnerToOuter(controller);
+
+  bigOuterToStack(controller);
 
   bigGrabStack(controller);
 
@@ -92,7 +121,9 @@ void bigZone(const std::shared_ptr<SideController>& controller) {
 void bigZoneNoFourStack(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
-  bigPreloadProtected(controller);
+  bigPreloadInner(controller);
+
+  bigInnerToOuter(controller);
 
   bigScore(controller);
 }
