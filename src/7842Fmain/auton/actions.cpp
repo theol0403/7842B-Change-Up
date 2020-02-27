@@ -12,7 +12,7 @@ void speedUp() {
 
 void spikeCube() {
   Robot::lift()->setState(liftStates::down);
-  while (Robot::lift()->getHeight() > 50) {
+  while (Robot::lift()->getHeight() > 45) {
     pros::delay(10);
   }
   Robot::lift()->setState(liftStates::brakeAndHold);
@@ -29,7 +29,7 @@ void spikeFourStack() {
   while (Robot::lift()->getHeight() > 50) {
     if (std::abs(Robot::lift()->getLeftMotor()->getActualVelocity()) > 30) {
       Robot::lift()->setState(liftStates::down);
-      Robot::model()->arcade(0.3, 0);
+      Robot::model()->arcade(0.24, 0);
       pros::delay(500);
     } else {
       Robot::lift()->setState(liftStates::up);

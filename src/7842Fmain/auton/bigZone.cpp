@@ -58,13 +58,13 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   // lift
-  Robot::lift()->goToPosition(500);
+  Robot::lift()->goToPosition(760);
 
   // move to goal
   speedUp();
-  chassis.strafeToPoint({4_ft, 10.5_ft}, makeAngle(-90_deg), 1, Settler().distanceErr(4_in));
-  chassis.strafeToPoint(toClaw({{1_ft, 11.8_ft}, -40_deg}), makeAngle(-40_deg));
-  pros::delay(500);
+  chassis.strafeToPoint({4_ft, 10_ft}, makeAngle(-90_deg), 1, Settler().distanceErr(4_in));
+  chassis.strafeToPoint(toClaw({{1_ft - 1_in, 11.5_ft + 1_in}, -40_deg}), makeAngle(-40_deg));
+  // pros::delay(500);
 
   Robot::claw()->setState(clawStates::open);
   pros::delay(1000);
@@ -75,7 +75,7 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   // pros::delay(100);
 
   // // back up
-  // chassis.strafeAbsoluteDirection(0.5_ft, 135_deg, makeAngle(-45_deg));
+  chassis.strafeAbsoluteDirection(0.5_ft, 135_deg, makeAngle(-40_deg));
   Robot::lift()->setState(liftStates::off);
 }
 
