@@ -15,16 +15,10 @@ inline void runAuton(const std::function<void(const std::shared_ptr<SideControll
 /**
  * Autons
  */
-void bigZone(const std::shared_ptr<SideController>& controller);
+void bigZone6(const std::shared_ptr<SideController>& controller);
+void bigZone7(const std::shared_ptr<SideController>& controller);
 void bigZoneNoFourStack(const std::shared_ptr<SideController>& controller);
 void testAuton(const std::shared_ptr<SideController>& controller);
-
-/**
- * Actions
- */
-void bigPreloadProtected(const std::shared_ptr<SideController>& controller);
-void bigGrabStack(const std::shared_ptr<SideController>& controller);
-void bigScore(const std::shared_ptr<SideController>& controller);
 
 void slowDown();
 void speedUp();
