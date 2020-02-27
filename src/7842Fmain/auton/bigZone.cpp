@@ -62,11 +62,12 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
 
   // move to goal
   speedUp();
-  chassis.strafeToPoint(toClaw({{1_ft - 5_in, 11.5_ft + 2_in}, -45_deg}), makeAngle(-45_deg));
+  chassis.strafeToPoint({4_ft, 11_ft}, makeAngle(-90_deg), 1, Settler().distanceErr(3_in));
+  chassis.strafeToPoint(toClaw({{1_ft, 11.5_ft}, -90_deg}), makeAngle(-90_deg));
   pros::delay(500);
 
   Robot::claw()->setState(clawStates::open);
-  pros::delay(500);
+  pros::delay(700);
   Robot::claw()->setState(clawStates::brake);
 
   // raise lift
@@ -74,7 +75,7 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   pros::delay(100);
 
   // back up
-  chassis.strafeAbsoluteDirection(1_ft, 135_deg, makeAngle(-45_deg));
+  chassis.strafeAbsoluteDirection(0.5_ft, 135_deg, makeAngle(-45_deg));
   Robot::lift()->setState(liftStates::off);
 }
 
