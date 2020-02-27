@@ -1,8 +1,8 @@
 #include "7842Fmain/auton.hpp"
 
 void slowDown() {
-  Robot::model()->setMaxVoltage(8000);
-  Robot::model()->setMaxVelocity(100);
+  Robot::model()->setMaxVoltage(9000);
+  Robot::model()->setMaxVelocity(120);
 }
 
 void speedUp() {

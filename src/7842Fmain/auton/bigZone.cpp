@@ -27,23 +27,23 @@ void bigPreloadProtected(const std::shared_ptr<SideController>& controller) {
   spikeCube();
   Robot::lift()->goToPosition(Lift::aboveCubePos);
 
-  // drive to outer cube
-  chassis.strafeToPoint(toClaw({outerProtectedCube, 180_deg}), makeAngle(180_deg));
+  // // drive to outer cube
+  // chassis.strafeToPoint(toClaw({outerProtectedCube, 180_deg}), makeAngle(180_deg));
 
-  // spike cube
-  spikeCube();
-  Robot::lift()->goToPosition(Lift::aboveCubePos);
+  // // spike cube
+  // spikeCube();
+  // Robot::lift()->goToPosition(Lift::aboveCubePos);
 }
 
 void bigGrabStack(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   Robot::lift()->goToPosition(Lift::fourStackPos);
-  pros::delay(1500);
+  chassis.strafeToPoint({3_ft, 10_ft}, makeAngle(180_deg), 1, Settler().distanceErr(4_in));
 
   slowDown(); // set max voltage while lift is up
   // drive to cube stack
-  chassis.strafeToPoint(toClaw({{2_tile + cubeHalf, 4_tile + cubeHalf + 3_in}, 180_deg}),
+  chassis.strafeToPoint(toClaw({{2_tile + cubeHalf, 4_tile + cubeHalf + 4_in}, 180_deg}),
                         makeAngle(180_deg));
   speedUp();
 
