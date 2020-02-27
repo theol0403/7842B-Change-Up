@@ -48,7 +48,7 @@ void bigOuterToStack(const std::shared_ptr<SideController>& controller) {
 
   // drive towards stack
   Robot::lift()->goToPosition(Lift::fourStackPos);
-  chassis.strafeToPoint({3_ft, 10_ft}, makeAngle(180_deg), 1, Settler().distanceErr(4_in));
+  pros::delay(1000);
 }
 
 void bigGrabStack(const std::shared_ptr<SideController>& controller) {
