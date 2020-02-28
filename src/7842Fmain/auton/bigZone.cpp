@@ -7,6 +7,11 @@ void bigPreloadInner(const std::shared_ptr<SideController>& controller) {
   // TODO: measure position
   Robot::odom()->setState(mirror({10_in, 9.8_ft, 90_deg}, side));
 
+  bool deployed = false;
+  // deploy robot
+  asyncTask(pros::delay(1000); Robot::get().deploy(); Robot::claw()->setState(clawStates::clamp);
+            deployed = true;);
+
   // push cube into goal
   util::strafeVector(Robot::model(), 1, 0, mirror(-85_deg, side));
   pros::delay(400);
@@ -15,9 +20,9 @@ void bigPreloadInner(const std::shared_ptr<SideController>& controller) {
   // go above inner protected
   chassis.strafeToPoint(toClaw({innerProtectedCube, 90_deg}), makeAngle(90_deg));
 
-  // deploy robot
-  Robot::get().deploy();
-  Robot::claw()->setState(clawStates::clamp);
+  // wait for deploy
+  while (!deployed)
+    pros::delay(20);
 
   // grab inner protected cube
   spikeCube();

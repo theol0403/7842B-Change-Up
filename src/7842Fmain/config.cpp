@@ -98,6 +98,9 @@ void Robot::_initializeScreen() {
        .button("bigNoStackRed", []() { runAuton(bigZoneNoFourStack, sides::red); })
        .button("bigNoStackBlue", []() { runAuton(bigZoneNoFourStack, sides::blue); })
        .newRow()
+       .button("skillsRed", []() { runAuton(skills, sides::red); })
+       .button("skillsBlue", []() { runAuton(skills, sides::blue); })
+       .newRow()
        .button("TestRed", []() { runAuton(testAuton, sides::red); })
        .button("TestBlue", []() { runAuton(testAuton, sides::blue); })
        .build());
