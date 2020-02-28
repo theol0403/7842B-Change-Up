@@ -24,6 +24,7 @@ extern const Vector innerProtectedCube;
 extern const Vector outerProtectedCube;
 
 extern const Vector closeTowerCube;
+extern const Vector leftTowerCube;
 
 extern const Vector fourStackCube;
 
