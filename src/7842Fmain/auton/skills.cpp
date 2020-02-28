@@ -42,7 +42,7 @@ void skills(const std::shared_ptr<SideController>& controller) {
   Robot::claw()->setState(clawStates::openMedium);
   Robot::lift()->goToPosition(Lift::aboveCubePos - 500);
 
-  chassis.strafeToPoint(toClaw({leftTowerCube + Vector {-3_in, 0_in}, 90_deg}), makeAngle(90_deg));
+  chassis.strafeToPoint(toClaw({leftTowerCube + Vector {-6_in, 0_in}, 90_deg}), makeAngle(90_deg));
 
   Robot::claw()->setState(clawStates::close);
   pros::delay(600);

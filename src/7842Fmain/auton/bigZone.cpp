@@ -46,6 +46,20 @@ void bigInnerToStack(const std::shared_ptr<SideController>& controller) {
   // drive towards stack
   Robot::lift()->goToPosition(Lift::fourStackPos);
   chassis.strafeToPoint({3_ft, 10_ft}, makeAngle(180_deg), 1, Settler().distanceErr(4_in));
+
+  slowDown(); // set max voltage while lift is up
+  // drive to cube stack
+  chassis.strafeToPoint(toClaw({{2_tile + cubeHalf, 4_tile + cubeHalf + 3_in}, 180_deg}),
+                        makeAngle(180_deg));
+  speedUp();
+
+  // spike stack
+  spikeFourStack();
+
+  Robot::claw()->setState(clawStates::closeMedium);
+
+  // ignore
+  Robot::lift()->goToPosition(Lift::aboveCubePos);
 }
 
 void bigOuterToStack(const std::shared_ptr<SideController>& controller) {
@@ -54,10 +68,6 @@ void bigOuterToStack(const std::shared_ptr<SideController>& controller) {
   // drive towards stack
   Robot::lift()->goToPosition(Lift::fourStackPos);
   pros::delay(1000);
-}
-
-void bigGrabStack(const std::shared_ptr<SideController>& controller) {
-  auto&& [chassis, side] = getChassis();
 
   slowDown(); // set max voltage while lift is up
   // drive to cube stack
@@ -106,8 +116,6 @@ void bigZone6(const std::shared_ptr<SideController>& controller) {
 
   bigInnerToStack(controller);
 
-  bigGrabStack(controller);
-
   bigScore(controller);
 }
 
@@ -119,8 +127,6 @@ void bigZone7(const std::shared_ptr<SideController>& controller) {
   bigInnerToOuter(controller);
 
   bigOuterToStack(controller);
-
-  bigGrabStack(controller);
 
   bigScore(controller);
 }
