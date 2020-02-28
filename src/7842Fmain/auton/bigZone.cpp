@@ -8,7 +8,7 @@ void bigPreloadInner(const std::shared_ptr<SideController>& controller) {
   Robot::odom()->setState(mirror({10_in, 9.8_ft, 90_deg}, side));
 
   // push cube into goal
-  util::strafeVector(Robot::model(), 1, 0, -85_deg);
+  util::strafeVector(Robot::model(), 1, 0, mirror(-85_deg, side));
   pros::delay(400);
   Robot::model()->tank(0, 0);
 
@@ -88,7 +88,7 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   // pros::delay(100);
 
   // // back up
-  chassis.strafeAbsoluteDirection(0.5_ft, 135_deg, makeAngle(-40_deg));
+  chassis.strafeAbsoluteDirection(1_ft, 135_deg, makeAngle(-40_deg));
   Robot::lift()->setState(liftStates::off);
 }
 
