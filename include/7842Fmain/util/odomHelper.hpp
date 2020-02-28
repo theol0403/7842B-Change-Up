@@ -23,6 +23,8 @@ extern const Vector allianceTower;
 extern const Vector innerProtectedCube;
 extern const Vector outerProtectedCube;
 
+extern const Vector closeTowerCube;
+
 extern const Vector fourStackCube;
 
 extern const PursuitLimits defaultLimits;

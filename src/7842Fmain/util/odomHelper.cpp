@@ -21,6 +21,8 @@ const Vector allianceTower {1.5_tile, 0_tile};
 const Vector innerProtectedCube {1_tile + cubeHalf, 5_tile + cubeHalf};
 const Vector outerProtectedCube {1_tile + cubeHalf, 4_tile + cubeHalf};
 
+const Vector closeTowerCube {1_tile - cubeHalf, 3_tile + towerBaseWidth / 2 + cubeHalf};
+
 const Vector fourStackCube {2_tile + cubeHalf, 4_tile + cubeHalf};
 
 const PursuitLimits defaultLimits {

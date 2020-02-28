@@ -19,6 +19,7 @@ void bigZone6(const std::shared_ptr<SideController>& controller);
 void bigZone7(const std::shared_ptr<SideController>& controller);
 void bigZoneNoFourStack(const std::shared_ptr<SideController>& controller);
 void testAuton(const std::shared_ptr<SideController>& controller);
+void skills(const std::shared_ptr<SideController>& controller);
 
 void slowDown();
 void speedUp();
