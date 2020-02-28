@@ -22,7 +22,7 @@ const Vector innerProtectedCube {1_tile + cubeHalf, 5_tile + cubeHalf};
 const Vector outerProtectedCube {1_tile + cubeHalf, 4_tile + cubeHalf};
 
 const Vector closeTowerCube {1_tile - cubeHalf, 3_tile + towerBaseWidth / 2 + cubeHalf};
-const Vector leftTowerCube {leftTower - Vector {0_in - cubeHalf - (towerBaseWidth / 2), 0_in}};
+const Vector leftTowerCube {leftTower - Vector {cubeHalf + (towerBaseWidth / 2), 0_in}};
 
 const Vector fourStackCube {2_tile + cubeHalf, 4_tile + cubeHalf};
 

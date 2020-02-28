@@ -26,7 +26,7 @@ void spikeFourStack() {
   Robot::claw()->setState(clawStates::brake);
 
   // stagger
-  while (Robot::lift()->getHeight() > 50) {
+  while (Robot::lift()->getHeight() > 45) {
     if (std::abs(Robot::lift()->getLeftMotor()->getActualVelocity()) > 30) {
       Robot::lift()->setState(liftStates::down);
       Robot::model()->arcade(0.24, 0);

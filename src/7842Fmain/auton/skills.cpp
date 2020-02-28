@@ -9,11 +9,11 @@ void skills(const std::shared_ptr<SideController>& controller) {
   Robot::claw()->setState(clawStates::brake);
   Robot::lift()->goToPosition(Lift::aboveCubePos - 500);
 
-  chassis.strafeToPoint(toClaw({closeTowerCube + Vector {3_in, 2_in}, 180_deg}),
+  chassis.strafeToPoint(toClaw({closeTowerCube + Vector {3_in, 3_in}, 180_deg}),
                         makeAngle(180_deg));
 
   Robot::claw()->setState(clawStates::close);
-  pros::delay(500);
+  pros::delay(600);
   Robot::claw()->setState(clawStates::off);
   pros::delay(500);
   Robot::claw()->setState(clawStates::brake);
@@ -22,7 +22,7 @@ void skills(const std::shared_ptr<SideController>& controller) {
 
   chassis.strafeAbsoluteDirection(1_ft, 0_deg, makeAngle(180_deg));
 
-  Robot::lift()->goToPosition(3000);
+  Robot::lift()->goToPosition(2920);
 
   pros::delay(1800);
 
@@ -39,13 +39,13 @@ void skills(const std::shared_ptr<SideController>& controller) {
 
   // tower 2
 
-  Robot::claw()->setState(clawStates::brake);
+  Robot::claw()->setState(clawStates::openMedium);
   Robot::lift()->goToPosition(Lift::aboveCubePos - 500);
 
   chassis.strafeToPoint(toClaw({leftTowerCube + Vector {-3_in, 0_in}, 90_deg}), makeAngle(90_deg));
 
   Robot::claw()->setState(clawStates::close);
-  pros::delay(500);
+  pros::delay(600);
   Robot::claw()->setState(clawStates::off);
   pros::delay(500);
   Robot::claw()->setState(clawStates::brake);
@@ -54,12 +54,12 @@ void skills(const std::shared_ptr<SideController>& controller) {
 
   chassis.strafeAbsoluteDirection(1_ft, -90_deg, makeAngle(90_deg));
 
-  Robot::lift()->goToPosition(3000);
+  Robot::lift()->goToPosition(2920);
 
   pros::delay(1800);
 
   slowDown();
-  chassis.strafeToPoint(toClaw({leftTower + Vector {}, 90_deg}), makeAngle(90_deg));
+  chassis.strafeToPoint(toClaw({leftTower + Vector {-1_ft, 4_in}, 90_deg}), makeAngle(90_deg));
 
   Robot::claw()->setState(clawStates::open);
   pros::delay(1000);

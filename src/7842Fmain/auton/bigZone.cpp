@@ -68,6 +68,8 @@ void bigGrabStack(const std::shared_ptr<SideController>& controller) {
   // spike stack
   spikeFourStack();
 
+  Robot::claw()->setState(clawStates::closeMedium);
+
   // ignore
   Robot::lift()->goToPosition(Lift::aboveCubePos);
 }
