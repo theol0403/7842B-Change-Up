@@ -106,7 +106,11 @@ void Robot::_initializeScreen() {
        .build());
 
   _screen->makePage<GUI::Actions>("Actions")
-    .button("Calibrate Lift", [&]() { _lift->setState(liftStates::calibrate); })
+    .button("Calibrate",
+            [&]() {
+              // _claw->getMotor()->tarePosition();
+              _lift->setState(liftStates::calibrate);
+            })
     .button("Systems Off", [&]() { _lift->setState(liftStates::off); })
     .newRow()
     .button("Deploy", [&]() { Robot::get().deploy(); })

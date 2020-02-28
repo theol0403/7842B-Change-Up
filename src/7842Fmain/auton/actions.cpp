@@ -12,7 +12,7 @@ void speedUp() {
 
 void spikeCube() {
   Robot::lift()->setState(liftStates::down);
-  while (Robot::lift()->getHeight() > 47) {
+  while (Robot::lift()->getHeight() > 46) {
     pros::delay(10);
   }
   Robot::lift()->setState(liftStates::brakeAndHold);

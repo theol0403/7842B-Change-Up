@@ -43,7 +43,11 @@ void Claw::loop() {
         claw->moveVelocity(0);
         break;
 
-      case clawStates::closeMedium: claw->moveVoltage(3000); break;
+      case clawStates::closeMedium:
+        claw->moveVoltage(3000);
+        break;
+
+        // case clawStates::openGrab: claw->moveAbsolute(3000); break;
     }
 
     rate.delayUntil(10);
