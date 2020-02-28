@@ -7,6 +7,7 @@ enum class clawStates {
   brake, // motor 0 velocity
   close, // motor 100% voltage
   open, // motor -100% voltage
+  openMedium, // motor -80% voltage
   clamp, // constant close voltage
   closeMedium // hold close
 };

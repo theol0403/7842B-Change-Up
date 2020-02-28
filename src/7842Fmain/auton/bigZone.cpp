@@ -84,7 +84,7 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   chassis.strafeToPoint(toClaw({{1_ft - 1_in, 11.5_ft + 1_in}, -40_deg}), makeAngle(-40_deg));
   // pros::delay(500);
 
-  Robot::claw()->setState(clawStates::open);
+  Robot::claw()->setState(clawStates::openMedium);
   pros::delay(1000);
   Robot::claw()->setState(clawStates::brake);
 
