@@ -19,6 +19,10 @@ void spikeCube() {
 }
 
 void spikeFourStack() {
+  spikeFourStack(Timer());
+}
+
+void spikeFourStack(const Timer& timer) {
   // start lower
   Robot::claw()->setState(clawStates::off);
   Robot::lift()->setState(liftStates::down);
@@ -26,7 +30,7 @@ void spikeFourStack() {
   Robot::claw()->setState(clawStates::brake);
 
   // stagger
-  while (Robot::lift()->getHeight() > 45) {
+  while (Robot::lift()->getHeight() > 45 && timer.getDtFromMark() < 12_s) {
     if (std::abs(Robot::lift()->getLeftMotor()->getActualVelocity()) > 30) {
       Robot::lift()->setState(liftStates::down);
       Robot::model()->arcade(0.24, 0);

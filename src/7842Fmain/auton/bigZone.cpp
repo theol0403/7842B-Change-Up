@@ -1,6 +1,8 @@
 #include "7842Fmain/auton.hpp"
 using namespace lib7842::units;
 
+Timer timer;
+
 void bigPreloadInner(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
@@ -54,7 +56,7 @@ void bigInnerToStack(const std::shared_ptr<SideController>& controller) {
   speedUp();
 
   // spike stack
-  spikeFourStack();
+  spikeFourStack(timer);
 
   Robot::claw()->setState(clawStates::closeMedium);
 
@@ -111,6 +113,8 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
 
 void bigZone6(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
+
+  timer.placeMark();
 
   bigPreloadInner(controller);
 

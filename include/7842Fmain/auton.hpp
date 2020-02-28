@@ -26,3 +26,4 @@ void speedUp();
 
 void spikeCube();
 void spikeFourStack();
+void spikeFourStack(const Timer& timer);
