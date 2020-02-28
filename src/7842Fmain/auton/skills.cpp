@@ -7,6 +7,8 @@ void skills(const std::shared_ptr<SideController>& controller) {
   bigZone7(controller);
 
   Robot::claw()->setState(clawStates::closeMedium);
+  Robot::lift()->goToPosition(Lift::aboveCubePos + 100);
+  pros::delay(500);
 
   chassis.strafeToPoint(toClaw({closeTowerCube, 180_deg}), makeAngle(180_deg));
 
@@ -18,5 +20,9 @@ void skills(const std::shared_ptr<SideController>& controller) {
 
   pros::delay(3000);
 
-  chassis.strafeToPoint(toClaw({closeTower, 180_deg}), makeAngle(180_deg));
+  chassis.strafeToPoint(toClaw({closeTower + Vector {0_ft, 6_in}, 180_deg}), makeAngle(180_deg));
+
+  Robot::claw()->setState(clawStates::open);
+  pros::delay(2000);
+  Robot::claw()->setState(clawStates::off);
 }
