@@ -54,12 +54,12 @@ void skills(const std::shared_ptr<SideController>& controller) {
 
   chassis.strafeAbsoluteDirection(1_ft, -90_deg, makeAngle(90_deg));
 
-  Robot::lift()->goToPosition(2000);
+  Robot::lift()->goToPosition(2500);
 
   pros::delay(1800);
 
   slowDown();
-  chassis.strafeToPoint(toClaw({leftTower + Vector {-3_in, 0_ft}, 90_deg}), makeAngle(90_deg));
+  chassis.strafeToPoint(toClaw({leftTower + Vector {-6_in, 3_in}, 90_deg}), makeAngle(90_deg));
 
   Robot::claw()->setState(clawStates::open);
   pros::delay(1000);

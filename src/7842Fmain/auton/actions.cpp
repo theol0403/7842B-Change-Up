@@ -37,7 +37,7 @@ void spikeFourStack(const Timer& timer) {
       pros::delay(500);
     } else {
       Robot::lift()->setState(liftStates::up);
-      Robot::model()->arcade(-0.3, 0);
+      Robot::model()->arcade(-0.35, 0);
       pros::delay(500);
     }
 
