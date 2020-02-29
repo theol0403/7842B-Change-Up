@@ -69,7 +69,7 @@ void bigOuterToStack(const std::shared_ptr<SideController>& controller) {
 
   // drive towards stack
   Robot::lift()->goToPosition(Lift::fourStackPos);
-  pros::delay(1000);
+  pros::delay(1300);
 
   slowDown(); // set max voltage while lift is up
   // drive to cube stack
@@ -95,7 +95,7 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   // move to goal
   speedUp();
   chassis.strafeToPoint({4_ft, 10_ft}, makeAngle(-90_deg), 1, Settler().distanceErr(4_in));
-  chassis.strafeToPoint(toClaw({{1_ft - 1_in, 11.5_ft + 1_in}, -40_deg}), makeAngle(-40_deg));
+  chassis.strafeToPoint(toClaw({{1_ft - 1.3_in, 11.5_ft + 1.2_in}, -40_deg}), makeAngle(-40_deg));
   // pros::delay(500);
 
   Robot::claw()->setState(clawStates::openMedium);
