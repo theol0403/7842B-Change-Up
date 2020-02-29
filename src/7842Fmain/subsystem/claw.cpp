@@ -36,7 +36,7 @@ void Claw::loop() {
 
       case clawStates::open: claw->moveVoltage(-12000); break;
 
-      case clawStates::openMedium: claw->moveVoltage(-10000); break;
+      case clawStates::openMedium: claw->moveVoltage(-9000); break;
 
       case clawStates::clamp:
         claw->setBrakeMode(AbstractMotor::brakeMode::brake);
