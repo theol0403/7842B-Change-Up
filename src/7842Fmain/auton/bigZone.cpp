@@ -90,7 +90,7 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   // lift
-  Robot::lift()->goToPosition(760);
+  Robot::lift()->goToPosition(755);
 
   // move to goal
   speedUp();
