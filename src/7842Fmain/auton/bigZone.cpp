@@ -90,16 +90,16 @@ void bigScore(const std::shared_ptr<SideController>& controller) {
   auto&& [chassis, side] = getChassis();
 
   // lift
-  Robot::lift()->goToPosition(755);
+  Robot::lift()->goToPosition(760);
 
   // move to goal
   speedUp();
   chassis.strafeToPoint({4_ft, 10_ft}, makeAngle(-90_deg), 1, Settler().distanceErr(4_in));
-  chassis.strafeToPoint(toClaw({{1_ft - 1.3_in, 11.5_ft + 1.2_in}, -40_deg}), makeAngle(-40_deg));
+  chassis.strafeToPoint(toClaw({{1_ft - 1_in, 11.5_ft + 2_in}, -40_deg}), makeAngle(-40_deg));
   // pros::delay(500);
 
   Robot::claw()->setState(clawStates::openMedium);
-  pros::delay(1000);
+  pros::delay(1200);
   Robot::claw()->setState(clawStates::brake);
 
   // // raise lift
