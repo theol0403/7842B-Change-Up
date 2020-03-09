@@ -1,9 +1,6 @@
 #pragma once
 #include "main.h"
 
-#include "subsystem/claw.hpp"
-#include "subsystem/lift.hpp"
-
 class Robot {
 protected:
   Robot() = default;
