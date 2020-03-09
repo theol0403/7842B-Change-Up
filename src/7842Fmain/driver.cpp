@@ -15,7 +15,7 @@
 #define setNewDeviceState(device, state) Robot::device()->setNewState(device##States::state);
 
 /***
- *    ______                  _____             _             _ 
+ *    ______                  _____             _             _
  *    | ___ \                /  __ \           | |           | |
  *    | |_/ / __ _ ___  ___  | /  \/ ___  _ __ | |_ _ __ ___ | |
  *    | ___ \/ _` / __|/ _ \ | |    / _ \| '_ \| __| '__/ _ \| |
@@ -27,17 +27,17 @@ void driverBaseControl() {
   double rightY = mAnalog(RIGHT_Y);
   double leftX = mAnalog(LEFT_X);
 
-  if (mDigital(A)) { rightY += 0.5; }
+  if (!mDigital(DOWN)) {
 
-  Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
-                          std::pow(rightY, 2) * util::sgn(rightY),
-                          std::pow(leftX, 2) * util::sgn(leftX));
+    Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
+                            std::pow(rightY, 2) * util::sgn(rightY), std::pow(leftX, 3));
+  }
 
-  if (mDigital(X) && !pros::competition::is_connected()) autonomous();
+  // if (mDigital(X) && !pros::competition::is_connected()) autonomous();
 }
 
 /***
- *    ______           _            _____             _             _ 
+ *    ______           _            _____             _             _
  *    |  _  \         (_)          /  __ \           | |           | |
  *    | | | |_____   ___  ___ ___  | /  \/ ___  _ __ | |_ _ __ ___ | |
  *    | | | / _ \ \ / / |/ __/ _ \ | |    / _ \| '_ \| __| '__/ _ \| |
@@ -45,50 +45,70 @@ void driverBaseControl() {
  *    |___/ \___| \_/ |_|\___\___|  \____/\___/|_| |_|\__|_|  \___/|_|
  */
 
+// acceleration control
+// tweak these numbers to control the acceleration and deceleration of the tipper
+const double start = 0.4;
+const double max = 0.8;
+const double end = 0;
+
+const double acceleration = (((max - start) / 0.8_s) * 10_ms).convert(number);
+const double deceleration = (((end - max) / 0.4_s) * 10_ms).convert(number);
+
+double wanted = 0;
+double last = 0;
+
 void driverDeviceControl() {
 
-  /***
-   *     _     _  __ _   
-   *    | |   (_)/ _| |  
-   *    | |    _| |_| |_ 
-   *    | |   | |  _| __|
-   *    | |___| | | | |_ 
-   *    \_____/_|_|  \__|
-   */
-  if (mDigital(R1) && mDigital(R2)) {
-    setNewDeviceState(lift, aboveCube);
-  } else if (mDigital(R2)) {
-    setNewDeviceState(lift, down);
-  } else if (mDigital(R1)) {
-    setNewDeviceState(lift, up);
-  } else if (mDigital(Y)) {
-    setNewDeviceState(lift, upSlow);
+  // tipper control
+  if (mDigital(X)) {
+    wanted = max;
   } else if (mDigital(B)) {
-    setNewDeviceState(lift, downSlow);
+    wanted = -max;
+    last = -max;
   } else {
-    setNewDeviceState(lift, brakeAndHold);
+    wanted = 0;
+    if (last == -max) { last = 0; }
   }
 
-  /***
-   *     _____ _
-   *    /  __ \ |
-   *    | /  \/ | __ ___      __
-   *    | |   | |/ _` \ \ /\ / /
-   *    | \__/\ | (_| |\ V  V /
-   *     \____/_|\__,_| \_/\_/
-   */
-  if (mDigital(L2)) {
-    setNewDeviceState(claw, close);
-  } else if (mDigital(L1)) {
-    setNewDeviceState(claw, open);
-  } else if (mDigital(DOWN)) {
-    setNewDeviceState(claw, closeMedium);
+  if (wanted > 0 && last < start) last = start;
+
+  double change = wanted - last;
+  if (change > acceleration) {
+    // acceleration
+    change = acceleration;
+  } else if (change < deceleration) {
+    // deceleration
+    change = deceleration;
+  }
+
+  last = last + change;
+
+  if (std::abs(last) < 0.1) {
+    Robot::tipper()->moveVelocity(0);
   } else {
-    auto state = Robot::claw()->getState();
-    if (state == clawStates::open) {
-      setNewDeviceState(claw, brake);
-    } else if (state == clawStates::close || state == clawStates::closeMedium) {
-      setNewDeviceState(claw, clamp);
+    Robot::tipper()->moveVoltage(last * 12000);
+  }
+
+  // roller control
+  if (!mDigital(DOWN)) { // override control for backing up
+    if (mDigital(L2)) {
+      Robot::rollers()->moveVoltage(12000); // max voltage 12000 milliamps
+    } else if (mDigital(L1)) {
+      Robot::rollers()->moveVoltage(-12000);
+    } else {
+      Robot::rollers()->moveVoltage(0);
     }
+  } else { // back up
+    Robot::model()->arcade(-0.4, 0);
+    Robot::rollers()->moveVoltage(-12000 * 0.5);
+  }
+
+  // arm control
+  if (mDigital(R1)) {
+    Robot::arm()->moveVoltage(12000);
+  } else if (mDigital(R2)) {
+    Robot::arm()->moveVoltage(-12000);
+  } else {
+    Robot::arm()->moveVelocity(0);
   }
 }

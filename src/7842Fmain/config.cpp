@@ -12,9 +12,9 @@
 void Robot::_initializeChassis() {
   _model = std::make_shared<ThreeEncoderXDriveModel>(
     // motors
-    std::make_shared<Motor>(1), // top left
-    std::make_shared<Motor>(-8), // top right
-    std::make_shared<Motor>(-3), // bottom right
+    std::make_shared<Motor>(8), // top left
+    std::make_shared<Motor>(-3), // top right
+    std::make_shared<Motor>(-9), // bottom right
     std::make_shared<Motor>(6), // bottom left
     // sensors
     std::make_shared<ADIEncoder>(1, 2, true), //
@@ -58,17 +58,13 @@ void Robot::_initializeChassis() {
  */
 void Robot::_initializeDevices() {
 
-  auto leftLift = std::make_shared<Motor>(14);
-  auto rightLift = std::make_shared<Motor>(-12);
+  _rollers = std::make_shared<MotorGroup>(MotorGroup {4, -2}); // left, right rollers
+  _tipper = std::make_shared<Motor>(1); // tipper
+  _arm = std::make_shared<Motor>(20); // arm
 
-  _lift =
-    std::make_shared<Lift>(leftLift, rightLift, leftLift->getEncoder(), rightLift->getEncoder(),
-                           std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
-                                                                       TimeUtilFactory().create()),
-                           std::make_shared<IterativePosPIDController>(0.03, 0.01, 0.0001, 0.1,
-                                                                       TimeUtilFactory().create()));
-
-  _claw = std::make_shared<Claw>(std::make_shared<Motor>(-13));
+  // set the brake modes of the devices
+  _arm->setBrakeMode(AbstractMotor::brakeMode::hold);
+  _tipper->setBrakeMode(AbstractMotor::brakeMode::brake);
 }
 
 /***
@@ -89,43 +85,19 @@ void Robot::_initializeScreen() {
     &_screen->makePage<GUI::Selector>("Auton")
        .button("None", []() {})
        .newRow()
-       .button("bigRed6", []() { runAuton(bigZone6, sides::red); })
-       .button("bigBlue6", []() { runAuton(bigZone6, sides::blue); })
-       .newRow()
-       .button("bigRed7", []() { runAuton(bigZone7, sides::red); })
-       .button("bigBlue7", []() { runAuton(bigZone7, sides::blue); })
-       .newRow()
-       .button("bigNoStackRed", []() { runAuton(bigZoneNoFourStack, sides::red); })
-       .button("bigNoStackBlue", []() { runAuton(bigZoneNoFourStack, sides::blue); })
-       .newRow()
-       .button("skillsRed", []() { runAuton(skills, sides::red); })
-       .button("skillsBlue", []() { runAuton(skills, sides::blue); })
-       .newRow()
        .button("TestRed", []() { runAuton(testAuton, sides::red); })
        .button("TestBlue", []() { runAuton(testAuton, sides::blue); })
        .build());
 
   _screen->makePage<GUI::Actions>("Actions")
-    .button("Calibrate",
-            [&]() {
-              // _claw->getMotor()->tarePosition();
-              _lift->setState(liftStates::calibrate);
-            })
-    .button("Systems Off", [&]() { _lift->setState(liftStates::off); })
+    .button("Calibrate", [&]() {})
+    .button("Systems Off", [&]() {})
     .newRow()
     .button("Deploy", [&]() { Robot::get().deploy(); })
     .button("Autonomous", [&]() { autonomous(); })
     .build();
 
   _screen->makePage<GUI::Odom>("Odom").attachOdom(_odom).attachResetter([&]() { _odom->reset(); });
-
-  _screen->makePage<GUI::Graph>("Lift")
-    .withRange(-250, 900)
-    .withResolution(50)
-    .withSeries("Left Lift Power", LV_COLOR_RED,
-                [&]() { return _lift->getLeftMotor()->getCurrentDraw(); })
-    .withSeries("Right Lift Power", LV_COLOR_GREEN,
-                [&]() { return _lift->getRightMotor()->getCurrentDraw(); });
 }
 
 /***
@@ -172,12 +144,16 @@ std::shared_ptr<PathFollower> Robot::follower() {
   getDevice(follower);
 }
 
-std::shared_ptr<Lift> Robot::lift() {
-  getDevice(lift);
+std::shared_ptr<AbstractMotor> Robot::rollers() {
+  getDevice(rollers);
 }
 
-std::shared_ptr<Claw> Robot::claw() {
-  getDevice(claw);
+std::shared_ptr<AbstractMotor> Robot::tipper() {
+  getDevice(tipper);
+}
+
+std::shared_ptr<AbstractMotor> Robot::arm() {
+  getDevice(arm);
 }
 
 GUI::Selector* Robot::selector() {
@@ -185,10 +161,18 @@ GUI::Selector* Robot::selector() {
 }
 
 void Robot::deploy() {
-  claw()->setState(clawStates::close);
-  lift()->setState(liftStates::up);
-  pros::delay(300);
-  claw()->setState(clawStates::off);
-  pros::delay(500);
-  lift()->setState(liftStates::off);
+  Timer timer;
+  timer.placeMark();
+  while (timer.getDtFromMark() < 1.4_s) {
+    rollers()->moveVoltage(-12000);
+    arm()->moveVoltage(12000);
+    pros::delay(1);
+  }
+  rollers()->moveVoltage(0);
+  timer.placeMark();
+  while (timer.getDtFromMark() < 1_s) {
+    arm()->moveVoltage(-12000);
+    pros::delay(1);
+  }
+  arm()->moveVoltage(0);
 }

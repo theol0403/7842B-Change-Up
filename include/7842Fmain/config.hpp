@@ -14,27 +14,37 @@ protected:
   void _initializeDevices();
   void _initializeScreen();
 
+  // base
   std::shared_ptr<ThreeEncoderXDriveModel> _model {nullptr};
   std::shared_ptr<CustomOdometry> _odom {nullptr};
   std::shared_ptr<OdomXController> _controller {nullptr};
   std::shared_ptr<PathFollower> _follower {nullptr};
 
-  std::shared_ptr<Lift> _lift {nullptr};
-  std::shared_ptr<Claw> _claw {nullptr};
+  // devices
+  std::shared_ptr<AbstractMotor> _rollers;
+  std::shared_ptr<AbstractMotor> _tipper;
+  std::shared_ptr<AbstractMotor> _arm;
 
+  // screen
   std::shared_ptr<GUI::Screen> _screen {nullptr};
   GUI::Selector* _selector {nullptr};
 
 public:
   static Robot& get();
   static Robot& initialize();
+
+  //base
   static std::shared_ptr<ThreeEncoderXDriveModel> model();
   static std::shared_ptr<CustomOdometry> odom();
   static std::shared_ptr<OdomXController> chassis();
   static std::shared_ptr<PathFollower> follower();
-  static std::shared_ptr<Lift> lift();
-  static std::shared_ptr<Claw> claw();
 
+  //devices
+  static std::shared_ptr<AbstractMotor> rollers();
+  static std::shared_ptr<AbstractMotor> tipper();
+  static std::shared_ptr<AbstractMotor> arm();
+
+  //screen
   static GUI::Selector* selector();
 
   static void deploy();
