@@ -4,8 +4,6 @@
 /**
  * Constants
  */
-extern const QLength clawOffset;
-
 extern const QLength cubeWidth;
 extern const QLength cubeHalf;
 extern const QLength fieldWidth;
@@ -39,14 +37,6 @@ extern const PursuitLimits defaultLimits;
 #define mirror SideController::mirror
 
 #define getChassis() std::make_pair(*controller, controller->getSide());
-
-/**
- * Calculate position of robot for claw to be at given position and angle
- *
- * @param  state The state
- * @return The robot position
- */
-Vector toClaw(const State& state);
 
 /**
  * Create an async task from a function

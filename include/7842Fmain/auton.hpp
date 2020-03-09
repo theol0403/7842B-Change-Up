@@ -15,15 +15,7 @@ inline void runAuton(const std::function<void(const std::shared_ptr<SideControll
 /**
  * Autons
  */
-void bigZone6(const std::shared_ptr<SideController>& controller);
-void bigZone7(const std::shared_ptr<SideController>& controller);
-void bigZoneNoFourStack(const std::shared_ptr<SideController>& controller);
 void testAuton(const std::shared_ptr<SideController>& controller);
-void skills(const std::shared_ptr<SideController>& controller);
 
 void slowDown();
 void speedUp();
-
-void spikeCube();
-void spikeFourStack();
-void spikeFourStack(const Timer& timer);

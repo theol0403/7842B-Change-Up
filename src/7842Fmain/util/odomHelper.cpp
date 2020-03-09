@@ -2,8 +2,6 @@
 
 using namespace lib7842::units;
 
-const QLength clawOffset {1_ft + 3.7_in}; // TODO: adjust claw offset
-
 const QLength cubeWidth {5.5_in};
 const QLength cubeHalf {cubeWidth / 2};
 const QLength fieldWidth {6_tile};
@@ -32,8 +30,3 @@ const PursuitLimits defaultLimits {
   0.7_mps, // max vel
   40_mps // k
 };
-
-Vector toClaw(const State& state) {
-  return Vector(state) - Vector {std::sin(state.theta.convert(radian)) * clawOffset,
-                                 std::cos(state.theta.convert(radian)) * clawOffset};
-}
