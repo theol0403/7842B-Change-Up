@@ -1,8 +1,8 @@
 #include "tray.hpp"
 
 Tray::Tray(const std::shared_ptr<AbstractMotor>& imotor,
-           const std::shared_ptr<RotarySensor>& isensor) :
-  motor(imotor), sensor(isensor) {
+           const std::shared_ptr<RotarySensor>& isensor, double ioutPos) :
+  motor(imotor), sensor(isensor), outPos(ioutPos) {
   pros::delay(100); // allow sensors to initialize
   initialize();
   startTask("Tray");
@@ -13,15 +13,21 @@ void Tray::setPosition(double ipos) {
 }
 
 double Tray::getPosition() const {
-  return getRawPosition() - startPos;
+  return (getRawPosition() - startPos) / outPos;
 }
 
 double Tray::getError() const {
-  return std::abs(targetPos - getPosition());
+  return targetPos - getPosition();
 }
 
 std::shared_ptr<AbstractMotor> Tray::getMotor() const {
   return motor;
+}
+
+double Tray::getVelocityMapping() {
+  double error = 1.0 - getPosition();
+  return error; // linear
+  // return error * error; // expo
 }
 
 double Tray::getRawPosition() const {
@@ -56,6 +62,11 @@ void Tray::loop() {
       case trayStates::up: motor->moveVoltage(12000); break;
 
       case trayStates::down: motor->moveVoltage(-12000); break;
+
+      case trayStates::score:
+        motor->setBrakeMode(AbstractMotor::brakeMode::brake);
+        motor->moveVelocity(getVelocityMapping() * 200);
+        break;
 
       case trayStates::calibrate:
         do {
