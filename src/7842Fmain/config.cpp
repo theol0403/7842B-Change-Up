@@ -57,8 +57,8 @@ void Robot::_initializeChassis() {
  *    |___/ \___| \_/ |_|\___\___||___/                              
  */
 void Robot::_initializeDevices() {
-  auto trayMotor = std::make_shared<Motor>(1);
-  _tray = std::make_shared<Tray>(trayMotor, trayMotor->getEncoder(), 1000); // tray
+  auto trayMotor = std::make_shared<Motor>(-1);
+  _tray = std::make_shared<Tray>(trayMotor, trayMotor->getEncoder(), 1300); // tray
 
   _rollers = std::make_shared<MotorGroup>(MotorGroup {4, -2}); // left, right rollers
   _arm = std::make_shared<Motor>(20); // arm

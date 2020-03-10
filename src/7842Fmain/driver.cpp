@@ -61,7 +61,12 @@ void driverDeviceControl() {
   } else if (mDigital(B)) {
     setNewDeviceState(tray, down);
   } else {
-    setNewDeviceState(tray, off);
+    auto state = Robot::tray()->getState();
+    if (state == trayStates::down) {
+      setNewDeviceState(tray, brake);
+    } else {
+      setNewDeviceState(tray, off);
+    }
   }
 
   // roller control

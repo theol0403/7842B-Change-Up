@@ -26,8 +26,8 @@ std::shared_ptr<AbstractMotor> Tray::getMotor() const {
 
 double Tray::getVelocityMapping() {
   double error = 1.0 - getPosition();
-  return error; // linear
-  // return error * error; // expo
+  // return error; // linear
+  return std::sqrt(error); // expo
 }
 
 double Tray::getRawPosition() const {
