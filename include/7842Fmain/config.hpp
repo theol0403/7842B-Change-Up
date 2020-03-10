@@ -1,6 +1,8 @@
 #pragma once
 #include "main.h"
 
+#include "subsystem/tray.hpp"
+
 class Robot {
 protected:
   Robot() = default;
@@ -18,8 +20,8 @@ protected:
   std::shared_ptr<PathFollower> _follower {nullptr};
 
   // devices
+  std::shared_ptr<Tray> _tray;
   std::shared_ptr<AbstractMotor> _rollers;
-  std::shared_ptr<AbstractMotor> _tipper;
   std::shared_ptr<AbstractMotor> _arm;
 
   // screen
@@ -37,8 +39,8 @@ public:
   static std::shared_ptr<PathFollower> follower();
 
   //devices
+  static std::shared_ptr<Tray> tray();
   static std::shared_ptr<AbstractMotor> rollers();
-  static std::shared_ptr<AbstractMotor> tipper();
   static std::shared_ptr<AbstractMotor> arm();
 
   //screen

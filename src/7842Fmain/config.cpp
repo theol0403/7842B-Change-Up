@@ -57,14 +57,14 @@ void Robot::_initializeChassis() {
  *    |___/ \___| \_/ |_|\___\___||___/                              
  */
 void Robot::_initializeDevices() {
+  auto trayMotor = std::make_shared<Motor>(1);
+  _tray = std::make_shared<Tray>(trayMotor, trayMotor->getEncoder(), 1000); // tray
 
   _rollers = std::make_shared<MotorGroup>(MotorGroup {4, -2}); // left, right rollers
-  _tipper = std::make_shared<Motor>(1); // tipper
   _arm = std::make_shared<Motor>(20); // arm
 
   // set the brake modes of the devices
   _arm->setBrakeMode(AbstractMotor::brakeMode::hold);
-  _tipper->setBrakeMode(AbstractMotor::brakeMode::brake);
 }
 
 /***
@@ -144,12 +144,12 @@ std::shared_ptr<PathFollower> Robot::follower() {
   getDevice(follower);
 }
 
-std::shared_ptr<AbstractMotor> Robot::rollers() {
-  getDevice(rollers);
+std::shared_ptr<Tray> Robot::tray() {
+  getDevice(tray);
 }
 
-std::shared_ptr<AbstractMotor> Robot::tipper() {
-  getDevice(tipper);
+std::shared_ptr<AbstractMotor> Robot::rollers() {
+  getDevice(rollers);
 }
 
 std::shared_ptr<AbstractMotor> Robot::arm() {

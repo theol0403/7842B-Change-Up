@@ -57,11 +57,11 @@ void driverDeviceControl() {
    *                  |___/ 
    */
   if (mDigital(X)) {
-    setNewDeviceState(lift, score);
+    setNewDeviceState(tray, score);
   } else if (mDigital(B)) {
-    setNewDeviceState(lift, down);
+    setNewDeviceState(tray, down);
   } else {
-    setNewDeviceState(lift, off);
+    setNewDeviceState(tray, off);
   }
 
   // roller control
