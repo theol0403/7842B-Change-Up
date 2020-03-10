@@ -28,7 +28,6 @@ void driverBaseControl() {
   double leftX = mAnalog(LEFT_X);
 
   if (!mDigital(DOWN)) {
-
     Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
                             std::pow(rightY, 2) * util::sgn(rightY), std::pow(leftX, 3));
   }
@@ -45,48 +44,24 @@ void driverBaseControl() {
  *    |___/ \___| \_/ |_|\___\___|  \____/\___/|_| |_|\__|_|  \___/|_|
  */
 
-// acceleration control
-// tweak these numbers to control the acceleration and deceleration of the tipper
-const double start = 0.4;
-const double max = 0.8;
-const double end = 0;
-
-const double acceleration = (((max - start) / 0.8_s) * 10_ms).convert(number);
-const double deceleration = (((end - max) / 0.4_s) * 10_ms).convert(number);
-
-double wanted = 0;
-double last = 0;
-
 void driverDeviceControl() {
 
-  // tipper control
+  /***
+   *    _____               
+   *   |_   _|              
+   *     | |_ __ __ _ _   _ 
+   *     | | '__/ _` | | | |
+   *     | | | | (_| | |_| |
+   *     \_/_|  \__,_|\__, |
+   *                   __/ |
+   *                  |___/ 
+   */
   if (mDigital(X)) {
-    wanted = max;
+    setNewDeviceState(lift, score);
   } else if (mDigital(B)) {
-    wanted = -max;
-    last = -max;
+    setNewDeviceState(lift, down);
   } else {
-    wanted = 0;
-    if (last == -max) { last = 0; }
-  }
-
-  if (wanted > 0 && last < start) last = start;
-
-  double change = wanted - last;
-  if (change > acceleration) {
-    // acceleration
-    change = acceleration;
-  } else if (change < deceleration) {
-    // deceleration
-    change = deceleration;
-  }
-
-  last = last + change;
-
-  if (std::abs(last) < 0.1) {
-    Robot::tipper()->moveVelocity(0);
-  } else {
-    Robot::tipper()->moveVoltage(last * 12000);
+    setNewDeviceState(lift, off);
   }
 
   // roller control
