@@ -5,20 +5,21 @@
 #include <stdexcept>
 #include <string>
 
+#include "lib7842/api/other/global.hpp"
 #include "state.hpp"
 #include "vector.hpp"
 
 namespace lib7842 {
 
 // forward declaration
-template <typename T> class Data;
+template <class T> class Data;
 using DataPoint = Data<Vector>;
 using DataState = Data<State>;
 
 /**
- * A class that contains information of any type. 
+ * A class that contains information of any type.
  */
-template <typename T> class Data : public T {
+template <class T> class Data : public T {
 public:
   using T::T;
 
@@ -35,9 +36,7 @@ public:
    * @param iid   The data name
    * @param idata The data
    */
-  void setData(const std::string& iid, const std::any& idata) {
-    data[iid] = idata;
-  }
+  void setData(const std::string& iid, const std::any& idata) { data[iid] = idata; }
 
   /**
    * Get the data, given the name and the type.
@@ -46,13 +45,13 @@ public:
    * @tparam U   The data type
    * @return The data
    */
-  template <typename U> U getData(const std::string& iid) const {
+  template <class U> U getData(const std::string& iid) const {
     const std::any& idata = getID(iid);
     try {
       return std::any_cast<U>(idata);
-    } catch (const std::bad_any_cast& e) {
-      throw std::runtime_error("Data::getData:: \"" + iid + "\" contains wrong type \"" +
-                               idata.type().name() + "\"");
+    } catch (const std::bad_any_cast&) {
+      GLOBAL_ERROR_THROW("Data::getData:: \"" + iid + "\" contains wrong type \"" +
+                         idata.type().name() + "\"");
     }
   }
 
@@ -66,11 +65,29 @@ protected:
   const std::any& getID(const std::string& iid) const {
     try {
       return data.at(iid);
-    } catch (const std::out_of_range& e) {
-      throw std::runtime_error("Data::getID:: \"" + iid + "\" does not exist in data");
+    } catch (const std::out_of_range&) {
+      GLOBAL_ERROR_THROW("Data::getID:: \"" + iid + "\" does not exist in data");
     }
   }
 
+  friend inline std::ostream& operator<<(std::ostream& os, const DataPoint& rhs);
   std::map<std::string, std::any> data {};
 };
+
+inline std::ostream& operator<<(std::ostream& os, const DataPoint& rhs) {
+  os << "{" << rhs.x << ", " << rhs.y;
+  bool first = true;
+  for (auto&& d : rhs.data) {
+    if (first) {
+      os << ", [";
+      first = false;
+    } else {
+      os << ", ";
+    }
+    os << d.first;
+  }
+  if (!first) { os << "]"; }
+  os << "}";
+  return os;
+}
 } // namespace lib7842

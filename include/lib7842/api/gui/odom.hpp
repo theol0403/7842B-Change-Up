@@ -1,10 +1,10 @@
 #pragma once
 #include "okapi/api/odometry/odometry.hpp"
 #include "page.hpp"
-#include <functional>
-#include <string>
 
 namespace lib7842::GUI {
+
+using namespace okapi;
 
 class Odom : public Page {
 public:
@@ -46,6 +46,7 @@ private:
   void updateOdom();
 
   // field
+  static const int side {6}; // number of tiles on one axis
   double fieldDim = 0; // width and height of field container
   lv_style_t fStyle;
 

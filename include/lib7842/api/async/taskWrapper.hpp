@@ -1,23 +1,24 @@
 #pragma once
+#include "lib7842/api/other/global.hpp"
 #include "okapi/api/coreProsAPI.hpp"
-#include "okapi/api/util/logging.hpp"
-#include "pros/rtos.hpp"
-#include <memory>
 
 namespace lib7842 {
-using namespace okapi;
 
 /**
- * A utility class that wraps a task trampoline. To use, simply inherit your class from TaskWrapper
- * and override the `loop` method. To start the task, the `startTask` method must be called, either
- * from the constructor or from outside the class.
+ * A utility class that wraps a task trampoline. To use, inherit your class from TaskWrapper and
+ * override the `loop` method. To start the task, the `startTask` method must be called, either
+ * from the derived constructor or from outside the class.
  */
 class TaskWrapper {
-protected:
-  explicit TaskWrapper(const std::shared_ptr<Logger>& ilogger = Logger::getDefaultLogger());
-  TaskWrapper(const TaskWrapper& itask) = delete;
-  TaskWrapper(TaskWrapper&& itask) = default;
+public:
+  TaskWrapper(const TaskWrapper&) = delete;
+  TaskWrapper operator=(const TaskWrapper&) = delete;
+  TaskWrapper(TaskWrapper&&) = default;
+  TaskWrapper& operator=(TaskWrapper&&) = default;
   virtual ~TaskWrapper() = default;
+
+protected:
+  TaskWrapper() = default;
 
   /**
    * Override this function to implement a custom task loop.
@@ -36,7 +37,7 @@ public:
   /**
    * Kill the task.
    */
-  virtual void killTask();
+  virtual void stopTask();
 
   /**
    * Get the task name.
@@ -44,9 +45,6 @@ public:
    * @return The name.
    */
   virtual std::string getName();
-
-protected:
-  std::shared_ptr<Logger> logger {nullptr};
 
 private:
   static void trampoline(void* iparam);

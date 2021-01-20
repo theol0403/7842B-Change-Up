@@ -1,20 +1,37 @@
 #pragma once
-#include "lib7842/api/positioning/point/mathPoint.hpp"
+#include "lib7842/api/positioning/spline/spline.hpp"
+#include "lib7842/api/positioning/spline/stepper.hpp"
 #include "pursuitLimits.hpp"
-#include "pursuitPath.hpp"
+#include "waypoint.hpp"
 
 namespace lib7842 {
 
 class PathGenerator {
 public:
   /**
+   * Generate a PursuitPath containing waypoint information for pure pursuit, given a Stepper.
+   */
+  template <class T, class U, class S>
+  static std::vector<Waypoint> generate(const Stepper<T, U, S>& ip, const PursuitLimits& limits) {
+    return generate(ip.generate(), limits);
+  }
+
+  /**
    * Generate a PursuitPath containing waypoint information for pure pursuit.
    *
-   * @param  ipath  The path
+   * @param  ip     The path
    * @param  limits The pure pursuit limits
    * @return the generated path
    */
-  static PursuitPath generate(const SimplePath& ipath, const PursuitLimits& limits);
+  static std::vector<Waypoint> generate(const std::vector<State>& ip, const PursuitLimits& limits) {
+    std::vector<Waypoint> path;
+    path.reserve(ip.size());
+    std::transform(ip.begin(), ip.end(), std::back_inserter(path),
+                   [](const State& p) { return Waypoint(p); });
+    setCurvatures(path);
+    setVelocity(path, limits);
+    return path;
+  }
 
 protected:
   /**
@@ -22,7 +39,7 @@ protected:
    *
    * @param ipath The path
    */
-  static void setCurvatures(PursuitPath& ipath);
+  static void setCurvatures(std::vector<Waypoint>& ipath);
 
   /**
    * Sets the waypoint velocities respecting curvature and deceleration. Traverses the path
@@ -31,7 +48,7 @@ protected:
    * @param ipath  The path
    * @param limits The pure pursuit limits
    */
-  static void setMaxVelocity(PursuitPath& ipath, const PursuitLimits& limits);
+  static void setVelocity(std::vector<Waypoint>& ipath, const PursuitLimits& limits);
 
   /**
    * Gets the curvature of a given segment.
