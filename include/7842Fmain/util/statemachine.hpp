@@ -1,5 +1,7 @@
 #pragma once
+#include "lib7842/api/async/taskWrapper.hpp"
 #include "main.h"
+using namespace lib7842;
 
 /**
  * State machine helper class.

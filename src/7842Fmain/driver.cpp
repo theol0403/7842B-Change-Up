@@ -48,24 +48,20 @@ void driverBaseControl() {
 
 void driverDeviceControl() {
 
-  /***
-   *    _____               
-   *   |_   _|              
-   *     | |_ __ __ _ _   _ 
-   *     | | '__/ _` | | | |
-   *     | | | | (_| | |_| |
-   *     \_/_|  \__,_|\__, |
-   *                   __/ |
-   *                  |___/ 
-   */
   // // roller control
   if (mDigital(R2) && mDigital(L2)) {
-    Robot::roller()->setState(rollerStates::on);
+    Robot::roller()->setNewState(rollerStates::on);
+  } else if (mDigital(R2) && mDigital(R1)) {
+    Robot::roller()->setNewState(rollerStates::on);
+  } else if (mDigital(L2) && mDigital(L1)) {
+    Robot::roller()->setNewState(rollerStates::poop);
   } else if (mDigital(R2)) {
-    Robot::roller()->setState(rollerStates::loading);
+    Robot::roller()->setNewState(rollerStates::loading);
   } else if (mDigital(L2)) {
-    Robot::roller()->setState(rollerStates::shoot);
+    Robot::roller()->setNewState(rollerStates::preShoot);
+  } else if (mDigital(L1)) {
+    Robot::roller()->setNewState(rollerStates::out);
   } else {
-    Robot::roller()->setState(rollerStates::off);
+    Robot::roller()->setNewState(rollerStates::off);
   }
 }

@@ -8,6 +8,8 @@ enum class rollerStates {
   shoot, // run top until no sensor, then run top and bottom
   on, // all on
   poop, // poop
+  preShoot,
+  out,
 };
 
 class Roller : public StateMachine<rollerStates, rollerStates::off> {
