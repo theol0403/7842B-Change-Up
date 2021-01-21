@@ -1,4 +1,6 @@
 #include "driver.hpp"
+#include "lib7842/api/other/utility.hpp"
+using namespace lib7842;
 
 #define mDigital(x)                                                                                \
   pros::c::controller_get_digital(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_DIGITAL_##x)
@@ -32,7 +34,7 @@ void driverBaseControl() {
                             std::pow(rightY, 2) * util::sgn(rightY), std::pow(leftX, 3));
   }
 
-  // if (mDigital(X) && !pros::competition::is_connected()) autonomous();
+  if (mDigital(X) && !pros::competition::is_connected()) autonomous();
 }
 
 /***
@@ -56,39 +58,21 @@ void driverDeviceControl() {
    *                   __/ |
    *                  |___/ 
    */
-  if (mDigital(X)) {
-    setNewDeviceState(tray, score);
-  } else if (mDigital(B)) {
-    setNewDeviceState(tray, down);
+  // // roller control
+  if (mDigital(L2)) {
+    Robot::rollers()->moveVoltage(12000); // max voltage 12000 milliamps
+  } else if (mDigital(L1)) {
+    Robot::rollers()->moveVoltage(-12000);
   } else {
-    auto state = Robot::tray()->getState();
-    if (state == trayStates::down) {
-      setNewDeviceState(tray, brake);
-    } else {
-      setNewDeviceState(tray, off);
-    }
-  }
-
-  // roller control
-  if (!mDigital(DOWN)) { // override control for backing up
-    if (mDigital(L2)) {
-      Robot::rollers()->moveVoltage(12000); // max voltage 12000 milliamps
-    } else if (mDigital(L1)) {
-      Robot::rollers()->moveVoltage(-12000);
-    } else {
-      Robot::rollers()->moveVoltage(0);
-    }
-  } else { // back up
-    Robot::model()->arcade(-0.4, 0);
-    Robot::rollers()->moveVoltage(-12000 * 0.5);
+    Robot::rollers()->moveVoltage(0);
   }
 
   // arm control
-  if (mDigital(R1)) {
-    Robot::arm()->moveVoltage(12000);
-  } else if (mDigital(R2)) {
-    Robot::arm()->moveVoltage(-12000);
+  if (mDigital(R2)) {
+    Robot::topRoller()->moveVoltage(12000);
+  } else if (mDigital(R1)) {
+    Robot::topRoller()->moveVoltage(-12000);
   } else {
-    Robot::arm()->moveVelocity(0);
+    Robot::topRoller()->moveVelocity(0);
   }
 }
