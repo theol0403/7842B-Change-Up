@@ -1,7 +1,7 @@
 #pragma once
 #include "main.h"
 
-#include "subsystem/tray.hpp"
+#include "subsystem/roller.hpp"
 
 class Robot {
 protected:
@@ -16,9 +16,7 @@ protected:
   std::shared_ptr<XDriveModel> _model {nullptr};
 
   // devices
-  // std::shared_ptr<Tray> _tray;
-  std::shared_ptr<AbstractMotor> _rollers;
-  std::shared_ptr<AbstractMotor> _topRoller;
+  std::shared_ptr<Roller> _roller;
 
 public:
   static Robot& get();
@@ -28,7 +26,5 @@ public:
   static std::shared_ptr<XDriveModel> model();
 
   //devices
-  // static std::shared_ptr<Tray> tray();
-  static std::shared_ptr<AbstractMotor> rollers();
-  static std::shared_ptr<AbstractMotor> topRoller();
+  static std::shared_ptr<Roller> roller();
 };

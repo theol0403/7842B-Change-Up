@@ -59,20 +59,13 @@ void driverDeviceControl() {
    *                  |___/ 
    */
   // // roller control
-  if (mDigital(L2)) {
-    Robot::rollers()->moveVoltage(12000); // max voltage 12000 milliamps
-  } else if (mDigital(L1)) {
-    Robot::rollers()->moveVoltage(-12000);
+  if (mDigital(R2) && mDigital(L2)) {
+    Robot::roller()->setState(rollerStates::on);
+  } else if (mDigital(R2)) {
+    Robot::roller()->setState(rollerStates::loading);
+  } else if (mDigital(L2)) {
+    Robot::roller()->setState(rollerStates::shoot);
   } else {
-    Robot::rollers()->moveVoltage(0);
-  }
-
-  // arm control
-  if (mDigital(R2)) {
-    Robot::topRoller()->moveVoltage(12000);
-  } else if (mDigital(R1)) {
-    Robot::topRoller()->moveVoltage(-12000);
-  } else {
-    Robot::topRoller()->moveVelocity(0);
+    Robot::roller()->setState(rollerStates::off);
   }
 }

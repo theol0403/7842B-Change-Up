@@ -11,7 +11,7 @@
 void Robot::_initializeChassis() {
   _model = std::make_shared<XDriveModel>(
     // motors
-    std::make_shared<Motor>(14), // top left
+    std::make_shared<Motor>(11), // top left
     std::make_shared<Motor>(-5), // top right
     std::make_shared<Motor>(-6), // bottom right
     std::make_shared<Motor>(2), // bottom left
@@ -31,8 +31,9 @@ void Robot::_initializeChassis() {
  *    |___/ \___| \_/ |_|\___\___||___/                              
  */
 void Robot::_initializeDevices() {
-  _rollers = std::make_shared<MotorGroup>(MotorGroup {7, 12, -10}); // left, right rollers
-  _topRoller = std::make_shared<MotorGroup>(MotorGroup {-19}); // left, right rollers
+  _roller = std::make_shared<Roller>(std::make_shared<MotorGroup>(MotorGroup {-10, 12}),
+                                     std::make_shared<Motor>(7), std::make_shared<Motor>(-19),
+                                     std::make_shared<pros::ADIAnalogIn>('D'));
 }
 
 /***
@@ -66,9 +67,6 @@ std::shared_ptr<XDriveModel> Robot::model() {
   getDevice(model);
 }
 
-std::shared_ptr<AbstractMotor> Robot::rollers() {
-  getDevice(rollers);
-}
-std::shared_ptr<AbstractMotor> Robot::topRoller() {
-  getDevice(topRoller);
+std::shared_ptr<Roller> Robot::roller() {
+  getDevice(roller);
 }
