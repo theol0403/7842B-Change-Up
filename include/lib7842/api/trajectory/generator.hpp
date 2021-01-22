@@ -5,6 +5,7 @@
 #include "lib7842/api/positioning/spline/spline.hpp"
 #include "limits.hpp"
 #include "okapi/api/units/QAngle.hpp"
+#include "okapi/impl/util/rate.hpp"
 #include "trapezoidal.hpp"
 
 namespace lib7842 {
@@ -67,7 +68,9 @@ public:
 
   static void follow(ChassisModel& chassis, const std::vector<Step>& trajectory,
                      const ChassisScales& scales, const QAngularSpeed& igearset) {
+    Rate rate;
     for (const auto& step : trajectory) {
+      Timer time;
       QSpeed left = step.v - (step.w / radian * scales.wheelTrack) / 2;
       QSpeed right = step.v + (step.w / radian * scales.wheelTrack) / 2;
 
@@ -76,11 +79,12 @@ public:
 
       auto leftSpeed = (leftWheel / igearset).convert(number);
       auto rightSpeed = (rightWheel / igearset).convert(number);
+      // if (time.repeat(20_ms)) std::cout << leftSpeed << std::endl;
 
-      /* chassis.tank(leftSpeed, rightSpeed); */
-      chassis.left(leftSpeed);
-      chassis.right(rightSpeed);
-      pros::delay(5);
+      chassis.tank(leftSpeed, rightSpeed);
+      // chassis.left(leftSpeed);
+      // chassis.right(rightSpeed);
+      rate.delayUntil(10_ms);
     }
   }
 };

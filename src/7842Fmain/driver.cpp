@@ -61,6 +61,8 @@ void driverDeviceControl() {
     Robot::roller()->setNewState(rollerStates::preShoot);
   } else if (mDigital(L1)) {
     Robot::roller()->setNewState(rollerStates::out);
+  } else if (mDigital(A)) {
+    Robot::roller()->setNewState(rollerStates::deploy);
   } else {
     Robot::roller()->setNewState(rollerStates::off);
   }

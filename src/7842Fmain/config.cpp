@@ -18,8 +18,6 @@ void Robot::_initializeChassis() {
     std::make_shared<IntegratedEncoder>(14), std::make_shared<IntegratedEncoder>(2),
     // limits
     200, 12000);
-
-  ChassisScales scales({2.75_in, 11.39_in, 0_in, 2.75_in}, 360);
 }
 
 /***
