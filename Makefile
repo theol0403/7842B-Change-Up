@@ -12,7 +12,7 @@ BINDIR=$(ROOT)/bin
 SRCDIR=$(ROOT)/src
 INCDIR=$(ROOT)/include
 
-WARNFLAGS+=-Wno-psabi
+WARNFLAGS+= -Wall -Wextra -Wshadow -Wno-psabi -Wno-sign-compare -Wno-invalid-constexpr -Wno-deprecated
 EXTRA_CFLAGS=
 EXTRA_CXXFLAGS=
 
