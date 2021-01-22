@@ -6,14 +6,14 @@ void disabled() {}
 void competition_initialize() {}
 
 ChassisScales scales({2.75_in, 21_in}, 360);
-Limits limits(scales, 200_rpm, 0.5_s, 1, 1);
-template <typename S> void follow(S&& path) {
+Limits limits(scales, 200_rpm, 0.6_s, 1, 1);
+template <typename S> void follow(S&& path, bool forward) {
   auto trajectory = TrajectoryGenerator::generate(path, limits, 10_ms);
-  TrajectoryGenerator::follow(*Robot::model(), trajectory, scales, 200_rpm);
+  TrajectoryGenerator::follow(*Robot::model(), trajectory, scales, 200_rpm, forward);
 }
 
-void distance(QLength m) {
-  follow(Line({0_m, 0_m}, {0_m, m}));
+void drive(QLength m) {
+  follow(Line({0_m, 0_m}, {0_m, abs(m)}), m >= 0_m);
 }
 
 IterativePosPIDController pid(0.02, 0, 0, 0, TimeUtilFactory().create());
@@ -26,6 +26,7 @@ void turn(QAngle a) {
     double out = pid.step(-error.convert(degree));
     Robot::model()->tank(out, -out);
   } while (abs(error) >= 5_deg);
+  Robot::model()->tank(0, 0);
 }
 void initialize() {
   pros::delay(200);
@@ -33,9 +34,44 @@ void initialize() {
   s.calibrate();
 }
 
+#define roller(x) Robot::roller()->setNewState(rollerStates::x)
+
 void autonomous() {
-  // auto path = CubicBezier({{0_ft, 0_ft}, {1_ft, 0_ft}, {1_ft, 2_ft}, {2_ft, 2_ft}});
-  turn(90_deg);
+  s.reset();
+
+  roller(deploy);
+  pros::delay(500);
+  roller(loading);
+
+  turn(55_deg);
+  drive(1_ft);
+  Robot::model()->xArcade(-1, 0, 0);
+  pros::delay(100);
+  Robot::model()->xArcade(0, 0, 0);
+
+  roller(on);
+  pros::delay(500);
+  roller(loading);
+
+  drive(-2_ft);
+  turn(-100_deg);
+  roller(poop);
+  drive(4.2_ft);
+  roller(loading);
+  turn(130_deg);
+
+  drive(4_ft);
+  drive(-0.2_ft);
+
+  roller(on);
+  pros::delay(500);
+  roller(loading);
+  drive(-1_ft);
+
+  roller(poop);
+  turn(-135_deg);
+  roller(loading);
+  drive(4_ft);
 }
 
 void opcontrol() {

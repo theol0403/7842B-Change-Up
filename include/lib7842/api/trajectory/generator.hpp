@@ -67,7 +67,7 @@ public:
   }
 
   static void follow(ChassisModel& chassis, const std::vector<Step>& trajectory,
-                     const ChassisScales& scales, const QAngularSpeed& igearset) {
+                     const ChassisScales& scales, const QAngularSpeed& igearset, bool forward) {
     Rate rate;
     for (const auto& step : trajectory) {
       Timer time;
@@ -81,7 +81,11 @@ public:
       auto rightSpeed = (rightWheel / igearset).convert(number);
       // if (time.repeat(20_ms)) std::cout << leftSpeed << std::endl;
 
-      chassis.tank(leftSpeed, rightSpeed);
+      if (forward) {
+        chassis.tank(leftSpeed, rightSpeed);
+      } else {
+        chassis.tank(-rightSpeed, -leftSpeed);
+      }
       // chassis.left(leftSpeed);
       // chassis.right(rightSpeed);
       rate.delayUntil(10_ms);
