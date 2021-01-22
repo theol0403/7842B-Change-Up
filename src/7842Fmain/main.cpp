@@ -2,11 +2,6 @@
 #include "config.hpp"
 #include "driver.hpp"
 
-void initialize() {
-  pros::delay(200);
-  Robot::initialize();
-}
-
 void disabled() {}
 void competition_initialize() {}
 
@@ -21,9 +16,26 @@ void distance(QLength m) {
   follow(Line({0_m, 0_m}, {0_m, m}));
 }
 
-void autonomous() {
+IterativePosPIDController pid(0.02, 0, 0, 0, TimeUtilFactory().create());
+IMU s(4);
+void turn(QAngle a) {
+  QAngle error = 0_deg;
+  pid.controllerSet(0);
+  do {
+    error = util::rollAngle180(a - s.getRemapped(180, -180) * degree);
+    double out = pid.step(-error.convert(degree));
+    Robot::model()->tank(out, -out);
+  } while (abs(error) >= 5_deg);
+}
+void initialize() {
+  pros::delay(200);
+  Robot::initialize();
+  s.calibrate();
+}
 
+void autonomous() {
   // auto path = CubicBezier({{0_ft, 0_ft}, {1_ft, 0_ft}, {1_ft, 2_ft}, {2_ft, 2_ft}});
+  turn(90_deg);
 }
 
 void opcontrol() {
