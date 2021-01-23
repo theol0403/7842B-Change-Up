@@ -7,7 +7,7 @@ void competition_initialize() {}
 
 ChassisScales scales({2.75_in, 21_in}, 360);
 Limits limits(scales, 200_rpm, 0.6_s, 1, 1);
-template <typename S> void follow(S&& path, bool forward) {
+template <typename S> void follow(S&& path, bool forward = true) {
   auto trajectory = TrajectoryGenerator::generate(path, limits, 10_ms);
   TrajectoryGenerator::follow(*Robot::model(), trajectory, scales, 200_rpm, forward);
 }
@@ -44,21 +44,24 @@ void autonomous() {
   roller(loading);
 
   turn(55_deg);
-  drive(1_ft);
+  drive(1.1_ft);
   Robot::model()->xArcade(-1, 0, 0);
   pros::delay(100);
   Robot::model()->xArcade(0, 0, 0);
 
   roller(on);
-  pros::delay(500);
+  pros::delay(700);
   roller(loading);
+  pros::delay(300);
 
-  drive(-2_ft);
+  Robot::model()->setMaxVoltage(8000);
+  drive(-2.5_ft);
+  Robot::model()->setMaxVoltage(12000);
   turn(-100_deg);
   roller(poop);
   drive(4.2_ft);
-  roller(loading);
   turn(130_deg);
+  roller(loading);
 
   drive(4_ft);
   drive(-0.2_ft);
@@ -71,7 +74,21 @@ void autonomous() {
   roller(poop);
   turn(-135_deg);
   roller(loading);
-  drive(4_ft);
+  Robot::model()->setMaxVoltage(9000);
+  drive(6_ft);
+  Robot::model()->setMaxVoltage(12000);
+
+  turn(-170_deg);
+  drive(1.8_ft);
+
+  roller(on);
+  pros::delay(700);
+  roller(loading);
+  pros::delay(300);
+
+  drive(-2_ft);
+  roller(poop);
+  pros::delay(2000);
 }
 
 void opcontrol() {
