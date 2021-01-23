@@ -21,7 +21,6 @@ void Roller::initialize() {
 void Roller::loop() {
   Timer time;
   Rate rate;
-  Timer shootTime;
 
   while (true) {
 
@@ -62,14 +61,6 @@ void Roller::loop() {
         }
         break;
 
-      case rollerStates::preShoot:
-        topRoller->moveVoltage(12000);
-        intakes->moveVoltage(0);
-        bottomRoller->moveVoltage(12000);
-        shootTime.placeHardMark();
-        if (shootTime.getDtFromHardMark() > 0.5_s) state = rollerStates::shoot;
-        break;
-
       case rollerStates::shoot:
         topRoller->moveVoltage(12000);
         intakes->moveVoltage(0);
@@ -81,13 +72,13 @@ void Roller::loop() {
         bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(-12000);
         break;
+
       case rollerStates::out:
         intakes->moveVoltage(-12000);
         bottomRoller->moveVoltage(-12000);
         topRoller->moveVoltage(-12000);
         break;
     }
-    // if (state != rollerStates::preShoot) shootTime.clearHardMark();
 
     // if (time.repeat(100_ms)) { std::cout << getSensor() << std::endl; }
 

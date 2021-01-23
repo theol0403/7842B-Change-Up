@@ -8,7 +8,6 @@ enum class rollerStates {
   shoot, // run top until no sensor, then run top and bottom
   on, // all on
   poop, // poop
-  preShoot,
   out,
   deploy,
   purge
@@ -31,6 +30,4 @@ protected:
   std::shared_ptr<AbstractMotor> bottomRoller {nullptr};
   std::shared_ptr<AbstractMotor> topRoller {nullptr};
   std::shared_ptr<pros::ADIAnalogIn> light {nullptr};
-
-  double lightDiff {0};
 };

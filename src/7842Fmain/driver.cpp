@@ -14,7 +14,7 @@ using namespace lib7842;
     pros::c::controller_get_analog(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_ANALOG_##x)) /    \
     127.0
 
-#define setNewDeviceState(device, state) Robot::device()->setNewState(device##States::state);
+#define system(device, state) Robot::device()->setNewState(device##States::state);
 
 /***
  *    ______                  _____             _             _
@@ -48,22 +48,22 @@ void driverBaseControl() {
 
 void driverDeviceControl() {
 
-  // // roller control
+  // roller control
   if (mDigital(R2) && mDigital(L2)) {
-    Robot::roller()->setNewState(rollerStates::on);
+    system(roller, on);
   } else if (mDigital(R2) && mDigital(R1)) {
-    Robot::roller()->setNewState(rollerStates::on);
+    system(roller, on);
   } else if (mDigital(L2) && mDigital(L1)) {
-    Robot::roller()->setNewState(rollerStates::poop);
+    system(roller, poop);
   } else if (mDigital(R2)) {
-    Robot::roller()->setNewState(rollerStates::loading);
+    system(roller, loading);
   } else if (mDigital(L2)) {
-    Robot::roller()->setNewState(rollerStates::preShoot);
+    system(roller, shoot);
   } else if (mDigital(L1)) {
-    Robot::roller()->setNewState(rollerStates::out);
+    system(roller, out);
   } else if (mDigital(A)) {
-    Robot::roller()->setNewState(rollerStates::deploy);
+    system(roller, deploy);
   } else {
-    Robot::roller()->setNewState(rollerStates::off);
+    system(roller, off);
   }
 }

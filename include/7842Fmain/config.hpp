@@ -4,27 +4,19 @@
 #include "subsystem/roller.hpp"
 
 class Robot {
-protected:
-  Robot() = default;
-  Robot(const Robot& irobot) = delete;
-  ~Robot() = default;
-
-  void _initializeChassis();
-  void _initializeDevices();
-
-  // base
-  std::shared_ptr<XDriveModel> _model {nullptr};
-
-  // devices
-  std::shared_ptr<Roller> _roller;
-
 public:
   static Robot& get();
   static Robot& initialize();
 
-  //base
-  static std::shared_ptr<XDriveModel> model();
+#define ADD(name, type) static std::shared_ptr<type> name();
+#include "systems.def"
+#undef ADD
 
-  //devices
-  static std::shared_ptr<Roller> roller();
+protected:
+  void _initializeChassis();
+  void _initializeDevices();
+
+#define ADD(name, type) std::shared_ptr<type> _##name {nullptr};
+#include "systems.def"
+#undef ADD
 };

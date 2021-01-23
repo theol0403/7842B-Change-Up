@@ -61,10 +61,9 @@ Robot& Robot::initialize() {
   if (!instance._##x) throw std::runtime_error("Robot::" #x ": _" #x " is null");                  \
   return instance._##x;
 
-std::shared_ptr<XDriveModel> Robot::model() {
-  getDevice(model);
-}
-
-std::shared_ptr<Roller> Robot::roller() {
-  getDevice(roller);
-}
+#define ADD(name, type)                                                                            \
+  std::shared_ptr<type> Robot::name() {                                                            \
+    getDevice(name);                                                                               \
+  }
+#include "systems.def"
+#undef ADD
