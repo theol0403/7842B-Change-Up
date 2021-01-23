@@ -53,7 +53,7 @@ void Roller::loop() {
         if (getSensor() > 0) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);
-          topRoller->moveVoltage(8000);
+          topRoller->moveVoltage(12000);
         } else {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);

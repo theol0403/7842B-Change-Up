@@ -34,6 +34,7 @@ void initialize() {
   pros::delay(200);
   Robot::initialize();
   s.calibrate();
+  pros::delay(1000);
 }
 
 #define roller(x) Robot::roller()->setNewState(rollerStates::x)
@@ -53,7 +54,7 @@ void autonomous() {
 
   // goal 1
   roller(on);
-  pros::delay(1000);
+  pros::delay(900);
 
   Robot::model()->setMaxVoltage(6000);
   drive(-2.5_ft);
@@ -75,7 +76,7 @@ void autonomous() {
   drive(-1_ft);
 
   roller(poop);
-  turn(-139_deg);
+  turn(-140_deg);
   roller(loading);
   Robot::model()->setMaxVoltage(9000);
   drive(6_ft);
@@ -100,7 +101,18 @@ void autonomous() {
   drive(0.7_ft);
   roller(on);
   pros::delay(700);
-  drive(-2_ft);
+  drive(-1.5_ft);
+  turn(-45_deg);
+
+  roller(loading);
+  drive(5_ft);
+  turn(-110_deg);
+  drive(2.5_ft);
+  roller(on);
+  pros::delay(1000);
+
+  drive(-1.3_ft);
+  roller(poop);
 }
 
 void opcontrol() {
