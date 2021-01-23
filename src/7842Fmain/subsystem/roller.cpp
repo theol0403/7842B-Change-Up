@@ -32,10 +32,15 @@ void Roller::loop() {
         bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(12000);
         break;
+      case rollerStates::purge:
+        intakes->moveVoltage(-12000);
+        bottomRoller->moveVoltage(12000);
+        topRoller->moveVoltage(12000);
+        break;
 
       case rollerStates::deploy:
         intakes->moveVoltage(-12000);
-        bottomRoller->moveVoltage(0);
+        bottomRoller->moveVoltage(-5000);
         topRoller->moveVoltage(12000);
         break;
 
@@ -72,7 +77,7 @@ void Roller::loop() {
         break;
 
       case rollerStates::poop:
-        intakes->moveVoltage(6000);
+        intakes->moveVoltage(12000);
         bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(-12000);
         break;
@@ -82,7 +87,7 @@ void Roller::loop() {
         topRoller->moveVoltage(-12000);
         break;
     }
-    if (state != rollerStates::preShoot) shootTime.clearHardMark();
+    // if (state != rollerStates::preShoot) shootTime.clearHardMark();
 
     // if (time.repeat(100_ms)) { std::cout << getSensor() << std::endl; }
 

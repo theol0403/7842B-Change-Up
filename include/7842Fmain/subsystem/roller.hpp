@@ -10,7 +10,8 @@ enum class rollerStates {
   poop, // poop
   preShoot,
   out,
-  deploy
+  deploy,
+  purge
 };
 
 class Roller : public StateMachine<rollerStates, rollerStates::off> {

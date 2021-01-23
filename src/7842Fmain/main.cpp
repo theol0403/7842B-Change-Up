@@ -12,6 +12,8 @@ template <typename S> void follow(S&& path, bool forward = true) {
   TrajectoryGenerator::follow(*Robot::model(), trajectory, scales, 200_rpm, forward);
 }
 
+#define asyncTask(x) pros::Task([&]() { x });
+
 void drive(QLength m) {
   follow(Line({0_m, 0_m}, {0_m, abs(m)}), m >= 0_m);
 }
@@ -49,46 +51,56 @@ void autonomous() {
   pros::delay(100);
   Robot::model()->xArcade(0, 0, 0);
 
+  // goal 1
   roller(on);
-  pros::delay(700);
-  roller(loading);
-  pros::delay(300);
+  pros::delay(1000);
 
-  Robot::model()->setMaxVoltage(8000);
+  Robot::model()->setMaxVoltage(6000);
   drive(-2.5_ft);
   Robot::model()->setMaxVoltage(12000);
-  turn(-100_deg);
-  roller(poop);
-  drive(4.2_ft);
-  turn(130_deg);
+  roller(purge);
+  pros::delay(500);
+  turn(-105_deg);
   roller(loading);
+  drive(5.2_ft);
+  turn(135_deg);
 
   drive(4_ft);
   drive(-0.2_ft);
 
+  // goal 2
   roller(on);
   pros::delay(500);
   roller(loading);
   drive(-1_ft);
 
   roller(poop);
-  turn(-135_deg);
+  turn(-139_deg);
   roller(loading);
   Robot::model()->setMaxVoltage(9000);
   drive(6_ft);
   Robot::model()->setMaxVoltage(12000);
+  roller(loading);
 
-  turn(-170_deg);
+  turn(-175_deg);
   drive(1.8_ft);
 
+  // corner goal
+  roller(on);
+  pros::delay(1000);
+
+  drive(-1.3_ft);
+  roller(poop);
+
+  turn(-45_deg);
+  drive(4.4_ft);
+  roller(loading);
+  turn(-135_deg);
+
+  drive(0.7_ft);
   roller(on);
   pros::delay(700);
-  roller(loading);
-  pros::delay(300);
-
   drive(-2_ft);
-  roller(poop);
-  pros::delay(2000);
 }
 
 void opcontrol() {
