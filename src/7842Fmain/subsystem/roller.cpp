@@ -3,19 +3,29 @@
 Roller::Roller(const std::shared_ptr<AbstractMotor>& iintakes,
                const std::shared_ptr<AbstractMotor>& ibottomRoller,
                const std::shared_ptr<AbstractMotor>& itopRoller,
-               const std::shared_ptr<pros::ADIAnalogIn>& ilight) :
-  intakes(iintakes), bottomRoller(ibottomRoller), topRoller(itopRoller), light(ilight) {
+               const std::shared_ptr<pros::ADIAnalogIn>& itopLight,
+               const std::shared_ptr<pros::ADIAnalogIn>& ibottomLight) :
+  intakes(iintakes),
+  bottomRoller(ibottomRoller),
+  topRoller(itopRoller),
+  topLight(itopLight),
+  bottomLight(ibottomLight) {
   pros::delay(100); // allow sensors to initialize
   initialize();
   startTask("Roller");
 }
 
-double Roller::getSensor() const {
-  return light->get_value() - 2954 + 50;
+double Roller::getTopLight() const {
+  return topLight->get_value() - 2954 + 50;
+}
+
+double Roller::getBottomLight() const {
+  return bottomLight->get_value() - 2954 + 50;
 }
 
 void Roller::initialize() {
-  light->calibrate();
+  topLight->calibrate();
+  bottomLight->calibrate();
 }
 
 void Roller::loop() {
@@ -50,14 +60,18 @@ void Roller::loop() {
         break;
 
       case rollerStates::loading:
-        if (getSensor() > 0) {
+        if (getTopLight() < 0 && getBottomLight() < 0) {
           intakes->moveVoltage(12000);
-          bottomRoller->moveVoltage(12000);
-          topRoller->moveVoltage(12000);
-        } else {
+          bottomRoller->moveVoltage(0);
+          topRoller->moveVoltage(0);
+        } else if (getTopLight() < 0) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);
           topRoller->moveVoltage(0);
+        } else {
+          intakes->moveVoltage(12000);
+          bottomRoller->moveVoltage(12000);
+          topRoller->moveVoltage(12000);
         }
         break;
 
@@ -77,6 +91,17 @@ void Roller::loop() {
         intakes->moveVoltage(-12000);
         bottomRoller->moveVoltage(-12000);
         topRoller->moveVoltage(-12000);
+        break;
+
+      case rollerStates::intakeOut:
+        intakes->moveVoltage(-12000);
+        bottomRoller->moveVoltage(12000);
+        topRoller->moveVoltage(-12000);
+        break;
+      case rollerStates::topOut:
+        intakes->moveVoltage(0);
+        bottomRoller->moveVoltage(0);
+        topRoller->moveVoltage(12000);
         break;
     }
 

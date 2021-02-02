@@ -3,7 +3,8 @@
 using namespace lib7842;
 
 #define mDigital(x)                                                                                \
-  pros::c::controller_get_digital(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_DIGITAL_##x)
+  (pros::c::controller_get_digital(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_DIGITAL_##x) ||   \
+   pros::c::controller_get_digital(pros::E_CONTROLLER_PARTNER, pros::E_CONTROLLER_DIGITAL_##x))
 
 #define mDigitalPressed(x)                                                                         \
   pros::c::controller_get_digital_new_press(pros::E_CONTROLLER_MASTER,                             \
@@ -29,10 +30,8 @@ void driverBaseControl() {
   double rightY = mAnalog(RIGHT_Y);
   double leftX = mAnalog(LEFT_X);
 
-  if (!mDigital(DOWN)) {
-    Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
-                            std::pow(rightY, 2) * util::sgn(rightY), std::pow(leftX, 3));
-  }
+  Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
+                          std::pow(rightY, 2) * util::sgn(rightY), std::pow(leftX, 3));
 
   if (mDigital(X) && !pros::competition::is_connected()) autonomous();
 }
@@ -49,20 +48,24 @@ void driverBaseControl() {
 void driverDeviceControl() {
 
   // roller control
-  if (mDigital(R2) && mDigital(L2)) {
+  if (mDigital(R2) && mDigital(R1)) {
     system(roller, on);
-  } else if (mDigital(R2) && mDigital(R1)) {
-    system(roller, on);
-  } else if (mDigital(L2) && mDigital(L1)) {
+  } else if (mDigital(A)) {
     system(roller, poop);
+  } else if (mDigital(R1)) {
+    system(roller, shoot);
+  } else if (mDigital(L2)) {
+    system(roller, out);
+  } else if (mDigital(L1)) {
+    system(roller, purge);
+  } else if (mDigital(B)) {
+    system(roller, deploy);
+  } else if (mDigital(LEFT)) {
+    system(roller, intakeOut);
+  } else if (mDigital(DOWN)) {
+    system(roller, topOut);
   } else if (mDigital(R2)) {
     system(roller, loading);
-  } else if (mDigital(L2)) {
-    system(roller, shoot);
-  } else if (mDigital(L1)) {
-    system(roller, out);
-  } else if (mDigital(A)) {
-    system(roller, deploy);
   } else {
     system(roller, off);
   }

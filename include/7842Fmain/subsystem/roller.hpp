@@ -10,7 +10,9 @@ enum class rollerStates {
   poop, // poop
   out,
   deploy,
-  purge
+  purge,
+  intakeOut,
+  topOut,
 };
 
 class Roller : public StateMachine<rollerStates, rollerStates::off> {
@@ -18,10 +20,12 @@ public:
   Roller(const std::shared_ptr<AbstractMotor>& iintakes,
          const std::shared_ptr<AbstractMotor>& ibottomRoller,
          const std::shared_ptr<AbstractMotor>& itopRoller,
-         const std::shared_ptr<pros::ADIAnalogIn>& ilight);
+         const std::shared_ptr<pros::ADIAnalogIn>& itoplight,
+         const std::shared_ptr<pros::ADIAnalogIn>& ibottomlight);
 
 protected:
-  double getSensor() const;
+  double getTopLight() const;
+  double getBottomLight() const;
 
   void initialize() override;
   void loop() override;
@@ -29,5 +33,6 @@ protected:
   std::shared_ptr<AbstractMotor> intakes {nullptr};
   std::shared_ptr<AbstractMotor> bottomRoller {nullptr};
   std::shared_ptr<AbstractMotor> topRoller {nullptr};
-  std::shared_ptr<pros::ADIAnalogIn> light {nullptr};
+  std::shared_ptr<pros::ADIAnalogIn> topLight {nullptr};
+  std::shared_ptr<pros::ADIAnalogIn> bottomLight {nullptr};
 };
