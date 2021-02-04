@@ -2,6 +2,10 @@
 #include "config.hpp"
 #include "driver.hpp"
 
+#define mDigital(x)                                                                                \
+  (pros::c::controller_get_digital(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_DIGITAL_##x) ||   \
+   pros::c::controller_get_digital(pros::E_CONTROLLER_PARTNER, pros::E_CONTROLLER_DIGITAL_##x))
+
 void disabled() {}
 void competition_initialize() {}
 
@@ -37,14 +41,14 @@ void initialize() {
   pros::delay(1000);
 }
 
-#define roller(x) Robot::roller()->setNewState(rollerStates::x)
+#define roll(x) Robot::roller()->setNewState(rollerStates::x)
 
 void autonomous() {
   s.reset();
 
-  roller(deploy);
+  roll(deploy);
   pros::delay(500);
-  roller(loading);
+  roll(loading);
 
   turn(55_deg);
   drive(1.1_ft);
@@ -53,71 +57,83 @@ void autonomous() {
   Robot::model()->xArcade(0, 0, 0);
 
   // goal 1
-  roller(on);
+  roll(on);
   pros::delay(900);
 
   Robot::model()->setMaxVoltage(6000);
   drive(-2.5_ft);
   Robot::model()->setMaxVoltage(12000);
-  roller(purge);
+  roll(purge);
   pros::delay(500);
   turn(-105_deg);
-  roller(loading);
-  drive(5.2_ft);
+  roll(loading);
+  drive(5.15_ft);
   turn(135_deg);
 
   drive(4_ft);
   drive(-0.2_ft);
 
   // goal 2
-  roller(on);
+  roll(on);
   pros::delay(500);
-  roller(loading);
+  roll(loading);
   drive(-1_ft);
 
-  roller(poop);
-  turn(-140_deg);
-  roller(loading);
+  roll(poop);
+  turn(-139_deg);
+  roll(loading);
   Robot::model()->setMaxVoltage(9000);
-  drive(6_ft);
+  drive(6.1_ft);
   Robot::model()->setMaxVoltage(12000);
-  roller(loading);
+  roll(loading);
 
   turn(-175_deg);
   drive(1.8_ft);
 
   // corner goal
-  roller(on);
-  pros::delay(1000);
+  roll(on);
+  pros::delay(500);
+  roll(poop);
+  pros::delay(500);
 
   drive(-1.3_ft);
-  roller(poop);
+  roll(poop);
 
   turn(-45_deg);
-  drive(4.4_ft);
-  roller(loading);
+  drive(4.35_ft);
+  roll(loading);
   turn(-135_deg);
 
   drive(0.7_ft);
-  roller(on);
+  // edge goal
+  roll(on);
   pros::delay(700);
   drive(-1.5_ft);
+  roll(purge);
+  pros::delay(700);
   turn(-45_deg);
 
-  roller(loading);
-  drive(5_ft);
-  turn(-110_deg);
-  drive(2.5_ft);
-  roller(on);
-  pros::delay(1000);
+  roll(loading);
+  drive(4.7_ft);
+  turn(-105_deg);
+  drive(2.2_ft);
+  // far corner goal
+  roll(on);
+  pros::delay(500);
+  roll(poop);
+  pros::delay(500);
 
   drive(-1.3_ft);
-  roller(poop);
 }
 
 void opcontrol() {
 
   while (true) {
+
+    if (mDigital(Y) && !pros::competition::is_connected()) {
+      Robot::roller()->initialize();
+      s.calibrate();
+    }
 
     driverBaseControl();
     driverDeviceControl();

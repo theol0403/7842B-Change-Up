@@ -23,7 +23,7 @@ public:
          const std::shared_ptr<pros::ADIAnalogIn>& itoplight,
          const std::shared_ptr<pros::ADIAnalogIn>& ibottomlight);
 
-protected:
+public:
   double getTopLight() const;
   double getBottomLight() const;
 
