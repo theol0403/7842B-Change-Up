@@ -60,7 +60,7 @@ void autonomous() {
   roll(on);
   pros::delay(500);
   roll(loading);
-  pros::delay(500);
+  pros::delay(400);
 
   Robot::model()->setMaxVoltage(6000);
   drive(-2.5_ft);
@@ -69,7 +69,7 @@ void autonomous() {
   pros::delay(500);
   turn(-105_deg);
   roll(loading);
-  drive(5_ft);
+  drive(4.90_ft);
   turn(135_deg);
 
   drive(4_ft);
@@ -82,14 +82,14 @@ void autonomous() {
   drive(-1_ft);
 
   roll(poop);
-  turn(-139_deg);
+  turn(-141_deg);
   roll(loading);
   Robot::model()->setMaxVoltage(9000);
   drive(6_ft);
   Robot::model()->setMaxVoltage(12000);
   roll(loading);
 
-  turn(-175_deg);
+  turn(-180_deg);
   drive(1.8_ft);
 
   // corner goal
@@ -116,14 +116,14 @@ void autonomous() {
   turn(-45_deg);
 
   roll(loading);
-  drive(4.9_ft);
+  drive(4.6_ft);
   turn(-105_deg);
-  drive(2.2_ft);
+  drive(3_ft);
   // far corner goal
   roll(on);
   pros::delay(500);
   roll(poop);
-  pros::delay(500);
+  pros::delay(700);
 
   drive(-1.3_ft);
 }
