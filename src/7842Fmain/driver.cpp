@@ -50,6 +50,8 @@ void driverDeviceControl() {
   // roller control
   if (mDigital(R2) && mDigital(R1)) {
     system(roller, on);
+  } else if (mDigital(R1) && mDigital(A)) {
+    system(roller, on);
   } else if (mDigital(A)) {
     system(roller, poop);
   } else if (mDigital(R1)) {

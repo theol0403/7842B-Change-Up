@@ -31,7 +31,7 @@ void turn(QAngle a) {
     error = util::rollAngle180(a - s.getRemapped(180, -180) * degree);
     double out = pid.step(-error.convert(degree));
     Robot::model()->tank(out, -out);
-  } while (abs(error) >= 5_deg);
+  } while (abs(error) >= 4_deg);
   Robot::model()->tank(0, 0);
 }
 void initialize() {
@@ -70,10 +70,9 @@ void autonomous() {
   turn(-105_deg);
   roll(loading);
   drive(4.90_ft);
-  turn(135_deg);
+  turn(134_deg);
 
   drive(4_ft);
-  drive(-0.2_ft);
 
   // goal 2
   roll(on);
@@ -82,21 +81,22 @@ void autonomous() {
   drive(-1_ft);
 
   roll(poop);
-  turn(-141_deg);
+  turn(-140_deg);
   roll(loading);
   Robot::model()->setMaxVoltage(9000);
-  drive(6_ft);
+  drive(7_ft);
   Robot::model()->setMaxVoltage(12000);
   roll(loading);
 
-  turn(-180_deg);
-  drive(1.8_ft);
+
+  turn(-175_deg);
+  drive(1.85_ft);
 
   // corner goal
   roll(on);
   pros::delay(500);
   roll(poop);
-  pros::delay(500);
+  pros::delay(400);
 
   drive(-1.3_ft);
   roll(poop);
@@ -109,7 +109,7 @@ void autonomous() {
   drive(0.7_ft);
   // edge goal
   roll(on);
-  pros::delay(500);
+  pros::delay(600);
   drive(-1.8_ft);
   roll(purge);
   pros::delay(700);
@@ -123,9 +123,10 @@ void autonomous() {
   roll(on);
   pros::delay(500);
   roll(poop);
-  pros::delay(700);
+  pros::delay(400);
 
   drive(-1.3_ft);
+  pros::delay(1000);
 }
 
 void opcontrol() {
