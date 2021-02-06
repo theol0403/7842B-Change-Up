@@ -91,7 +91,7 @@ void autonomous() {
   // back up
   drive(-1_ft);
   // to ball
-  turn(-139_deg);
+  turn(-138_deg);
   roll(loading);
   Robot::model()->setMaxVoltage(9000);
   drive(7_ft);
@@ -109,7 +109,7 @@ void autonomous() {
   roll(poop);
   // to ball
   turn(-45_deg);
-  asyncTask(pros::delay(500); roll(loading););
+  asyncTask(pros::delay(1000); roll(loading););
   drive(4.45_ft);
 
   // 4 to second edge goal
@@ -137,7 +137,9 @@ void autonomous() {
 
   // back up
   drive(-1.3_ft);
-  pros::delay(1000);
+  turn(70_deg);
+  drive(4_ft);
+  turn(-45_deg);
 }
 
 void opcontrol() {
