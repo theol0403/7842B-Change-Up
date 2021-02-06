@@ -49,7 +49,7 @@ void Roller::loop() {
 
       case rollerStates::deploy:
         intakes->moveVoltage(-12000);
-        bottomRoller->moveVoltage(-5000);
+        bottomRoller->moveVoltage(-2000);
         topRoller->moveVoltage(12000);
         break;
 
