@@ -46,85 +46,95 @@ void initialize() {
 void autonomous() {
   s.reset();
 
+  // deploy
   roll(deploy);
   pros::delay(500);
   roll(loading);
 
+  // 1 to first corner goal
   turn(55_deg);
   drive(1.1_ft);
   Robot::model()->xArcade(-1, 0, 0);
   pros::delay(100);
   Robot::model()->xArcade(0, 0, 0);
-
-  // goal 1
+  // 1 shoot first corner goal
   roll(on);
   pros::delay(500);
   roll(loading);
   pros::delay(400);
 
+  // back up
   Robot::model()->setMaxVoltage(6000);
   drive(-2.5_ft);
   Robot::model()->setMaxVoltage(12000);
   roll(purge);
   pros::delay(500);
+  // to ball
   turn(-105_deg);
   roll(loading);
   drive(4.90_ft);
+
+  // 2 to first edge goal
   turn(134_deg);
-
   drive(4_ft);
-
-  // goal 2
+  // 2 shoot first edge goal
   roll(on);
   pros::delay(500);
   roll(loading);
-  drive(-1_ft);
 
+  // back up
+  drive(-1_ft);
   roll(poop);
+  // to ball
   turn(-140_deg);
   roll(loading);
   Robot::model()->setMaxVoltage(9000);
   drive(7_ft);
   Robot::model()->setMaxVoltage(12000);
-  roll(loading);
 
-
+  // 3 to second corner goal
   turn(-175_deg);
   drive(1.85_ft);
-
-  // corner goal
+  // 3 shoot second corner goal
   roll(on);
   pros::delay(500);
   roll(poop);
   pros::delay(400);
 
+  // back up
   drive(-1.3_ft);
   roll(poop);
-
+  // to ball
   turn(-45_deg);
+  asyncTask(pros::delay(500); roll(loading););
   drive(4.35_ft);
-  roll(loading);
-  turn(-135_deg);
 
+  // 4 to second edge goal
+  turn(-135_deg);
   drive(0.7_ft);
-  // edge goal
+  // 4 shoot second edge goal
   roll(on);
-  pros::delay(600);
+  pros::delay(500);
+
+  // back up
   drive(-1.8_ft);
   roll(purge);
   pros::delay(700);
+  // to ball
   turn(-45_deg);
-
   roll(loading);
   drive(4.6_ft);
+
+  // 5 to third corner goal
   turn(-105_deg);
   drive(3_ft);
-  // far corner goal
+  // 5 shoot third corner goal
   roll(on);
   pros::delay(500);
   roll(poop);
   pros::delay(400);
 
+  // back up
   drive(-1.3_ft);
   pros::delay(1000);
 }
