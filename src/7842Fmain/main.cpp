@@ -43,6 +43,14 @@ void initialize() {
 
 #define roll(x) Robot::roller()->setNewState(rollerStates::x)
 
+void cornerGoal() {
+  roll(intake);
+  pros::delay(500);
+  roll(on);
+  pros::delay(400);
+  roll(poop);
+}
+
 void autonomous() {
   s.reset();
 
@@ -58,10 +66,8 @@ void autonomous() {
   pros::delay(100);
   Robot::model()->xArcade(0, 0, 0);
   // 1 shoot first corner goal
-  roll(on);
-  pros::delay(500);
+  cornerGoal();
   roll(loading);
-  pros::delay(400);
 
   // back up
   Robot::model()->setMaxVoltage(6000);
@@ -96,10 +102,7 @@ void autonomous() {
   turn(-175_deg);
   drive(1.85_ft);
   // 3 shoot second corner goal
-  roll(on);
-  pros::delay(500);
-  roll(poop);
-  pros::delay(400);
+  cornerGoal();
 
   // back up
   drive(-1.3_ft);
@@ -129,10 +132,7 @@ void autonomous() {
   turn(-105_deg);
   drive(3_ft);
   // 5 shoot third corner goal
-  roll(on);
-  pros::delay(500);
-  roll(poop);
-  pros::delay(400);
+  cornerGoal();
 
   // back up
   drive(-1.3_ft);
