@@ -76,7 +76,7 @@ void autonomous() {
   roll(purge);
   pros::delay(500);
   // to ball
-  turn(-103_deg);
+  turn(-105_deg);
   roll(loading);
   drive(4.90_ft);
 
@@ -86,11 +86,10 @@ void autonomous() {
   // 2 shoot first edge goal
   roll(on);
   pros::delay(500);
-  roll(loading);
+  roll(poop);
 
   // back up
   drive(-1_ft);
-  roll(poop);
   // to ball
   turn(-139_deg);
   roll(loading);
