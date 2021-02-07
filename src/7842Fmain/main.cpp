@@ -78,7 +78,7 @@ void autonomous() {
   // to ball
   turn(-105_deg);
   roll(loading);
-  drive(4.90_ft);
+  drive(4.95_ft);
 
   // 2 to first edge goal
   turn(134_deg);
@@ -101,16 +101,15 @@ void autonomous() {
   turn(-175_deg);
   drive(1.85_ft);
   // 3 shoot second corner goal
-  drive(-0.1_ft);
   cornerGoal();
 
   // back up
-  drive(-1.2_ft);
+  drive(-1_ft);
   roll(poop);
   // to ball
   turn(-45_deg);
   asyncTask(pros::delay(1000); roll(loading););
-  drive(4.45_ft);
+  drive(4.8_ft);
 
   // 4 to second edge goal
   turn(-135_deg);
@@ -120,13 +119,13 @@ void autonomous() {
   pros::delay(500);
 
   // back up
-  drive(-1.7_ft);
+  drive(-1.6_ft);
   roll(purge);
   pros::delay(600);
   // to ball
   turn(-45_deg);
   roll(loading);
-  drive(4.8_ft);
+  drive(4.85_ft);
 
   // 5 to third corner goal
   turn(-105_deg);
@@ -137,9 +136,20 @@ void autonomous() {
 
   // back up
   drive(-1.3_ft);
-  turn(70_deg);
-  drive(4_ft);
+  turn(75_deg);
+  roll(loading);
+  drive(4.5_ft);
   turn(-45_deg);
+  drive(4_ft);
+
+  // 2 shoot first edge goal
+  roll(on);
+  pros::delay(500);
+  roll(poop);
+
+  // back up
+  drive(-1_ft);
+  pros::delay(2000);
 }
 
 void opcontrol() {
