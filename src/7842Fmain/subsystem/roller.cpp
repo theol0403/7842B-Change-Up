@@ -41,6 +41,7 @@ void Roller::initialize() {
 
 void Roller::loop() {
   Rate rate;
+  Timer poopTime;
 
   while (true) {
 
@@ -65,6 +66,12 @@ void Roller::loop() {
         break;
 
       case rollerStates::loading:
+
+        if (getColor() == colors::blue) {
+          poopTime.placeMark();
+          state = rollerStates::timedPoop;
+        }
+
         // if no balls in intake
         if (getTopLight() >= 0 && getColor() == colors::none) {
           intakes->moveVoltage(12000);
@@ -117,6 +124,16 @@ void Roller::loop() {
         intakes->moveVoltage(-12000);
         bottomRoller->moveVoltage(-2000);
         topRoller->moveVoltage(12000);
+        break;
+
+      case rollerStates::timedPoop:
+        intakes->moveVoltage(12000);
+        bottomRoller->moveVoltage(12000);
+        topRoller->moveVoltage(-6000);
+        if (poopTime.getDtFromMark() >= 1_s) {
+          poopTime.clearHardMark();
+          state = rollerStates::timedPoop;
+        }
         break;
     }
 
