@@ -15,7 +15,7 @@ void Robot::_initializeChassis() {
     std::make_shared<Motor>(-5), // top right
     std::make_shared<Motor>(-6), // bottom right
     std::make_shared<Motor>(2), // bottom left
-    std::make_shared<IntegratedEncoder>(14), std::make_shared<IntegratedEncoder>(2),
+    std::make_shared<IntegratedEncoder>(11), std::make_shared<IntegratedEncoder>(-5),
     // limits
     200, 12000);
 }
