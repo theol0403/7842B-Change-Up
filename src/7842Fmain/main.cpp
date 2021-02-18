@@ -2,43 +2,30 @@
 #include "config.hpp"
 #include "driver.hpp"
 
-#define mDigital(x)                                                                                \
-  (pros::c::controller_get_digital(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_DIGITAL_##x) ||   \
-   pros::c::controller_get_digital(pros::E_CONTROLLER_PARTNER, pros::E_CONTROLLER_DIGITAL_##x))
-
 void disabled() {}
 void competition_initialize() {}
 
-ChassisScales scales({2.75_in, 21_in}, 360);
-Limits limits(scales, 200_rpm, 0.6_s, 1, 1);
-template <typename S> void follow(S&& path, bool forward = true) {
-  auto trajectory = TrajectoryGenerator::generate(path, limits, 10_ms);
-  TrajectoryGenerator::follow(*Robot::model(), trajectory, scales, 200_rpm, forward);
+void initialize() {
+  pros::delay(200);
+  Robot::initialize();
 }
 
 #define asyncTask(x) pros::Task([&]() { x });
 
-void drive(QLength m) {
-  follow(Line({0_m, 0_m}, {0_m, abs(m)}), m >= 0_m);
+void drive(const QLength& m) {
+  Robot::generator()->follow(Line({0_m, 0_m}, {0_m, abs(m)}), m >= 0_m);
 }
 
 IterativePosPIDController pid(0.024, 0, 0, 0, TimeUtilFactory().create());
-IMU s(4);
 void turn(QAngle a) {
   QAngle error = 0_deg;
   pid.controllerSet(0);
   do {
-    error = util::rollAngle180(a - s.getRemapped(180, -180) * degree);
+    error = util::rollAngle180(a - Robot::imu()->getRemapped(180, -180) * degree);
     double out = pid.step(-error.convert(degree));
     Robot::model()->tank(out, -out);
   } while (abs(error) >= 3_deg);
   Robot::model()->tank(0, 0);
-}
-void initialize() {
-  pros::delay(200);
-  Robot::initialize();
-  s.calibrate();
-  pros::delay(1000);
 }
 
 #define roll(x) Robot::roller()->setNewState(rollerStates::x)
@@ -52,7 +39,7 @@ void cornerGoal() {
 }
 
 void autonomous() {
-  s.reset();
+  Robot::imu().reset();
 
   // deploy
   roll(deploy);
@@ -155,11 +142,6 @@ void autonomous() {
 void opcontrol() {
 
   while (true) {
-
-    if (mDigital(Y) && !pros::competition::is_connected()) {
-      s.calibrate();
-      Robot::roller()->initialize();
-    }
 
     driverBaseControl();
     driverDeviceControl();

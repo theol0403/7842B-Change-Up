@@ -18,6 +18,10 @@ void Robot::_initializeChassis() {
     std::make_shared<IntegratedEncoder>(11), std::make_shared<IntegratedEncoder>(-5),
     // limits
     200, 12000);
+
+  ChassisScales scales({2.75_in, 11.3_in}, 360);
+  Limits limits(scales, 200_rpm, 0.6_s, 1, 1);
+  _generator = std::make_shared<TrajectoryGenerator>(_model, limits, scales, 200_rpm, 10_ms);
 }
 
 /***
@@ -33,6 +37,9 @@ void Robot::_initializeDevices() {
                                      std::make_shared<Motor>(7), std::make_shared<Motor>(-19),
                                      std::make_shared<pros::ADIAnalogIn>('D'),
                                      std::make_shared<pros::ADIAnalogIn>('B'));
+
+  _imu = std::make_shared<IMU>(4);
+  _imu->calibrate();
 }
 
 /***

@@ -1,2 +1,4 @@
 ADD(model, XDriveModel)
 ADD(roller, Roller)
+ADD(generator, TrajectoryGenerator)
+ADD(imu,IMU)
