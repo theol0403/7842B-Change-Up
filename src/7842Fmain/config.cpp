@@ -1,4 +1,5 @@
 #include "config.hpp"
+#include <memory>
 
 /***
  *     _____ _                   _     
@@ -40,19 +41,12 @@ void Robot::_initializeDevices() {
 
   _imu = std::make_shared<IMU>(4);
   _imu->calibrate();
-}
 
-/***
- *     _____                          
- *    /  ___|                         
- *    \ `--.  ___ _ __ ___  ___ _ __  
- *     `--. \/ __| '__/ _ \/ _ \ '_ \ 
- *    /\__/ / (__| | |  __/  __/ | | |
- *    \____/ \___|_|  \___|\___|_| |_|                              
- */
-void Robot::_initializeScreen() {
   _screen = std::make_shared<GUI::Screen>(lv_scr_act(), LV_COLOR_ORANGE);
   _screen->startTask("Screen");
+
+  _vision = std::make_shared<VisionTask>(std::make_shared<Vision::Vision>(15),
+                                         _screen->makePage<GUI::VisionPage>("Vision"));
 }
 
 /***

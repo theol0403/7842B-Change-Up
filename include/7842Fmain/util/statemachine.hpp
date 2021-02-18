@@ -15,7 +15,6 @@ template <typename States, States assumedState = States::off>
 class StateMachine : public TaskWrapper {
 
 public:
-  StateMachine() = default;
   virtual ~StateMachine() = default;
 
   /**

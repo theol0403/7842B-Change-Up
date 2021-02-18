@@ -2,6 +2,7 @@
 #include "main.h"
 
 #include "subsystem/roller.hpp"
+#include "subsystem/vision.hpp"
 
 class Robot {
 public:
@@ -15,7 +16,6 @@ public:
 protected:
   void _initializeChassis();
   void _initializeDevices();
-  void _initializeScreen();
 
 #define ADD(name, type) std::shared_ptr<type> _##name {nullptr};
 #include "systems.def"
