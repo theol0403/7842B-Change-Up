@@ -65,18 +65,21 @@ void Roller::loop() {
         break;
 
       case rollerStates::loading:
-        if (getTopLight() < 0 && getColor() != colors::none) {
-          intakes->moveVoltage(12000);
-          bottomRoller->moveVoltage(0);
-          topRoller->moveVoltage(0);
-        } else if (getTopLight() < 0) {
-          intakes->moveVoltage(12000);
-          bottomRoller->moveVoltage(12000);
-          topRoller->moveVoltage(0);
-        } else {
+        // if no balls in intake
+        if (getTopLight() >= 0 && getColor() == colors::none) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);
           topRoller->moveVoltage(12000);
+          // if only top ball in intake
+        } else if (getTopLight() < 0 && getColor() == colors::none) {
+          intakes->moveVoltage(12000);
+          bottomRoller->moveVoltage(12000);
+          topRoller->moveVoltage(0);
+          // else there is ball in top and bottom
+        } else {
+          intakes->moveVoltage(12000);
+          bottomRoller->moveVoltage(0);
+          topRoller->moveVoltage(0);
         }
         break;
 
