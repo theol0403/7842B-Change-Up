@@ -20,7 +20,7 @@ void Robot::_initializeChassis() {
     // limits
     200, 12000);
 
-  ChassisScales scales({2.75_in, 11.3_in}, 360);
+  ChassisScales scales({3.25_in, 11.3_in}, 360);
   Limits limits(scales, 200_rpm, 0.6_s, 1, 1);
   _generator = std::make_shared<TrajectoryGenerator>(_model, limits, scales, 200_rpm, 10_ms);
 }

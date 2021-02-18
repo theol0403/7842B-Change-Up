@@ -16,15 +16,45 @@ void drive(const QLength& m) {
   Robot::generator()->follow(Line({0_m, 0_m}, {0_m, abs(m)}), m >= 0_m);
 }
 
+auto ballDistance = 1_ft;
+auto ballVel = 0.5;
+
+void driveBall(const QLength& m, double ballPct) {
+  auto generator = Robot::generator();
+
+  auto startDist = m * ballPct;
+  generator->follow(Line({0_m, 0_m}, {0_m, startDist}), true, 0, ballVel);
+
+  auto seek = Trapezoidal(generator->limits, ballDistance, ballVel, ballVel, ballVel + 0.01);
+
+  Timer t;
+  while (t.getDtFromStart() < seek.time) {
+    QAngularSpeed leftWheel = (seek.vel / (1_pi * generator->scales.wheelDiameter)) * 360_deg;
+    QAngularSpeed rightWheel = (seek.vel / (1_pi * generator->scales.wheelDiameter)) * 360_deg;
+
+    double offset = Robot::vision()->getOffset() * 0.005;
+
+    auto leftSpeed = (leftWheel / generator->gearset).convert(number) + offset;
+    auto rightSpeed = (rightWheel / generator->gearset).convert(number) - offset;
+
+    Robot::model()->tank(leftSpeed, rightSpeed);
+    pros::delay(10);
+  }
+
+  auto endDist = m - startDist - ballDistance;
+  generator->follow(Line({0_m, 0_m}, {0_m, endDist}), true, ballVel, 0);
+}
+
 IterativePosPIDController pid(0.024, 0, 0, 0, TimeUtilFactory().create());
 void turn(QAngle a) {
   QAngle error = 0_deg;
   pid.controllerSet(0);
+  Timer t;
   do {
     error = util::rollAngle180(a - Robot::imu()->getRemapped(180, -180) * degree);
     double out = pid.step(-error.convert(degree));
     Robot::model()->tank(out, -out);
-  } while (abs(error) >= 3_deg);
+  } while (abs(error) >= 3_deg && t.getDtFromStart() < 3_s);
   Robot::model()->tank(0, 0);
 }
 

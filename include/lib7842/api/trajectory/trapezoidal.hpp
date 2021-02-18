@@ -6,10 +6,9 @@ namespace lib7842 {
 
 class Trapezoidal : public Profile {
 public:
-  constexpr Trapezoidal(const Limits& ilimits, const QLength& ilength,
-                        const QSpeed& istart_v = 0_mps, const QSpeed& iend_v = 0_mps,
-                        double vel_scale = 1) :
-    limits(ilimits), length(ilength), start_v(istart_v), end_v(iend_v) {
+  constexpr Trapezoidal(const Limits& ilimits, const QLength& ilength, double istart_v = 0,
+                        double iend_v = 0, double vel_scale = 1) :
+    limits(ilimits), length(ilength), start_v(limits.v * istart_v), end_v(limits.v * iend_v) {
     // load limits
     auto& a = limits.a;
     auto v = limits.v * vel_scale;
@@ -93,7 +92,7 @@ public:
     return k;
   }
 
-protected:
+public:
   Limits limits; // the kinematic limits
   QLength length; // the length of the profile
   QSpeed start_v; // the starting velocity

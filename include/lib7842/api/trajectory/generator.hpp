@@ -19,8 +19,8 @@ public:
     {}
   }
 
-  void follow(const Spline& spline, bool forward = true, const QSpeed& start_v = 0_mps,
-              const QSpeed& end_v = 0_mps, double vel_scale = 1) const {
+  void follow(const Spline& spline, bool forward = true, double start_v = 0, double end_v = 0,
+              double vel_scale = 1) const {
     QLength length = spline.length();
     Trapezoidal profile(limits, length, start_v, end_v, vel_scale);
 
@@ -63,7 +63,7 @@ public:
       // calculate new velocity
       vel = profile.calc(dist).v;
     }
-    model->forward(0);
+    moveStep(profile.end_v, 0_rpm, forward);
   }
 
   void moveStep(const QSpeed& v, const QAngularSpeed& w, bool forward) const {
@@ -85,7 +85,7 @@ public:
     // model.right(rightSpeed);
   }
 
-protected:
+public:
   std::shared_ptr<ChassisModel> model;
   Limits limits;
   ChassisScales scales;
