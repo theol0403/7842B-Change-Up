@@ -11,9 +11,13 @@ public:
   VisionTask(const std::shared_ptr<Vision::Vision>& vision,
              const std::shared_ptr<GUI::VisionPage>& idrawer);
 
+  double getOffset() const;
+
 protected:
   const std::shared_ptr<Vision::Vision> vision;
   const std::shared_ptr<GUI::VisionPage> drawer;
+
+  double offset {0};
 
 protected:
   /**

@@ -1,5 +1,4 @@
 #include "7842Fmain/subsystem/vision.hpp"
-#include <memory>
 
 VisionTask::VisionTask(const std::shared_ptr<Vision::Vision>& ivision,
                        const std::shared_ptr<GUI::VisionPage>& idrawer) :
@@ -21,10 +20,18 @@ void VisionTask::initialize() {
 void VisionTask::loop() {
   while (true) {
     auto container = vision->getAll();
+    // container.remove(Vision::Query::area, std::less<double>(), 100);
 
     drawer->clear();
     drawer->makeLayer().withColor(LV_COLOR_RED, RED).withColor(LV_COLOR_BLUE, BLUE).draw(container);
-    // container->remove(Vision::Query::area, std::less<double>(), 200);
-    // drawer->clear().makeLayer().withColor(LV_COLOR_RED, 1).withColor(LV_COLOR_YELLOW, 2).draw(container);
+
+    container.remove(Vision::Query::sig, std::not_equal_to<double>(), RED)
+      .sort(Vision::Query::area);
+
+    offset = container.get(0, Vision::Query::offsetCenterX);
   }
+}
+
+double VisionTask::getOffset() const {
+  return offset;
 }
