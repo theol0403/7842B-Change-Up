@@ -4,12 +4,12 @@ Roller::Roller(const std::shared_ptr<AbstractMotor>& iintakes,
                const std::shared_ptr<AbstractMotor>& ibottomRoller,
                const std::shared_ptr<AbstractMotor>& itopRoller,
                const std::shared_ptr<pros::ADIAnalogIn>& itopLight,
-               const std::shared_ptr<pros::ADIAnalogIn>& ibottomLight) :
+               const std::shared_ptr<OpticalSensor>& icolor) :
   intakes(iintakes),
   bottomRoller(ibottomRoller),
   topRoller(itopRoller),
   topLight(itopLight),
-  bottomLight(ibottomLight) {
+  color(icolor) {
   pros::delay(100); // allow sensors to initialize
   initialize();
   startTask("Roller");
@@ -19,39 +19,32 @@ double Roller::getTopLight() const {
   return topLight->get_value() - 2954 + 50;
 }
 
-double Roller::getBottomLight() const {
-  return bottomLight->get_value() - 2954 + 50;
+Roller::colors Roller::getColor() const {
+  auto rgb = color->getRGB();
+  std::cout << "Red: " << rgb.red << std::endl;
+  std::cout << "Green: " << rgb.green << std::endl;
+  std::cout << "Blue: " << rgb.blue << std::endl;
+  std::cout << "Alpha: " << rgb.brightness << std::endl;
+
+  if (rgb.red > 100) {
+    return colors::red;
+  } else if (rgb.blue > 100) {
+    return colors::blue;
+  } else {
+    return colors::none;
+  }
 }
 
 void Roller::initialize() {
   topLight->calibrate();
-  bottomLight->calibrate();
 }
 
 void Roller::loop() {
-  Timer time;
   Rate rate;
 
   while (true) {
 
     switch (state) {
-
-      case rollerStates::on:
-        intakes->moveVoltage(12000);
-        bottomRoller->moveVoltage(12000);
-        topRoller->moveVoltage(12000);
-        break;
-      case rollerStates::purge:
-        intakes->moveVoltage(-12000);
-        bottomRoller->moveVoltage(12000);
-        topRoller->moveVoltage(12000);
-        break;
-
-      case rollerStates::deploy:
-        intakes->moveVoltage(-12000);
-        bottomRoller->moveVoltage(-2000);
-        topRoller->moveVoltage(12000);
-        break;
 
       case rollerStates::off:
         intakes->moveVoltage(0);
@@ -59,8 +52,20 @@ void Roller::loop() {
         topRoller->moveVoltage(0);
         break;
 
+      case rollerStates::on:
+        intakes->moveVoltage(12000);
+        bottomRoller->moveVoltage(12000);
+        topRoller->moveVoltage(12000);
+        break;
+
+      case rollerStates::out:
+        intakes->moveVoltage(-12000);
+        bottomRoller->moveVoltage(-12000);
+        topRoller->moveVoltage(-12000);
+        break;
+
       case rollerStates::loading:
-        if (getTopLight() < 0 && getBottomLight() < 0) {
+        if (getTopLight() < 0 && getColor() != colors::none) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(0);
           topRoller->moveVoltage(0);
@@ -87,25 +92,30 @@ void Roller::loop() {
         topRoller->moveVoltage(-12000);
         break;
 
-      case rollerStates::out:
-        intakes->moveVoltage(-12000);
-        bottomRoller->moveVoltage(-12000);
-        topRoller->moveVoltage(-12000);
-        break;
-
       case rollerStates::intakeOut:
         intakes->moveVoltage(-12000);
         bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(-12000);
         break;
+
+      case rollerStates::purge:
+        intakes->moveVoltage(-12000);
+        bottomRoller->moveVoltage(12000);
+        topRoller->moveVoltage(12000);
+        break;
+
       case rollerStates::topOut:
         intakes->moveVoltage(0);
         bottomRoller->moveVoltage(0);
         topRoller->moveVoltage(12000);
         break;
-    }
 
-    // if (time.repeat(100_ms)) { std::cout << getSensor() << std::endl; }
+      case rollerStates::deploy:
+        intakes->moveVoltage(-12000);
+        bottomRoller->moveVoltage(-2000);
+        topRoller->moveVoltage(12000);
+        break;
+    }
 
     rate.delayUntil(5_ms);
   }

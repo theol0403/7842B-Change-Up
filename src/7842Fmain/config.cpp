@@ -36,7 +36,7 @@ void Robot::_initializeDevices() {
   _roller = std::make_shared<Roller>(std::make_shared<MotorGroup>(MotorGroup {-10, 12}),
                                      std::make_shared<Motor>(7), std::make_shared<Motor>(-19),
                                      std::make_shared<pros::ADIAnalogIn>('D'),
-                                     std::make_shared<pros::ADIAnalogIn>('B'));
+                                     std::make_shared<OpticalSensor>(14));
 
   _imu = std::make_shared<IMU>(4);
   _imu->calibrate();

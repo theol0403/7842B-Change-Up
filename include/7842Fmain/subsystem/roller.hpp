@@ -3,16 +3,16 @@
 #include "main.h"
 
 enum class rollerStates {
-  off, // all motors off
-  loading, // run all util sensor, then bottom
-  shoot, // run top until no sensor, then run top and bottom
+  off, // all off
   on, // all on
-  poop, // poop
-  out,
+  out, // all backwards
+  loading, // load balls into robot. Disable rollers one by one, and auto poop
+  shoot, // all on but don't move intakes
+  poop, // poop while intaking
+  intakeOut, // poop while outtaking
+  purge, // shoot while outtaking
+  topOut, // only spin top roller
   deploy,
-  purge,
-  intakeOut,
-  topOut,
 };
 
 class Roller : public StateMachine<rollerStates, rollerStates::off> {
@@ -21,11 +21,13 @@ public:
          const std::shared_ptr<AbstractMotor>& ibottomRoller,
          const std::shared_ptr<AbstractMotor>& itopRoller,
          const std::shared_ptr<pros::ADIAnalogIn>& itoplight,
-         const std::shared_ptr<pros::ADIAnalogIn>& ibottomlight);
+         const std::shared_ptr<OpticalSensor>& icolor);
 
 public:
+  enum class colors { red, blue, none };
+
   double getTopLight() const;
-  double getBottomLight() const;
+  colors getColor() const;
 
   void initialize() override;
   void loop() override;
@@ -34,5 +36,5 @@ public:
   std::shared_ptr<AbstractMotor> bottomRoller {nullptr};
   std::shared_ptr<AbstractMotor> topRoller {nullptr};
   std::shared_ptr<pros::ADIAnalogIn> topLight {nullptr};
-  std::shared_ptr<pros::ADIAnalogIn> bottomLight {nullptr};
+  std::shared_ptr<OpticalSensor> color {nullptr};
 };
