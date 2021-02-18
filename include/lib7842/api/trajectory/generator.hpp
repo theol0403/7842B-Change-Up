@@ -12,28 +12,27 @@ namespace lib7842 {
 
 class TrajectoryGenerator {
 public:
-  struct Step {
-    State p;
-    QSpeed v;
-    QAngularSpeed w;
-    QCurvature c;
-  };
+  TrajectoryGenerator(std::shared_ptr<ChassisModel> imodel, const Limits& ilimits,
+                      const ChassisScales& iscales, const QAngularSpeed& igearset,
+                      const QTime& idt) :
+    model(std::move(imodel)), limits(ilimits), scales(iscales), gearset(igearset), dt(idt) {
+    {}
+  }
 
-  template <typename S>
-  requires std::derived_from<std::remove_reference_t<S>, Spline> static std::vector<Step>
-    generate(S&& spline, const Limits& limits, const QTime& dt) {
-    QLength length = spline.length(50);
-    Trapezoidal profile(limits, length);
-
-    std::vector<Step> trajectory;
+  void follow(const Spline& spline, bool forward = true, const QSpeed& start_v = 0_mps,
+              const QSpeed& end_v = 0_mps, double vel_scale = 1) const {
+    QLength length = spline.length();
+    Trapezoidal profile(limits, length, start_v, end_v, vel_scale);
 
     // setup
     double t = 0;
     QLength dist = 0_m;
     State pos = spline.calc(t);
     QAngle theta = pos.theta;
-    QSpeed vel = profile.calc(dt).v;
+    QSpeed vel = profile.calc(0_s).v;
+    if (vel == 0_mps) { vel = profile.calc(dt).v; }
 
+    Rate rate;
     while (dist <= length && t <= 1) {
       // limit velocity according to approximation of the curvature during the next timeslice
       QCurvature curvature = spline.curvature(t);
@@ -55,42 +54,43 @@ public:
       // calculate where along the spline we will be at the end of the timeslice
       t = spline.t_at_dist_travelled(t, d_dist);
 
-      // save trajectory
-      trajectory.emplace_back(pos, vel, angular_vel, curvature);
+      // run trajectory
+      moveStep(vel, angular_vel, forward);
+      rate.delayUntil(dt);
 
       // update new position
       pos = spline.calc(t);
       // calculate new velocity
       vel = profile.calc(dist).v;
     }
-    return trajectory;
+    model->forward(0);
   }
 
-  static void follow(ChassisModel& chassis, const std::vector<Step>& trajectory,
-                     const ChassisScales& scales, const QAngularSpeed& igearset, bool forward) {
-    Rate rate;
-    for (const auto& step : trajectory) {
-      Timer time;
-      QSpeed left = step.v - (step.w / radian * scales.wheelTrack) / 2;
-      QSpeed right = step.v + (step.w / radian * scales.wheelTrack) / 2;
+  void moveStep(const QSpeed& v, const QAngularSpeed& w, bool forward) const {
+    QSpeed left = v - (w / radian * scales.wheelTrack) / 2;
+    QSpeed right = v + (w / radian * scales.wheelTrack) / 2;
 
-      QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
-      QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
+    QAngularSpeed leftWheel = (left / (1_pi * scales.wheelDiameter)) * 360_deg;
+    QAngularSpeed rightWheel = (right / (1_pi * scales.wheelDiameter)) * 360_deg;
 
-      auto leftSpeed = (leftWheel / igearset).convert(number);
-      auto rightSpeed = (rightWheel / igearset).convert(number);
-      // if (time.repeat(20_ms)) std::cout << leftSpeed << std::endl;
+    auto leftSpeed = (leftWheel / gearset).convert(number);
+    auto rightSpeed = (rightWheel / gearset).convert(number);
 
-      if (forward) {
-        chassis.tank(leftSpeed, rightSpeed);
-      } else {
-        chassis.tank(-rightSpeed, -leftSpeed);
-      }
-      // chassis.left(leftSpeed);
-      // chassis.right(rightSpeed);
-      rate.delayUntil(10_ms);
+    if (forward) {
+      model->tank(leftSpeed, rightSpeed);
+    } else {
+      model->tank(-rightSpeed, -leftSpeed);
     }
+    // model.left(leftSpeed);
+    // model.right(rightSpeed);
   }
+
+protected:
+  std::shared_ptr<ChassisModel> model;
+  Limits limits;
+  ChassisScales scales;
+  QAngularSpeed gearset;
+  QTime dt;
 };
 
 } // namespace lib7842
