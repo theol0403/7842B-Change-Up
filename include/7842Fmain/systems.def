@@ -1,4 +1,5 @@
 ADD(model, XDriveModel)
+ADD(screen, GUI::Screen)
 ADD(roller, Roller)
 ADD(generator, TrajectoryGenerator)
 ADD(imu,IMU)

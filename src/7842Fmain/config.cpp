@@ -43,6 +43,19 @@ void Robot::_initializeDevices() {
 }
 
 /***
+ *     _____                          
+ *    /  ___|                         
+ *    \ `--.  ___ _ __ ___  ___ _ __  
+ *     `--. \/ __| '__/ _ \/ _ \ '_ \ 
+ *    /\__/ / (__| | |  __/  __/ | | |
+ *    \____/ \___|_|  \___|\___|_| |_|                              
+ */
+void Robot::_initializeScreen() {
+  _screen = std::make_shared<GUI::Screen>(lv_scr_act(), LV_COLOR_ORANGE);
+  _screen->startTask("Screen");
+}
+
+/***
  *     _____ _             _      _              
  *    /  ___(_)           | |    | |             
  *    \ `--. _ _ __   __ _| | ___| |_ ___  _ __  
