@@ -79,6 +79,12 @@ void Roller::loop() {
         shouldPoop();
         break;
 
+      case rollerStates::onWithoutPoop:
+        intakes->moveVoltage(12000);
+        bottomRoller->moveVoltage(12000);
+        topRoller->moveVoltage(12000);
+        break;
+
       case rollerStates::out:
         intakes->moveVoltage(-12000);
         bottomRoller->moveVoltage(-12000);
@@ -100,6 +106,22 @@ void Roller::loop() {
           topRoller->moveVoltage(12000);
         }
         shouldPoop();
+        break;
+
+      case rollerStates::loadingWithoutPoop:
+        if (getTopLight() < 0 && getColor() != colors::none) {
+          intakes->moveVoltage(12000);
+          bottomRoller->moveVoltage(0);
+          topRoller->moveVoltage(0);
+        } else if (getTopLight() < 0) {
+          intakes->moveVoltage(12000);
+          bottomRoller->moveVoltage(12000);
+          topRoller->moveVoltage(0);
+        } else {
+          intakes->moveVoltage(12000);
+          bottomRoller->moveVoltage(12000);
+          topRoller->moveVoltage(12000);
+        }
         break;
 
       case rollerStates::shoot:
@@ -134,7 +156,7 @@ void Roller::loop() {
 
       case rollerStates::deploy:
         intakes->moveVoltage(-12000);
-        bottomRoller->moveVoltage(-2000);
+        bottomRoller->moveVoltage(-1000);
         topRoller->moveVoltage(12000);
         break;
 

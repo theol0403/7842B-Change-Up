@@ -16,8 +16,8 @@ void drive(const QLength& m) {
   Robot::generator()->follow(Line({0_m, 0_m}, {0_m, abs(m)}), m >= 0_m);
 }
 
-auto ballDistance = 1_ft;
-auto ballVel = 0.5;
+auto ballDistance = 1.5_ft;
+auto ballVel = 0.3;
 
 void driveBall(const QLength& m, double ballPct) {
   auto generator = Robot::generator();
@@ -56,16 +56,21 @@ void driveBall(const QLength& m, double ballPct) {
   generator->follow(Line({0_m, 0_m}, {0_m, endDist}), true, ballVel, 0);
 }
 
-IterativePosPIDController pid(0.024, 0, 0, 0, TimeUtilFactory().create());
+IterativePosPIDController pid(0.03, 0, 0.0005, 0, TimeUtilFactory().create());
+
 void turn(QAngle a) {
   QAngle error = 0_deg;
   pid.controllerSet(0);
   Timer t;
+  Timer settleTime;
   do {
     error = util::rollAngle180(a - Robot::imu()->getRemapped(180, -180) * degree);
     double out = pid.step(-error.convert(degree));
     Robot::model()->tank(out, -out);
-  } while (abs(error) >= 3_deg && t.getDtFromStart() < 3_s);
+    if (abs(error) < 3_deg) settleTime.placeHardMark();
+    pros::delay(10);
+  } while ((abs(error) >= 3_deg && t.getDtFromStart() < 3_s) ||
+           settleTime.getDtFromHardMark() < 0.2_s);
   Robot::model()->tank(0, 0);
 }
 
@@ -88,16 +93,17 @@ void autonomous() {
   pros::delay(500);
   roll(loading);
 
-  drive(2_ft);
+  drive(2.3_ft);
   turn(135_deg);
-  drive(2_ft);
+  drive(2.7_ft);
 
   // 1 shoot first corner goal
   roll(loading);
-  pros::delay(600);
-  roll(on);
-  pros::delay(800);
-  roll(loading);
+  pros::delay(400);
+  roll(onWithoutPoop);
+  pros::delay(400);
+  roll(shoot);
+  pros::delay(500);
 
   // back up
   Robot::model()->setMaxVoltage(5500);
@@ -106,12 +112,12 @@ void autonomous() {
   roll(purge);
   pros::delay(500);
   // to ball
-  turn(-60_deg);
+  turn(-69_deg);
   roll(loading);
-  driveBall(4.95_ft, 0.6);
+  driveBall(4.2_ft, 0.5);
 
   // 2 to first edge goal
-  turn(179_deg);
+  turn(170_deg);
   drive(3.8_ft);
   // 2 shoot first edge goal
   roll(on);
@@ -119,11 +125,11 @@ void autonomous() {
   roll(poop);
 
   // back up
-  drive(-1_ft);
+  drive(-0.5_ft);
   // to ball
-  turn(-93_deg);
+  turn(-92_deg);
   roll(loading);
-  driveBall(6_ft, 0.6);
+  driveBall(3_ft, 0.4);
 
   // 3 to second corner goal
   turn(-130_deg);
@@ -135,9 +141,9 @@ void autonomous() {
   drive(-1_ft);
   roll(poop);
   // to ball
-  turn(0_deg);
+  turn(-3_deg);
   asyncTask(pros::delay(600); roll(loading););
-  driveBall(4.8_ft, 0.6);
+  driveBall(4_ft, 0.5);
 
   // 4 to second edge goal
   turn(-90_deg);
