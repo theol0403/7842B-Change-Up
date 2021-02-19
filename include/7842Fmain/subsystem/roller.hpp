@@ -14,7 +14,6 @@ enum class rollerStates {
   topOut, // only spin top roller
   deploy,
   timedPoop,
-  shootPoop,
   poopOff, // poop while not intaking
 };
 
@@ -31,6 +30,7 @@ public:
 
   double getTopLight() const;
   colors getColor() const;
+  void shouldPoop();
 
   void initialize() override;
   void loop() override;

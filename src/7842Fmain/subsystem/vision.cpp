@@ -2,7 +2,11 @@
 
 VisionTask::VisionTask(const std::shared_ptr<Vision::Vision>& ivision,
                        const std::shared_ptr<GUI::VisionPage>& idrawer) :
-  vision(ivision), drawer(idrawer) {}
+  vision(ivision), drawer(idrawer) {
+  pros::delay(100); // allow sensors to initialize
+  initialize();
+  startTask("Roller");
+}
 
 const int RED = 2;
 const int BLUE = 1;
