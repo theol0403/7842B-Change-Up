@@ -24,7 +24,9 @@ void VisionTask::initialize() {
 void VisionTask::loop() {
   while (true) {
     auto container = vision->getAll();
-    // container.remove(Vision::Query::area, std::less<double>(), 100);
+    container.remove(Vision::Query::area, std::less<double>(), 2000);
+
+    // std::cout << "Area: " << container.get(0, Vision::Query::area) << std::endl;
 
     drawer->clear();
     drawer->makeLayer().withColor(LV_COLOR_RED, RED).withColor(LV_COLOR_BLUE, BLUE).draw(container);

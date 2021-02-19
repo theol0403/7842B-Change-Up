@@ -17,15 +17,24 @@ void drive(const QLength& m) {
 }
 
 auto ballDistance = 1_ft;
-auto ballVel = 0.4;
+auto ballVel = 0.5;
 
 void driveBall(const QLength& m, double ballPct) {
   auto generator = Robot::generator();
 
   auto startDist = m * ballPct;
+  if ((m - startDist - ballDistance) < 0_m)
+    throw std::runtime_error("Distance not enough to accelerate " +
+                             std::to_string(startDist.convert(foot)) + "_ft and seek ball");
+
+  // std::cout << "Accel: " << startDist.convert(foot) << std::endl;
+
   generator->follow(Line({0_m, 0_m}, {0_m, startDist}), true, 0, ballVel);
 
   auto seek = Trapezoidal(generator->limits, ballDistance, ballVel, ballVel, ballVel + 0.01);
+  std::cout << seek.time.convert(second) << std::endl;
+
+  // std::cout << "Seek: " << seek.length.convert(foot) << std::endl;
 
   Timer t;
   while (t.getDtFromStart() < seek.time) {
@@ -40,8 +49,10 @@ void driveBall(const QLength& m, double ballPct) {
     Robot::model()->tank(leftSpeed, rightSpeed);
     pros::delay(10);
   }
+  Robot::model()->tank(0, 0);
 
   auto endDist = m - startDist - ballDistance;
+  // std::cout << "Decel: " << endDist.convert(foot) << std::endl;
   generator->follow(Line({0_m, 0_m}, {0_m, endDist}), true, ballVel, 0);
 }
 
@@ -69,6 +80,7 @@ void cornerGoal() {
 }
 
 void autonomous() {
+
   Robot::imu().reset();
 
   // deploy
@@ -95,7 +107,7 @@ void autonomous() {
   // to ball
   turn(-105_deg);
   roll(loading);
-  driveBall(4.95_ft, 0.7);
+  driveBall(4.95_ft, 0.6);
 
   // 2 to first edge goal
   turn(134_deg);
@@ -110,7 +122,7 @@ void autonomous() {
   // to ball
   turn(-138_deg);
   roll(loading);
-  driveBall(5_ft, 0.7);
+  driveBall(6_ft, 0.6);
 
   // 3 to second corner goal
   turn(-175_deg);
@@ -124,7 +136,7 @@ void autonomous() {
   // to ball
   turn(-45_deg);
   asyncTask(pros::delay(600); roll(loading););
-  driveBall(4.8_ft, 0.7);
+  driveBall(4.8_ft, 0.6);
 
   // 4 to second edge goal
   turn(-135_deg);
@@ -140,7 +152,7 @@ void autonomous() {
   // to ball
   turn(-45_deg);
   roll(loading);
-  driveBall(4.85_ft, 0.7);
+  driveBall(4.85_ft, 0.6);
 
   // 5 to third corner goal
   turn(-105_deg);
@@ -154,7 +166,7 @@ void autonomous() {
   // to ball
   turn(75_deg);
   roll(loading);
-  driveBall(4.5_ft, 0.7);
+  driveBall(4.5_ft, 0.6);
   // 5 to third edge goal
   turn(-45_deg);
   drive(4_ft);
