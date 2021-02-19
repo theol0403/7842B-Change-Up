@@ -31,8 +31,8 @@ Roller::colors Roller::getColor() const {
   // }
 
   switch (hue) {
-    case 140 ... 280: return colors::blue;
-    case 10 ... 40: return colors::red;
+    case 150 ... 270: return colors::blue;
+    case 8 ... 50: return colors::red;
     default: return colors::none;
   }
 }
