@@ -19,19 +19,22 @@ double Roller::getTopLight() const {
   return topLight->get_value() - 2954 + 50;
 }
 
+Timer rate;
 Roller::colors Roller::getColor() const {
-  auto rgb = color->getRGB();
-  std::cout << "Red: " << rgb.red << std::endl;
-  std::cout << "Green: " << rgb.green << std::endl;
-  std::cout << "Blue: " << rgb.blue << std::endl;
-  std::cout << "Alpha: " << rgb.brightness << std::endl;
 
-  if (rgb.red > 100) {
-    return colors::red;
-  } else if (rgb.blue > 100) {
-    return colors::blue;
-  } else {
-    return colors::none;
+  int hue = color->getHue();
+  // if (rate.repeat(200_ms)) { std::cout << "Hue: " << hue << std::endl; }
+
+  // switch (hue) {
+  //   case 150 ... 260: std::cout << "blue" << std::endl; return colors::blue;
+  //   case 10 ... 40: std::cout << "red" << std::endl; return colors::red;
+  //   default: std::cout << "none" << std::endl; return colors::none;
+  // }
+
+  switch (hue) {
+    case 140 ... 280: return colors::blue;
+    case 10 ... 40: return colors::red;
+    default: return colors::none;
   }
 }
 
@@ -48,6 +51,12 @@ void Roller::loop() {
     switch (state) {
 
       case rollerStates::off:
+        // if blue ball but none in top
+        if (getColor() == colors::blue && getTopLight() >= 0) {
+          poopTime.placeMark();
+          state = rollerStates::poopOff;
+        }
+
         intakes->moveVoltage(0);
         bottomRoller->moveVoltage(0);
         topRoller->moveVoltage(0);
@@ -57,6 +66,10 @@ void Roller::loop() {
         intakes->moveVoltage(12000);
         bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(12000);
+        if (getColor() == colors::blue && getTopLight() >= 0) {
+          poopTime.placeMark();
+          state = rollerStates::shootPoop;
+        }
         break;
 
       case rollerStates::out:
@@ -66,27 +79,24 @@ void Roller::loop() {
         break;
 
       case rollerStates::loading:
-
-        if (getColor() == colors::blue) {
+        // if blue ball but none in top
+        if (getColor() == colors::blue && getTopLight() >= 0) {
           poopTime.placeMark();
           state = rollerStates::timedPoop;
         }
 
-        // if no balls in intake
-        if (getTopLight() >= 0 && getColor() == colors::none) {
-          intakes->moveVoltage(12000);
-          bottomRoller->moveVoltage(12000);
-          topRoller->moveVoltage(12000);
-          // if only top ball in intake
-        } else if (getTopLight() < 0 && getColor() == colors::none) {
-          intakes->moveVoltage(12000);
-          bottomRoller->moveVoltage(12000);
-          topRoller->moveVoltage(0);
-          // else there is ball in top and bottom
-        } else {
+        if (getTopLight() < 0 && getColor() != colors::none) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(0);
           topRoller->moveVoltage(0);
+        } else if (getTopLight() < 0) {
+          intakes->moveVoltage(12000);
+          bottomRoller->moveVoltage(12000);
+          topRoller->moveVoltage(0);
+        } else {
+          intakes->moveVoltage(12000);
+          bottomRoller->moveVoltage(12000);
+          topRoller->moveVoltage(12000);
         }
         break;
 
@@ -129,10 +139,30 @@ void Roller::loop() {
       case rollerStates::timedPoop:
         intakes->moveVoltage(12000);
         bottomRoller->moveVoltage(12000);
-        topRoller->moveVoltage(-6000);
-        if (poopTime.getDtFromMark() >= 1_s) {
+        topRoller->moveVoltage(-12000);
+        if (poopTime.getDtFromMark() >= 0.5_s) {
           poopTime.clearHardMark();
-          state = rollerStates::timedPoop;
+          state = rollerStates::loading;
+        }
+        break;
+
+      case rollerStates::poopOff:
+        intakes->moveVoltage(0);
+        bottomRoller->moveVoltage(12000);
+        topRoller->moveVoltage(-12000);
+        if (poopTime.getDtFromMark() >= 0.5_s) {
+          poopTime.clearHardMark();
+          state = rollerStates::off;
+        }
+        break;
+
+      case rollerStates::shootPoop:
+        intakes->moveVoltage(12000);
+        bottomRoller->moveVoltage(12000);
+        topRoller->moveVoltage(-12000);
+        if (poopTime.getDtFromMark() >= 0.5_s) {
+          poopTime.clearHardMark();
+          state = rollerStates::on;
         }
         break;
     }

@@ -13,7 +13,9 @@ enum class rollerStates {
   purge, // shoot while outtaking
   topOut, // only spin top roller
   deploy,
-  timedPoop
+  timedPoop,
+  shootPoop,
+  poopOff, // poop while not intaking
 };
 
 class Roller : public StateMachine<rollerStates, rollerStates::off> {

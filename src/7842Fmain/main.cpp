@@ -17,7 +17,7 @@ void drive(const QLength& m) {
 }
 
 auto ballDistance = 1_ft;
-auto ballVel = 0.5;
+auto ballVel = 0.4;
 
 void driveBall(const QLength& m, double ballPct) {
   auto generator = Robot::generator();
@@ -95,7 +95,7 @@ void autonomous() {
   // to ball
   turn(-105_deg);
   roll(loading);
-  drive(4.95_ft);
+  driveBall(4.95_ft, 0.7);
 
   // 2 to first edge goal
   turn(134_deg);
@@ -110,9 +110,7 @@ void autonomous() {
   // to ball
   turn(-138_deg);
   roll(loading);
-  Robot::model()->setMaxVoltage(9000);
-  drive(7_ft);
-  Robot::model()->setMaxVoltage(12000);
+  driveBall(5_ft, 0.7);
 
   // 3 to second corner goal
   turn(-175_deg);
@@ -125,8 +123,8 @@ void autonomous() {
   roll(poop);
   // to ball
   turn(-45_deg);
-  asyncTask(pros::delay(1000); roll(loading););
-  drive(4.8_ft);
+  asyncTask(pros::delay(600); roll(loading););
+  driveBall(4.8_ft, 0.7);
 
   // 4 to second edge goal
   turn(-135_deg);
@@ -142,7 +140,7 @@ void autonomous() {
   // to ball
   turn(-45_deg);
   roll(loading);
-  drive(4.85_ft);
+  driveBall(4.85_ft, 0.7);
 
   // 5 to third corner goal
   turn(-105_deg);
@@ -153,13 +151,15 @@ void autonomous() {
 
   // back up
   drive(-1.3_ft);
+  // to ball
   turn(75_deg);
   roll(loading);
-  drive(4.5_ft);
+  driveBall(4.5_ft, 0.7);
+  // 5 to third edge goal
   turn(-45_deg);
   drive(4_ft);
 
-  // 2 shoot first edge goal
+  // 5 shoot third edge goal
   roll(on);
   pros::delay(500);
   roll(poop);

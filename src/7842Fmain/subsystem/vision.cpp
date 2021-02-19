@@ -4,16 +4,16 @@ VisionTask::VisionTask(const std::shared_ptr<Vision::Vision>& ivision,
                        const std::shared_ptr<GUI::VisionPage>& idrawer) :
   vision(ivision), drawer(idrawer) {}
 
-const int RED = 0;
+const int RED = 2;
 const int BLUE = 1;
 
 void VisionTask::initialize() {
   pros::vision_signature_s_t RED_SIG =
-    pros::Vision::signature_from_utility(RED, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
+    pros::Vision::signature_from_utility(RED, 6273, 8583, 7428, -615, 291, -162, 2.500, 0);
   vision->set_signature(RED, &RED_SIG);
 
   pros::vision_signature_s_t BLUE_SIG =
-    pros::Vision::signature_from_utility(BLUE, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
+    pros::Vision::signature_from_utility(BLUE, -2371, -1423, -1896, 6257, 10385, 8322, 2.400, 0);
   vision->set_signature(BLUE, &BLUE_SIG);
 }
 
@@ -29,6 +29,8 @@ void VisionTask::loop() {
       .sort(Vision::Query::area);
 
     offset = container.get(0, Vision::Query::offsetCenterX);
+
+    pros::delay(10);
   }
 }
 
