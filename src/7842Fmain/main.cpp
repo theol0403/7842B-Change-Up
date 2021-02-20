@@ -70,7 +70,7 @@ void turn(QAngle a) {
     if (abs(error) < 3_deg) settleTime.placeHardMark();
     pros::delay(10);
   } while ((abs(error) >= 3_deg && t.getDtFromStart() < 3_s) ||
-           settleTime.getDtFromHardMark() < 0.2_s);
+           settleTime.getDtFromHardMark() < 0.15_s);
   Robot::model()->tank(0, 0);
 }
 
@@ -78,7 +78,7 @@ void turn(QAngle a) {
 
 void cornerGoal() {
   roll(loading);
-  pros::delay(500);
+  pros::delay(200);
   roll(onWithoutPoop);
   pros::delay(1200);
   roll(poop);
@@ -99,16 +99,16 @@ void autonomous() {
 
   // 1 shoot first corner goal
   roll(loading);
-  pros::delay(400);
+  pros::delay(200);
   roll(topOut);
   pros::delay(400);
   roll(onWithoutPoop);
-  pros::delay(1000);
+  pros::delay(1100);
 
   // back up
   drive(-2.5_ft);
   roll(purge);
-  pros::delay(500);
+  pros::delay(200);
   // to ball
   turn(-79_deg);
   roll(loading);
@@ -154,7 +154,6 @@ void autonomous() {
   // back up
   drive(-1.6_ft);
   roll(purge);
-  pros::delay(600);
   // to ball
   turn(-2_deg);
   roll(loading);
