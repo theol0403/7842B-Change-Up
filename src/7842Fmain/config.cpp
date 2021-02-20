@@ -10,18 +10,28 @@
  *     \____/_| |_|\__,_|___/___/_|___/                                   
  */
 void Robot::_initializeChassis() {
+  auto topLeft = std::make_shared<Motor>(11); // top left
+  auto topRight = std::make_shared<Motor>(-5); // top right
+  auto bottomRight = std::make_shared<Motor>(-6); // bottom right
+  auto bottomLeft = std::make_shared<Motor>(2); // bottom left
+
+  topLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
+  topRight->setBrakeMode(AbstractMotor::brakeMode::brake);
+  bottomRight->setBrakeMode(AbstractMotor::brakeMode::brake);
+  bottomLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
+
   _model = std::make_shared<XDriveModel>(
     // motors
-    std::make_shared<Motor>(11), // top left
-    std::make_shared<Motor>(-5), // top right
-    std::make_shared<Motor>(-6), // bottom right
-    std::make_shared<Motor>(2), // bottom left
+    topLeft, // top left
+    topRight, // top right
+    bottomRight, // bottom right
+    bottomLeft, // bottom left
     std::make_shared<IntegratedEncoder>(11), std::make_shared<IntegratedEncoder>(-5),
     // limits
     200, 12000);
 
   ChassisScales scales({3.25_in, 11.3_in}, 360);
-  Limits limits(scales, 200_rpm, 0.5_s, 1, 1);
+  Limits limits(scales, 200_rpm, 0.7_s, 1, 1);
   _generator = std::make_shared<TrajectoryGenerator>(_model, limits, scales, 200_rpm, 10_ms);
 }
 

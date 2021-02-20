@@ -16,7 +16,7 @@ void drive(const QLength& m) {
   Robot::generator()->follow(Line({0_m, 0_m}, {0_m, abs(m)}), m >= 0_m);
 }
 
-auto ballDistance = 1_ft;
+auto ballDistance = 0.7_ft;
 auto ballVel = 0.3;
 
 void driveBall(const QLength& m, double ballPct) {
@@ -56,7 +56,7 @@ void driveBall(const QLength& m, double ballPct) {
   generator->follow(Line({0_m, 0_m}, {0_m, endDist}), true, ballVel, 0);
 }
 
-IterativePosPIDController pid(0.03, 0, 0.0004, 0, TimeUtilFactory().create());
+IterativePosPIDController pid(0.028, 0, 0.0004, 0, TimeUtilFactory().create());
 
 void turn(QAngle a) {
   QAngle error = 0_deg;
@@ -78,9 +78,9 @@ void turn(QAngle a) {
 
 void cornerGoal() {
   roll(loading);
-  pros::delay(800);
-  roll(on);
   pros::delay(500);
+  roll(onWithoutPoop);
+  pros::delay(1200);
   roll(poop);
 }
 
@@ -101,34 +101,31 @@ void autonomous() {
   roll(loading);
   pros::delay(400);
   roll(onWithoutPoop);
-  pros::delay(400);
-  roll(shoot);
+  pros::delay(600);
   pros::delay(500);
-  roll(onWithoutPoop);
 
   // back up
   drive(-2.5_ft);
   roll(purge);
   pros::delay(500);
   // to ball
-  turn(-69_deg);
+  turn(-79_deg);
   roll(loading);
-  driveBall(4.2_ft, 0.5);
+  driveBall(3.2_ft, 0.6);
 
   // 2 to first edge goal
-  turn(170_deg);
+  turn(172_deg);
   drive(3.8_ft);
   // 2 shoot first edge goal
   roll(on);
-  pros::delay(500);
-  roll(intakeOut);
+  pros::delay(600);
 
   // back up
-  drive(-1_ft);
+  drive(-0.8_ft);
   // to ball
   turn(-92_deg);
   roll(loading);
-  driveBall(2.9_ft, 0.3);
+  driveBall(3.3_ft, 0.2);
 
   // 3 to second corner goal
   turn(-135_deg);
@@ -140,52 +137,72 @@ void autonomous() {
   drive(-1_ft);
   roll(poop);
   // to ball
-  turn(-3_deg);
+  turn(-9_deg);
   roll(loading);
-  driveBall(3.5_ft, 0.6);
+  driveBall(3.8_ft, 0.6);
 
   // 4 to second edge goal
-  turn(-90_deg);
+  turn(-94_deg);
   drive(1_ft);
   // 4 shoot second edge goal
   roll(on);
-  pros::delay(500);
-  roll(intakeOut);
+  pros::delay(600);
 
   // back up
   drive(-1.6_ft);
   roll(purge);
   pros::delay(600);
-  // // to ball
-  // turn(0_deg);
-  // roll(loading);
-  // driveBall(4.85_ft, 0.6);
+  // to ball
+  turn(0_deg);
+  roll(loading);
+  driveBall(4_ft, 0.6);
 
-  // // 5 to third corner goal
-  // turn(-60_deg);
-  // drive(3.6_ft);
-  // // 5 shoot third corner goal
-  // cornerGoal();
-  // pros::delay(200);
+  // 5 to third corner goal
+  turn(-60_deg);
+  drive(3.6_ft);
+  // 5 shoot third corner goal
+  cornerGoal();
+  roll(loadingWithoutPoop);
+  pros::delay(300);
 
-  // // back up
-  // drive(-1.3_ft);
-  // // to ball
-  // turn(120_deg);
-  // roll(loading);
-  // driveBall(4.5_ft, 0.6);
-  // // 5 to third edge goal
-  // turn(0_deg);
-  // drive(4_ft);
+  // back up
+  roll(purge);
+  drive(-1.3_ft);
+  // to ball
+  turn(110_deg);
+  roll(loading);
+  driveBall(4_ft, 0.6);
+  // 5 to third edge goal
+  turn(-4_deg);
+  drive(4_ft);
 
-  // // 5 shoot third edge goal
-  // roll(on);
-  // pros::delay(500);
-  // roll(poop);
+  // 5 shoot third edge goal
+  roll(on);
+  pros::delay(600);
+  roll(poop);
 
-  // // back up
-  // drive(-1_ft);
-  // pros::delay(2000);
+  // back up
+  drive(-1_ft);
+
+  // YYYYYYYYYYYYYYYYYYYYYY
+
+  // back up
+  roll(purge);
+  drive(-1.3_ft);
+  // to ball
+  turn(90_deg);
+  roll(loading);
+  driveBall(4_ft, 0.6);
+  // 5 to third edge goal
+  turn(45_deg);
+  drive(2_ft);
+
+  // 5 shoot third edge goal
+  cornerGoal();
+
+  // back up
+  drive(-1_ft);
+  pros::delay(2000);
 }
 
 void opcontrol() {

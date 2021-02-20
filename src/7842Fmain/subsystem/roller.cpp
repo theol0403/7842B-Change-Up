@@ -180,7 +180,7 @@ void Roller::loop() {
         intakes->moveVoltage(12000);
         bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(-12000);
-        if (poopTime.getDtFromMark() >= 0.5_s) {
+        if (poopTime.getDtFromMark() >= 0.3_s) {
           poopTime.clearHardMark();
           state = backState;
         }
@@ -190,7 +190,7 @@ void Roller::loop() {
         intakes->moveVoltage(0);
         bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(-12000);
-        if (poopTime.getDtFromMark() >= 0.5_s) {
+        if (poopTime.getDtFromMark() >= 0.3_s) {
           poopTime.clearHardMark();
           state = rollerStates::off;
         }
