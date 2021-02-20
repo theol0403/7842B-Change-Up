@@ -100,9 +100,10 @@ void autonomous() {
   // 1 shoot first corner goal
   roll(loading);
   pros::delay(400);
+  roll(topOut);
+  pros::delay(400);
   roll(onWithoutPoop);
-  pros::delay(600);
-  pros::delay(500);
+  pros::delay(1000);
 
   // back up
   drive(-2.5_ft);
@@ -119,13 +120,15 @@ void autonomous() {
   // 2 shoot first edge goal
   roll(on);
   pros::delay(600);
+  roll(loadingWithoutPoop);
 
   // back up
   drive(-0.8_ft);
+  roll(poop);
   // to ball
   turn(-92_deg);
   roll(loading);
-  driveBall(3.4_ft, 0.2);
+  driveBall(3.45_ft, 0.2);
 
   // 3 to second corner goal
   turn(-135_deg);
@@ -166,46 +169,45 @@ void autonomous() {
   pros::delay(300);
 
   // back up
-  roll(purge);
   drive(-1.3_ft);
+  roll(poop);
   // to ball
   turn(110_deg);
   roll(loading);
   driveBall(3.8_ft, 0.6);
-  // 5 to third edge goal
+  // 6 to third edge goal
   turn(-7_deg);
   drive(3_ft);
 
-  // 5 shoot third edge goal
+  // 6 shoot third edge goal
   roll(on);
   pros::delay(500);
   roll(poop);
 
-  // YYYYYYYYYYYYYYYYYYYYYY
-
   // back up
   drive(-1_ft);
-
   // to ball
   turn(75_deg);
   roll(loading);
   driveBall(3.8_ft, 0.3);
-  // 5 to third edge goal
+  // 7 to fourth corner goal
   turn(38_deg);
   drive(1.5_ft);
 
-  // 5 shoot third edge goal
+  // 7 shoot fourth corner goal
   cornerGoal();
 
   // back up
   drive(-1.5_ft);
-
+  // to ball
   turn(170_deg);
   roll(loading);
   driveBall(3.6_ft, 0.6);
 
+  // 8 to fourth edge goal
   turn(80_deg);
   drive(1_ft);
+  // 8 shoot fourth edge goal
   roll(on);
   pros::delay(600);
 
@@ -213,15 +215,21 @@ void autonomous() {
   drive(-0.5_ft);
   roll(onWithoutPoop);
   pros::delay(500);
+  // to ball
   turn(-97_deg);
   roll(loading);
+  driveBall(4_ft, 0.3);
 
-  drive(4_ft);
   drive(-1_ft);
   Robot::model()->xArcade(-1, 0, 0);
   pros::delay(300);
   Robot::model()->xArcade(0, 0, 0);
-  drive(1_ft);
+  drive(2_ft);
+  drive(-1_ft);
+  Robot::model()->xArcade(1, 0, 0);
+  pros::delay(300);
+  Robot::model()->xArcade(0, 0, 0);
+  drive(1.5_ft);
   roll(on);
 
   pros::delay(1000);
