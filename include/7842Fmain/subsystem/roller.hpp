@@ -32,7 +32,7 @@ public:
 
   double getTopLight() const;
   colors getColor() const;
-  void shouldPoop();
+  bool shouldPoop();
 
   void initialize() override;
   void loop() override;

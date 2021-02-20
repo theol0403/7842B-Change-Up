@@ -15,11 +15,15 @@ Roller::Roller(const std::shared_ptr<AbstractMotor>& iintakes,
   startTask("Roller");
 }
 
+Timer r;
 double Roller::getTopLight() const {
-  return topLight->get_value() - 2954 + 60;
+  if (r.repeat(200_ms)) std::cout << topLight->get_value() - 2894 << std::endl;
+  return topLight->get_value() - 2954 + 40;
 }
 
 Roller::colors Roller::getColor() const {
+  // if (r.repeat(200_ms)) std::cout << color->getBrightness() << std::endl;
+  if (color->getBrightness() > 0.02) return colors::none;
 
   int hue = color->getHue();
   // if (rate.repeat(200_ms)) { std::cout << "Hue: " << hue << std::endl; }
@@ -31,26 +35,30 @@ Roller::colors Roller::getColor() const {
   // }
 
   switch (hue) {
-    case 150 ... 270: return colors::blue;
-    case 8 ... 50: return colors::red;
+    case 160 ... 250: return colors::blue;
+    case 0 ... 40:
+    case 340 ... 360: return colors::red;
     default: return colors::none;
   }
 }
 
 void Roller::initialize() {
   topLight->calibrate();
+  // topRoller->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 }
 
 rollerStates backState = rollerStates::off;
 
 Timer poopTime;
-void Roller::shouldPoop() {
+bool Roller::shouldPoop() {
   // if blue ball but none in top
-  if (getColor() == colors::blue && getTopLight() >= 0) {
+  if (getColor() == colors::blue && getTopLight() >= 30) {
     poopTime.placeMark();
     backState = state;
     state = rollerStates::timedPoop;
+    return true;
   }
+  return false;
 }
 
 void Roller::loop() {
@@ -65,6 +73,7 @@ void Roller::loop() {
         if (getColor() == colors::blue && getTopLight() >= 0) {
           poopTime.placeMark();
           state = rollerStates::poopOff;
+          continue;
         }
 
         intakes->moveVoltage(0);
@@ -73,10 +82,16 @@ void Roller::loop() {
         break;
 
       case rollerStates::on:
-        intakes->moveVoltage(12000);
-        bottomRoller->moveVoltage(12000);
-        topRoller->moveVoltage(12000);
-        shouldPoop();
+        if (shouldPoop()) continue;
+        if (getColor() == colors::blue && getTopLight() < 0) {
+          intakes->moveVoltage(12000);
+          bottomRoller->moveVoltage(-1000);
+          topRoller->moveVoltage(12000);
+        } else {
+          intakes->moveVoltage(12000);
+          bottomRoller->moveVoltage(12000);
+          topRoller->moveVoltage(12000);
+        }
         break;
 
       case rollerStates::onWithoutPoop:
@@ -92,6 +107,7 @@ void Roller::loop() {
         break;
 
       case rollerStates::loading:
+        if (shouldPoop()) continue;
         if (getTopLight() < 0 && getColor() != colors::none) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(0);
@@ -99,13 +115,12 @@ void Roller::loop() {
         } else if (getTopLight() < 0) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);
-          topRoller->moveVoltage(0);
+          topRoller->moveVoltage(1000);
         } else {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);
           topRoller->moveVoltage(12000);
         }
-        shouldPoop();
         break;
 
       case rollerStates::loadingWithoutPoop:
@@ -116,7 +131,7 @@ void Roller::loop() {
         } else if (getTopLight() < 0) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);
-          topRoller->moveVoltage(0);
+          topRoller->moveVelocity(0);
         } else {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);
@@ -125,6 +140,7 @@ void Roller::loop() {
         break;
 
       case rollerStates::shoot:
+        if (shouldPoop()) continue;
         topRoller->moveVoltage(12000);
         intakes->moveVoltage(0);
         bottomRoller->moveVoltage(12000);
