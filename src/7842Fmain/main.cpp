@@ -80,7 +80,7 @@ void cornerGoal() {
   roll(loading);
   pros::delay(200);
   roll(onWithoutPoop);
-  pros::delay(1200);
+  pros::delay(700);
   roll(poop);
 }
 
@@ -103,7 +103,7 @@ void autonomous() {
   roll(topOut);
   pros::delay(400);
   roll(onWithoutPoop);
-  pros::delay(1100);
+  pros::delay(800);
 
   // back up
   drive(-2.5_ft);
@@ -116,15 +116,18 @@ void autonomous() {
 
   // 2 to first edge goal
   turn(172_deg);
-  drive(3.7_ft);
+  drive(3.75_ft);
   // 2 shoot first edge goal
   roll(on);
-  pros::delay(600);
+  pros::delay(500);
   roll(loadingWithoutPoop);
 
   // back up
   drive(-0.8_ft);
-  roll(poop);
+  asyncTask({
+    pros::delay(200);
+    roll(poop);
+  });
   // to ball
   turn(-92_deg);
   roll(loading);
@@ -135,21 +138,22 @@ void autonomous() {
   drive(2_ft);
   // 3 shoot second corner goal
   cornerGoal();
+  roll(purge);
 
   // back up
   drive(-1_ft);
-  roll(poop);
   // to ball
   turn(-9_deg);
   roll(loading);
-  driveBall(3.8_ft, 0.6);
+  driveBall(3.85_ft, 0.6);
 
   // 4 to second edge goal
   turn(-94_deg);
   drive(1_ft);
   // 4 shoot second edge goal
-  roll(on);
+  roll(onWithoutPoop);
   pros::delay(500);
+  roll(poop);
 
   // back up
   drive(-1.6_ft);
@@ -157,14 +161,14 @@ void autonomous() {
   // to ball
   turn(-2_deg);
   roll(loading);
-  driveBall(3.3_ft, 0.5);
+  driveBall(3.4_ft, 0.5);
 
   // 5 to third corner goal
-  turn(-55_deg);
+  turn(-56_deg);
   drive(3.6_ft);
   // 5 shoot third corner goal
   cornerGoal();
-  roll(loadingWithoutPoop);
+  roll(purge);
   pros::delay(300);
 
   // back up
@@ -175,11 +179,11 @@ void autonomous() {
   roll(loading);
   driveBall(3.8_ft, 0.6);
   // 6 to third edge goal
-  turn(-7_deg);
+  turn(-8_deg);
   drive(3_ft);
 
   // 6 shoot third edge goal
-  roll(on);
+  roll(onWithoutPoop);
   pros::delay(500);
   roll(poop);
 
@@ -190,7 +194,7 @@ void autonomous() {
   roll(loading);
   driveBall(3.8_ft, 0.3);
   // 7 to fourth corner goal
-  turn(38_deg);
+  turn(37_deg);
   drive(1.5_ft);
 
   // 7 shoot fourth corner goal
@@ -207,31 +211,32 @@ void autonomous() {
   turn(80_deg);
   drive(1_ft);
   // 8 shoot fourth edge goal
-  roll(on);
-  pros::delay(600);
+  roll(onWithoutPoop);
+  pros::delay(500);
 
   // back up
   drive(-0.5_ft);
-  roll(onWithoutPoop);
-  pros::delay(500);
+  roll(purge);
+  pros::delay(800);
   // to ball
-  turn(-97_deg);
+  turn(-101_deg);
   roll(loading);
-  driveBall(4_ft, 0.3);
+  driveBall(2_ft, 0.4);
+  turn(-101_deg);
+  Robot::model()->xArcade(1, 0, 0);
+  pros::delay(300);
+  Robot::model()->xArcade(0, 0, 0);
+  drive(2_ft);
 
   drive(-1_ft);
   Robot::model()->xArcade(-1, 0, 0);
   pros::delay(300);
   Robot::model()->xArcade(0, 0, 0);
-  drive(2_ft);
-  drive(-1_ft);
-  Robot::model()->xArcade(1, 0, 0);
-  pros::delay(300);
-  Robot::model()->xArcade(0, 0, 0);
   drive(1.5_ft);
-  roll(on);
 
-  pros::delay(1000);
+  roll(onWithoutPoop);
+  pros::delay(600);
+  drive(-2_ft);
 }
 
 void opcontrol() {
