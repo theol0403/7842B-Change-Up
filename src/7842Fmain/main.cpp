@@ -153,9 +153,9 @@ void autonomous() {
   roll(purge);
   pros::delay(600);
   // to ball
-  turn(0_deg);
+  turn(-2_deg);
   roll(loading);
-  driveBall(4_ft, 0.6);
+  driveBall(3.5_ft, 0.5);
 
   // 5 to third corner goal
   turn(-60_deg);
@@ -171,9 +171,9 @@ void autonomous() {
   // to ball
   turn(110_deg);
   roll(loading);
-  driveBall(4_ft, 0.6);
+  driveBall(3.5_ft, 0.6);
   // 5 to third edge goal
-  turn(-4_deg);
+  turn(-6_deg);
   drive(4_ft);
 
   // 5 shoot third edge goal
@@ -181,20 +181,17 @@ void autonomous() {
   pros::delay(600);
   roll(poop);
 
-  // back up
-  drive(-1_ft);
-
   // YYYYYYYYYYYYYYYYYYYYYY
 
   // back up
-  roll(purge);
-  drive(-1.3_ft);
+  drive(-1_ft);
+
   // to ball
-  turn(90_deg);
+  turn(83_deg);
   roll(loading);
-  driveBall(4_ft, 0.6);
+  driveBall(3_ft, 0.6);
   // 5 to third edge goal
-  turn(45_deg);
+  turn(40_deg);
   drive(2_ft);
 
   // 5 shoot third edge goal
