@@ -129,7 +129,7 @@ void autonomous() {
 
   // 3 to second corner goal
   turn(-135_deg);
-  drive(1.85_ft);
+  drive(1.7_ft);
   // 3 shoot second corner goal
   cornerGoal();
 
@@ -155,10 +155,10 @@ void autonomous() {
   // to ball
   turn(-2_deg);
   roll(loading);
-  driveBall(3.5_ft, 0.5);
+  driveBall(3.4_ft, 0.5);
 
   // 5 to third corner goal
-  turn(-60_deg);
+  turn(-55_deg);
   drive(3.6_ft);
   // 5 shoot third corner goal
   cornerGoal();
@@ -171,10 +171,10 @@ void autonomous() {
   // to ball
   turn(110_deg);
   roll(loading);
-  driveBall(3.5_ft, 0.6);
+  driveBall(3.8_ft, 0.6);
   // 5 to third edge goal
-  turn(-6_deg);
-  drive(4_ft);
+  turn(-8_deg);
+  drive(3_ft);
 
   // 5 shoot third edge goal
   roll(on);
@@ -187,9 +187,9 @@ void autonomous() {
   drive(-1_ft);
 
   // to ball
-  turn(83_deg);
+  turn(78_deg);
   roll(loading);
-  driveBall(3_ft, 0.6);
+  driveBall(4_ft, 0.3);
   // 5 to third edge goal
   turn(40_deg);
   drive(2_ft);
@@ -199,7 +199,19 @@ void autonomous() {
 
   // back up
   drive(-1_ft);
-  pros::delay(2000);
+
+  turn(180_deg);
+  roll(loading);
+  driveBall(3_ft, 0.6);
+
+  turn(90_deg);
+  roll(on);
+  pros::delay(600);
+
+  // back up
+  drive(-1.6_ft);
+  roll(purge);
+  pros::delay(600);
 }
 
 void opcontrol() {
