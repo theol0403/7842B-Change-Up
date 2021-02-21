@@ -115,7 +115,7 @@ void Roller::loop() {
         } else if (getTopLight() < 0) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);
-          topRoller->moveVoltage(1000);
+          topRoller->moveVoltage(400);
         } else {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);

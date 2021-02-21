@@ -135,7 +135,7 @@ void autonomous() {
 
   // 3 to second corner goal
   turn(-135_deg);
-  drive(2_ft);
+  drive(1.9_ft);
   // 3 shoot second corner goal
   cornerGoal();
   roll(purge);
@@ -149,7 +149,7 @@ void autonomous() {
 
   // 4 to second edge goal
   turn(-94_deg);
-  drive(1_ft);
+  drive(1.2_ft);
   // 4 shoot second edge goal
   roll(onWithoutPoop);
   pros::delay(500);
@@ -205,7 +205,7 @@ void autonomous() {
   // to ball
   turn(170_deg);
   roll(loading);
-  driveBall(3.6_ft, 0.6);
+  driveBall(3.8_ft, 0.6);
 
   // 8 to fourth edge goal
   turn(80_deg);
@@ -224,15 +224,15 @@ void autonomous() {
   driveBall(2_ft, 0.4);
   turn(-101_deg);
   Robot::model()->xArcade(1, 0, 0);
-  pros::delay(300);
+  pros::delay(200);
   Robot::model()->xArcade(0, 0, 0);
   drive(2_ft);
 
   drive(-1_ft);
-  Robot::model()->xArcade(-1, 0, 0);
-  pros::delay(300);
-  Robot::model()->xArcade(0, 0, 0);
-  drive(1.5_ft);
+  // Robot::model()->xArcade(-1, 0, 0);
+  // pros::delay(300);
+  // Robot::model()->xArcade(0, 0, 0);
+  drive(2_ft);
 
   roll(onWithoutPoop);
   pros::delay(600);
