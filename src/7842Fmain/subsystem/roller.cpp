@@ -58,9 +58,9 @@ Roller::colors Roller::getBottomLight() const {
 bool Roller::shouldPoop(int shouldIntake) {
   // if blue ball in bottom but no red in top
   if (getBottomLight() == colors::blue && getTopLight() != colors::red) {
-    poopTime.placeMark();
-    backState = state;
-    shouldIntakePoopVel = shouldIntake;
+    macroTime.placeMark();
+    macroReturnState = state;
+    macroIntakeVel = shouldIntake;
     state = rollerStates::timedPoop;
     return true;
   }
@@ -70,21 +70,21 @@ bool Roller::shouldPoop(int shouldIntake) {
 bool Roller::shouldShootPoop(int shouldIntake) {
   // if red ball in top but blue in bottom
   if (getBottomLight() == colors::blue && getTopLight() == colors::red) {
-    poopTime.placeMark();
-    backState = state;
-    shouldIntakePoopVel = shouldIntake;
+    macroTime.placeMark();
+    macroReturnState = state;
+    macroIntakeVel = shouldIntake;
     state = rollerStates::timedShootPoop;
     return true;
   }
   return false;
 }
 
-bool Roller::shouldShootPoop(int shouldIntake) {
+bool Roller::shouldSpacedShoot(int shouldIntake) {
   // if double shot
   if (getTopLight() == colors::red && getBottomLight() == colors::red) {
-    poopTime.placeMark();
-    backState = state;
-    shouldIntakePoopVel = shouldIntake;
+    macroTime.placeMark();
+    macroReturnState = state;
+    macroIntakeVel = shouldIntake;
     state = rollerStates::spacedShoot;
     return true;
   }
@@ -184,10 +184,10 @@ void Roller::loop() {
       case rollerStates::timedPoop:
         topRoller->moveVoltage(-12000);
         bottomRoller->moveVoltage(12000);
-        intakes->moveVoltage(shouldIntakePoopVel);
-        if (poopTime.getDtFromMark() >= 0.3_s) {
-          poopTime.clearHardMark();
-          state = backState;
+        intakes->moveVoltage(macroIntakeVel);
+        if (macroTime.getDtFromMark() >= 0.3_s) {
+          macroTime.clearHardMark();
+          state = macroReturnState;
           continue;
         }
         break;
@@ -195,9 +195,9 @@ void Roller::loop() {
       case rollerStates::timedShootPoop:
         topRoller->moveVoltage(12000);
         bottomRoller->moveVoltage(-2000); // what happens if you full reverse
-        intakes->moveVoltage(shouldIntakePoopVel);
-        if (poopTime.getDtFromMark() >= 0.3_s) {
-          poopTime.placeMark();
+        intakes->moveVoltage(macroIntakeVel);
+        if (macroTime.getDtFromMark() >= 0.3_s) {
+          macroTime.placeMark();
           state = rollerStates::timedPoop;
           continue;
         }
@@ -206,10 +206,10 @@ void Roller::loop() {
       case rollerStates::spacedShoot:
         topRoller->moveVoltage(12000);
         bottomRoller->moveVoltage(2000);
-        intakes->moveVoltage(shouldIntakePoopVel);
-        if (poopTime.getDtFromMark() >= 0.3_s) {
-          poopTime.clearHardMark();
-          state = backState;
+        intakes->moveVoltage(macroIntakeVel);
+        if (macroTime.getDtFromMark() >= 0.3_s) {
+          macroTime.clearHardMark();
+          state = macroReturnState;
           continue;
         }
         break;

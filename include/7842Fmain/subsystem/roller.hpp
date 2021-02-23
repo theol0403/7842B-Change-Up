@@ -48,7 +48,7 @@ public:
   std::shared_ptr<OpticalSensor> bottomLight {nullptr};
   std::shared_ptr<GUI::Graph> graph {nullptr};
 
-  Timer poopTime;
-  rollerStates backState = rollerStates::off;
-  int shouldIntakePoopVel = 12000;
+  Timer macroTime;
+  rollerStates macroReturnState = rollerStates::off;
+  int macroIntakeVel = 12000;
 };
