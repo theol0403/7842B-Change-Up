@@ -53,7 +53,7 @@ void driverDeviceControl() {
   } else if (mDigital(R1) && mDigital(A)) {
     system(roller, on);
   } else if (mDigital(A)) {
-    system(roller, poop);
+    system(roller, poopIn);
   } else if (mDigital(R1)) {
     system(roller, shoot);
   } else if (mDigital(L2)) {
@@ -63,7 +63,7 @@ void driverDeviceControl() {
   } else if (mDigital(B)) {
     system(roller, deploy);
   } else if (mDigital(LEFT)) {
-    system(roller, intakeOut);
+    system(roller, poopOut);
   } else if (mDigital(DOWN)) {
     system(roller, topOut);
   } else if (mDigital(R2)) {

@@ -43,19 +43,18 @@ void Robot::_initializeChassis() {
  *    |___/ \___| \_/ |_|\___\___||___/                              
  */
 void Robot::_initializeDevices() {
-  _roller = std::make_shared<Roller>(std::make_shared<MotorGroup>(MotorGroup {-10, 12}),
-                                     std::make_shared<Motor>(7), std::make_shared<Motor>(-19),
-                                     std::make_shared<pros::ADIAnalogIn>('D'),
-                                     std::make_shared<OpticalSensor>(15));
-
-  _imu = std::make_shared<IMU>(4);
-  _imu->calibrate();
-
   _screen = std::make_shared<GUI::Screen>(lv_scr_act(), LV_COLOR_ORANGE);
-  _screen->startTask("Screen");
 
   _vision = std::make_shared<VisionTask>(std::make_shared<Vision::Vision>(3),
                                          _screen->makePage<GUI::VisionPage>("Vision"));
+
+  _roller = std::make_shared<Roller>(
+    std::make_shared<MotorGroup>(MotorGroup {-10, 12}), std::make_shared<Motor>(7),
+    std::make_shared<Motor>(-19), std::make_shared<OpticalSensor>(9),
+    std::make_shared<OpticalSensor>(15), _screen->makePage<GUI::Graph>("Roller"));
+
+  _imu = std::make_shared<IMU>(4);
+  _imu->calibrate();
 }
 
 /***

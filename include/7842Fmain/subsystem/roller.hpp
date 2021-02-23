@@ -4,19 +4,17 @@
 
 enum class rollerStates {
   off, // all off
-  on, // all on
-  onWithoutPoop, // all on
   out, // all backwards
-  loading, // load balls into robot. Disable rollers one by one, and auto poop
-  loadingWithoutPoop, // load balls into robot. Disable rollers one by one, and auto poop
+  on, // all on
   shoot, // all on but don't move intakes
-  poop, // poop while intaking
-  intakeOut, // poop while outtaking
+  loading, // load balls into robot. Disable rollers one by one, and auto poop
+  poopIn, // poop while intaking
+  poopOut, // poop while outtaking
   purge, // shoot while outtaking
   topOut, // only spin top roller
   deploy,
   timedPoop,
-  poopOff, // poop while not intaking
+  timedShootPoop,
 };
 
 class Roller : public StateMachine<rollerStates, rollerStates::off> {
@@ -24,15 +22,18 @@ public:
   Roller(const std::shared_ptr<AbstractMotor>& iintakes,
          const std::shared_ptr<AbstractMotor>& ibottomRoller,
          const std::shared_ptr<AbstractMotor>& itopRoller,
-         const std::shared_ptr<pros::ADIAnalogIn>& itoplight,
-         const std::shared_ptr<OpticalSensor>& icolor);
+         const std::shared_ptr<OpticalSensor>& itoplight,
+         const std::shared_ptr<OpticalSensor>& ibottomLight,
+         const std::shared_ptr<GUI::Graph>& igraph);
 
 public:
-  enum class colors { red, blue, none };
+  enum class colors { none = 0, red, blue };
 
-  double getTopLight() const;
-  colors getColor() const;
-  bool shouldPoop();
+  colors getTopLight() const;
+  colors getBottomLight() const;
+
+  bool shouldPoop(int shouldIntake = 12000);
+  bool shouldShootPoop(int shouldIntake = 12000);
 
   void initialize() override;
   void loop() override;
@@ -40,6 +41,11 @@ public:
   std::shared_ptr<AbstractMotor> intakes {nullptr};
   std::shared_ptr<AbstractMotor> bottomRoller {nullptr};
   std::shared_ptr<AbstractMotor> topRoller {nullptr};
-  std::shared_ptr<pros::ADIAnalogIn> topLight {nullptr};
-  std::shared_ptr<OpticalSensor> color {nullptr};
+  std::shared_ptr<OpticalSensor> topLight {nullptr};
+  std::shared_ptr<OpticalSensor> bottomLight {nullptr};
+  std::shared_ptr<GUI::Graph> graph {nullptr};
+
+  Timer poopTime;
+  rollerStates backState = rollerStates::off;
+  int shouldIntakePoopVel = 12000;
 };
