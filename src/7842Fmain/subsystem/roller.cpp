@@ -88,32 +88,42 @@ void Roller::loop() {
 
       case rollerStates::off:
         if (shouldPoop(0)) continue;
-        intakes->moveVoltage(0);
-        bottomRoller->moveVoltage(0);
         topRoller->moveVoltage(0);
+        bottomRoller->moveVoltage(0);
+        intakes->moveVoltage(0);
         break;
 
       case rollerStates::out:
         if (shouldPoop(-12000)) continue;
-        intakes->moveVoltage(-12000);
-        bottomRoller->moveVoltage(-12000);
         topRoller->moveVoltage(-12000);
+        bottomRoller->moveVoltage(-12000);
+        intakes->moveVoltage(-12000);
         break;
 
       case rollerStates::on:
         if (shouldPoop()) continue;
         if (shouldShootPoop()) continue;
+        if (getTopLight() == colors::red && getBottomLight() == colors::red) {
+          topRoller->moveVoltage(12000);
+          bottomRoller->moveVoltage(2000);
+        } else {
+          topRoller->moveVoltage(12000);
+          bottomRoller->moveVoltage(12000);
+        }
         intakes->moveVoltage(12000);
-        bottomRoller->moveVoltage(12000);
-        topRoller->moveVoltage(12000);
         break;
 
       case rollerStates::shoot:
         if (shouldPoop(0)) continue;
         if (shouldShootPoop(0)) continue;
-        topRoller->moveVoltage(12000);
+        if (getTopLight() == colors::red && getBottomLight() == colors::red) {
+          topRoller->moveVoltage(12000);
+          bottomRoller->moveVoltage(2000);
+        } else {
+          topRoller->moveVoltage(12000);
+          bottomRoller->moveVoltage(12000);
+        }
         intakes->moveVoltage(0);
-        bottomRoller->moveVoltage(12000);
         break;
 
       case rollerStates::intake:
@@ -121,56 +131,56 @@ void Roller::loop() {
         [[fallthrough]];
       case rollerStates::intakeWithoutPoop:
         if (getTopLight() != colors::none && getBottomLight() != colors::none) {
-          intakes->moveVoltage(12000);
-          bottomRoller->moveVoltage(0);
           topRoller->moveVoltage(0);
+          bottomRoller->moveVoltage(0);
+          intakes->moveVoltage(12000);
         } else if (getTopLight() == colors::red) {
           // will shoot blue if in bot
-          intakes->moveVoltage(12000);
+          topRoller->moveVoltage(0);
           // slow down
           bottomRoller->moveVoltage(8000);
-          topRoller->moveVoltage(0);
-        } else {
           intakes->moveVoltage(12000);
-          bottomRoller->moveVoltage(12000);
+        } else {
           topRoller->moveVoltage(8000);
+          bottomRoller->moveVoltage(12000);
+          intakes->moveVoltage(12000);
         }
         break;
 
       case rollerStates::poopIn:
-        intakes->moveVoltage(12000);
-        bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(-12000);
+        bottomRoller->moveVoltage(12000);
+        intakes->moveVoltage(12000);
         break;
 
       case rollerStates::poopOut:
-        intakes->moveVoltage(-12000);
-        bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(-12000);
+        bottomRoller->moveVoltage(12000);
+        intakes->moveVoltage(-12000);
         break;
 
       case rollerStates::purge:
-        intakes->moveVoltage(-12000);
-        bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(12000);
+        bottomRoller->moveVoltage(12000);
+        intakes->moveVoltage(-12000);
         break;
 
       case rollerStates::topOut:
-        intakes->moveVoltage(0);
-        bottomRoller->moveVoltage(5000);
         topRoller->moveVoltage(12000);
+        bottomRoller->moveVoltage(5000);
+        intakes->moveVoltage(0);
         break;
 
       case rollerStates::deploy:
-        intakes->moveVoltage(-12000);
-        bottomRoller->moveVoltage(-1000);
         topRoller->moveVoltage(12000);
+        bottomRoller->moveVoltage(-1000);
+        intakes->moveVoltage(-12000);
         break;
 
       case rollerStates::timedPoop:
-        intakes->moveVoltage(shouldIntakePoopVel);
-        bottomRoller->moveVoltage(12000);
         topRoller->moveVoltage(-12000);
+        bottomRoller->moveVoltage(12000);
+        intakes->moveVoltage(shouldIntakePoopVel);
         if (poopTime.getDtFromMark() >= 0.3_s) {
           poopTime.clearHardMark();
           state = backState;
@@ -179,9 +189,9 @@ void Roller::loop() {
         break;
 
       case rollerStates::timedShootPoop:
-        intakes->moveVoltage(shouldIntakePoopVel);
-        bottomRoller->moveVoltage(-2000); // what happens if you full reverse
         topRoller->moveVoltage(12000);
+        bottomRoller->moveVoltage(-2000); // what happens if you full reverse
+        intakes->moveVoltage(shouldIntakePoopVel);
         if (poopTime.getDtFromMark() >= 0.3_s) {
           poopTime.placeMark();
           state = rollerStates::timedPoop;
