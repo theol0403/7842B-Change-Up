@@ -16,6 +16,7 @@ enum class rollerStates {
   deploy,
   timedPoop,
   timedShootPoop,
+  spacedShoot, // all on but space the ball and no intakes
 };
 
 class Roller : public StateMachine<rollerStates, rollerStates::off> {
@@ -35,6 +36,7 @@ public:
 
   bool shouldPoop(int shouldIntake = 12000);
   bool shouldShootPoop(int shouldIntake = 12000);
+  bool shouldSpacedShoot(int shouldIntake = 12000);
 
   void initialize() override;
   void loop() override;

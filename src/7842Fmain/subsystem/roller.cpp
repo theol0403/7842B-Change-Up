@@ -79,6 +79,18 @@ bool Roller::shouldShootPoop(int shouldIntake) {
   return false;
 }
 
+bool Roller::shouldShootPoop(int shouldIntake) {
+  // if double shot
+  if (getTopLight() == colors::red && getBottomLight() == colors::red) {
+    poopTime.placeMark();
+    backState = state;
+    shouldIntakePoopVel = shouldIntake;
+    state = rollerStates::spacedShoot;
+    return true;
+  }
+  return false;
+}
+
 void Roller::loop() {
   Rate rate;
 
@@ -103,26 +115,18 @@ void Roller::loop() {
       case rollerStates::on:
         if (shouldPoop()) continue;
         if (shouldShootPoop()) continue;
-        if (getTopLight() == colors::red && getBottomLight() == colors::red) {
-          topRoller->moveVoltage(12000);
-          bottomRoller->moveVoltage(2000);
-        } else {
-          topRoller->moveVoltage(12000);
-          bottomRoller->moveVoltage(12000);
-        }
+        if (shouldSpacedShoot()) continue;
+        topRoller->moveVoltage(12000);
+        bottomRoller->moveVoltage(12000);
         intakes->moveVoltage(12000);
         break;
 
       case rollerStates::shoot:
         if (shouldPoop(0)) continue;
         if (shouldShootPoop(0)) continue;
-        if (getTopLight() == colors::red && getBottomLight() == colors::red) {
-          topRoller->moveVoltage(12000);
-          bottomRoller->moveVoltage(2000);
-        } else {
-          topRoller->moveVoltage(12000);
-          bottomRoller->moveVoltage(12000);
-        }
+        if (shouldSpacedShoot(0)) continue;
+        topRoller->moveVoltage(12000);
+        bottomRoller->moveVoltage(12000);
         intakes->moveVoltage(0);
         break;
 
@@ -195,6 +199,17 @@ void Roller::loop() {
         if (poopTime.getDtFromMark() >= 0.3_s) {
           poopTime.placeMark();
           state = rollerStates::timedPoop;
+          continue;
+        }
+        break;
+
+      case rollerStates::spacedShoot:
+        topRoller->moveVoltage(12000);
+        bottomRoller->moveVoltage(2000);
+        intakes->moveVoltage(shouldIntakePoopVel);
+        if (poopTime.getDtFromMark() >= 0.3_s) {
+          poopTime.clearHardMark();
+          state = backState;
           continue;
         }
         break;
