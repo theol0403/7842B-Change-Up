@@ -44,7 +44,7 @@ Roller::colors Roller::getColor() const {
 
 void Roller::initialize() {
   topLight->calibrate();
-  // topRoller->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+  topRoller->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 }
 
 rollerStates backState = rollerStates::off;
@@ -115,11 +115,11 @@ void Roller::loop() {
         } else if (getTopLight() < 0) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);
-          topRoller->moveVoltage(400);
+          topRoller->moveVoltage(0);
         } else {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(12000);
-          topRoller->moveVoltage(12000);
+          topRoller->moveVoltage(6000);
         }
         break;
 
