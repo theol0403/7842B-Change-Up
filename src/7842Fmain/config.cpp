@@ -1,5 +1,4 @@
 #include "config.hpp"
-#include <memory>
 
 /***
  *     _____ _                   _     
@@ -30,9 +29,9 @@ void Robot::_initializeChassis() {
     // limits
     200, 12000);
 
-  ChassisScales scales({3.25_in, 11.3_in}, 360);
-  Limits limits(scales, 200_rpm, 0.7_s, 1, 1);
-  _generator = std::make_shared<TrajectoryGenerator>(_model, limits, scales, 200_rpm, 10_ms);
+  ChassisScales scales({3.25_in, 15_in}, 360);
+  Limits limits(scales, 200_rpm, 0.7_s, sqrt(2), 1);
+  _generator = std::make_shared<XGenerator>(_model, 200_rpm, limits, scales, 10_ms);
 }
 
 /***

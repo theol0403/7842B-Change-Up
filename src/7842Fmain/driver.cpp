@@ -73,7 +73,7 @@ void driverDeviceControl() {
   }
 
   if (mDigital(Y) && !pros::competition::is_connected()) {
-    Robot::imu()->calibrate();
     Robot::roller()->initialize();
+    Robot::imu()->calibrate();
   }
 }
