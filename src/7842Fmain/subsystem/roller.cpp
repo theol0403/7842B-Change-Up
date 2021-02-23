@@ -57,7 +57,7 @@ Roller::colors Roller::getBottomLight() const {
 
 bool Roller::shouldPoop(int shouldIntake) {
   // if blue ball in bottom but no red in top
-  if (getBottomLight() == colors::blue && getTopLight() != colors::red) {
+  if (getTopLight() != colors::red && getBottomLight() == colors::blue) {
     macroTime.placeMark();
     macroReturnState = state;
     macroIntakeVel = shouldIntake;
@@ -69,7 +69,7 @@ bool Roller::shouldPoop(int shouldIntake) {
 
 bool Roller::shouldShootPoop(int shouldIntake) {
   // if red ball in top but blue in bottom
-  if (getBottomLight() == colors::blue && getTopLight() == colors::red) {
+  if (getTopLight() == colors::red && getBottomLight() == colors::blue) {
     macroTime.placeMark();
     macroReturnState = state;
     macroIntakeVel = shouldIntake;
