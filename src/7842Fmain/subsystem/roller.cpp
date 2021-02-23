@@ -116,8 +116,10 @@ void Roller::loop() {
         bottomRoller->moveVoltage(12000);
         break;
 
-      case rollerStates::loading:
+      case rollerStates::intake:
         if (shouldPoop()) continue;
+        [[fallthrough]];
+      case rollerStates::intakeWithoutPoop:
         if (getTopLight() != colors::none && getBottomLight() != colors::none) {
           intakes->moveVoltage(12000);
           bottomRoller->moveVoltage(0);

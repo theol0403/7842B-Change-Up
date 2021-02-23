@@ -67,7 +67,7 @@ void driverDeviceControl() {
   } else if (mDigital(DOWN)) {
     system(roller, topOut);
   } else if (mDigital(R2)) {
-    system(roller, loading);
+    system(roller, intake);
   } else {
     system(roller, off);
   }
