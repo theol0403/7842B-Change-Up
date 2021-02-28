@@ -31,7 +31,7 @@ void Robot::_initializeChassis() {
 
   ChassisScales scales({3.25_in, 15_in}, 360);
   Limits limits(scales, 200_rpm, 0.7_s, sqrt(2), 1);
-  _generator = std::make_shared<XGenerator>(_model, 200_rpm, limits, scales, 10_ms);
+  _chassis = std::make_shared<XVisionGenerator>(_model, 200_rpm, scales, limits, 10_ms);
 }
 
 /***

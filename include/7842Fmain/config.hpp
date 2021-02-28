@@ -3,6 +3,7 @@
 
 #include "subsystem/roller.hpp"
 #include "subsystem/vision.hpp"
+#include "subsystem/vision_drive.hpp"
 
 class Robot {
 public:
