@@ -3,7 +3,7 @@
 namespace lib7842 {
 
 void XVisionGenerator::strafe(const Spline& spline, const ProfileFlags& flags,
-                              const std::vector<std::pair<Number, Number>>& markers) {
+                              const PiecewiseTrapezoidal::Markers& markers) {
   auto runner = [&](double t, KinematicState& k) {
     // get the location on the spline
     auto pos = spline.calc(t);
@@ -32,7 +32,7 @@ void XVisionGenerator::strafe(const Spline& spline, const ProfileFlags& flags,
 }
 
 void XVisionGenerator::curve(const Spline& spline, const ProfileFlags& flags,
-                             const std::vector<std::pair<Number, Number>>& markers) {
+                             const PiecewiseTrapezoidal::Markers& markers) {
   auto runner = [&](double t, KinematicState& k) {
     // get the curvature along the path
     auto curvature = spline.curvature(t);

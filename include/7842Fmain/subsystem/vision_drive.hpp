@@ -14,10 +14,10 @@ public:
   };
 
   void strafe(const Spline& spline, const ProfileFlags& flags = {},
-              const std::vector<std::pair<Number, Number>>& markers = {});
+              const PiecewiseTrapezoidal::Markers& markers = {});
 
   void curve(const Spline& spline, const ProfileFlags& flags = {},
-             const std::vector<std::pair<Number, Number>>& markers = {});
+             const PiecewiseTrapezoidal::Markers& markers = {});
 
 protected:
   std::shared_ptr<XDriveModel> model;
