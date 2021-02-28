@@ -1,13 +1,24 @@
 #include "7842Fmain/subsystem/vision_drive.hpp"
 #include "7842Fmain/config.hpp"
+#include "pros/rtos.hpp"
 
 namespace lib7842 {
 
 const QLength visionCruise = 0.7_ft;
 const Number visionSpeed = 30_pct;
 
+const bool velocity = false;
+
 void XVisionGenerator::strafe(const Spline& spline, const ProfileFlags& flags,
                               const std::optional<Number>& vision) {
+  if (velocity && flags.start_v == 0_pct) {
+    model->getTopLeftMotor()->moveVelocity(0);
+    model->getTopRightMotor()->moveVelocity(0);
+    model->getBottomLeftMotor()->moveVelocity(0);
+    model->getBottomRightMotor()->moveVelocity(0);
+    pros::delay(10);
+  }
+
   auto visionD = spline.length() * vision.value_or(105_pct);
   auto runner = [&](double t, KinematicState& k) {
     // get the location on the spline
@@ -31,10 +42,17 @@ void XVisionGenerator::strafe(const Spline& spline, const ProfileFlags& flags,
     double topLeft = topLeftSpeed.convert(number);
     double topRight = topRightSpeed.convert(number);
 
-    model->getTopLeftMotor()->moveVoltage(topLeft * 12000);
-    model->getTopRightMotor()->moveVoltage(topRight * 12000);
-    model->getBottomLeftMotor()->moveVoltage(topRight * 12000);
-    model->getBottomRightMotor()->moveVoltage(topLeft * 12000);
+    if (velocity) {
+      model->getTopLeftMotor()->moveVelocity(topLeft * gearset.convert(rpm));
+      model->getTopRightMotor()->moveVelocity(topRight * gearset.convert(rpm));
+      model->getBottomLeftMotor()->moveVelocity(topRight * gearset.convert(rpm));
+      model->getBottomRightMotor()->moveVelocity(topLeft * gearset.convert(rpm));
+    } else {
+      model->getTopLeftMotor()->moveVoltage(topLeft * 12000);
+      model->getTopRightMotor()->moveVoltage(topRight * 12000);
+      model->getBottomLeftMotor()->moveVoltage(topRight * 12000);
+      model->getBottomRightMotor()->moveVoltage(topLeft * 12000);
+    }
   };
 
   PiecewiseTrapezoidal::Markers markers;
@@ -44,6 +62,15 @@ void XVisionGenerator::strafe(const Spline& spline, const ProfileFlags& flags,
 
 void XVisionGenerator::curve(const Spline& spline, const ProfileFlags& flags,
                              const std::optional<Number>& vision) {
+
+  if (velocity && flags.start_v == 0_pct) {
+    model->getTopLeftMotor()->moveVelocity(0);
+    model->getTopRightMotor()->moveVelocity(0);
+    model->getBottomLeftMotor()->moveVelocity(0);
+    model->getBottomRightMotor()->moveVelocity(0);
+    pros::delay(10);
+  }
+
   auto visionD = spline.length() * vision.value_or(105_pct);
   auto runner = [&](double t, KinematicState& k) {
     // get the curvature along the path
@@ -70,10 +97,17 @@ void XVisionGenerator::curve(const Spline& spline, const ProfileFlags& flags,
     double leftMotor = leftSpeed.convert(number);
     double rightMotor = rightSpeed.convert(number);
 
-    model->getTopLeftMotor()->moveVoltage((leftMotor + offset) * 12000);
-    model->getTopRightMotor()->moveVoltage((rightMotor - offset) * 12000);
-    model->getBottomLeftMotor()->moveVoltage((leftMotor - offset) * 12000);
-    model->getBottomRightMotor()->moveVoltage((rightMotor + offset) * 12000);
+    if (velocity) {
+      model->getTopLeftMotor()->moveVelocity((leftMotor + offset) * gearset.convert(rpm));
+      model->getTopRightMotor()->moveVelocity((rightMotor - offset) * gearset.convert(rpm));
+      model->getBottomLeftMotor()->moveVelocity((leftMotor - offset) * gearset.convert(rpm));
+      model->getBottomRightMotor()->moveVelocity((rightMotor + offset) * gearset.convert(rpm));
+    } else {
+      model->getTopLeftMotor()->moveVoltage((leftMotor + offset) * 12000);
+      model->getTopRightMotor()->moveVoltage((rightMotor - offset) * 12000);
+      model->getBottomLeftMotor()->moveVoltage((leftMotor - offset) * 12000);
+      model->getBottomRightMotor()->moveVoltage((rightMotor + offset) * 12000);
+    }
   };
 
   PiecewiseTrapezoidal::Markers markers;
