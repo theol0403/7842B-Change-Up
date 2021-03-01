@@ -21,13 +21,33 @@ void opcontrol() {
   }
 }
 
+void shootCorner() {
+  roll(onWithoutPoop);
+  pros::delay(500);
+  roll(intakeWithoutPoop);
+  pros::delay(500);
+}
+
+void shootEdge() {
+  roll(onWithoutPoop);
+  pros::delay(500);
+  roll(intakeWithoutPoop);
+}
+
+void align(const QTime& time) {
+  Timer t;
+  while (t.getDtFromStart() < time) {
+    Robot::model()->xArcade(Robot::vision()->getBlueOffset() * 0.02, 0, 0);
+  }
+}
+
 void autonomous() {
   // start facing right
   Robot::imu()->reset(90_deg);
 
   // deploy after strafing from edge
   asyncTask({
-    pros::delay(500);
+    pros::delay(300);
     roll(deploy);
   });
   move->strafe(Line({0_ft, 0_ft}, {-1.5_ft, 0_ft}));
@@ -39,8 +59,7 @@ void autonomous() {
   move->curve(Mesh({0_ft, 0_ft, 0_deg}, {1.5_ft, 4_ft, 60_deg}), {.ball_seek = 0_pct});
 
   // shoot
-  roll(onWithoutPoop);
-  pros::delay(1000);
+  shootCorner();
 
   // back up
   drive(-2.5_ft);
@@ -61,9 +80,7 @@ void autonomous() {
   drive(3.75_ft);
 
   // shoot
-  roll(onWithoutPoop);
-  pros::delay(500);
-  roll(intakeWithoutPoop);
+  shootEdge();
 
   // back up
   drive(-0.8_ft);
@@ -79,11 +96,10 @@ void autonomous() {
 
   // to ball and goal
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-1.5_ft, 5_ft, -60_deg}), {.ball_seek = 20_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-1.5_ft, 5_ft, -60_deg}), {.ball_seek = 10_pct});
 
   // shoot
-  roll(onWithoutPoop);
-  pros::delay(1000);
+  shootCorner();
 
   // back up
   drive(-1_ft);
@@ -103,9 +119,7 @@ void autonomous() {
   drive(1.2_ft);
 
   // shoot
-  roll(onWithoutPoop);
-  pros::delay(500);
-  roll(intakeWithoutPoop);
+  shootEdge();
 
   // back up
   drive(-1.6_ft);
@@ -128,8 +142,7 @@ void autonomous() {
   drive(3.6_ft);
 
   // shoot
-  roll(onWithoutPoop);
-  pros::delay(1000);
+  shootCorner();
 
   // back up
   drive(-1.3_ft);
@@ -149,8 +162,7 @@ void autonomous() {
   drive(3_ft);
 
   // shoot
-  roll(onWithoutPoop);
-  pros::delay(500);
+  shootEdge();
   roll(poopIn);
 
   // back up
@@ -167,8 +179,7 @@ void autonomous() {
   move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-1.5_ft, 5_ft, -60_deg}), {.ball_seek = 20_pct});
 
   // shoot
-  roll(onWithoutPoop);
-  pros::delay(1000);
+  shootCorner();
 
   // back up
   drive(-1.5_ft);
@@ -188,8 +199,7 @@ void autonomous() {
   drive(1_ft);
 
   // shoot
-  roll(onWithoutPoop);
-  pros::delay(500);
+  shootEdge();
 
   // back up
   drive(-0.5_ft);
@@ -203,16 +213,23 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(2_ft, {.ball_seek = 40_pct});
+  drive(2_ft, {.ball_seek = 0_pct});
 
   // recenter
   turn(-101_deg);
+  align(1_s);
+
+  // move to poke
+  move->strafe(Line({0_ft, 0_ft}, {0.6_ft, 0_ft}));
   drive(2_ft);
 
-  drive(-1_ft);
-  drive(2_ft);
+  // back up and allign
+  drive(-1.5_ft);
+  align(1_s);
 
-  roll(onWithoutPoop);
+  // shoot
+  drive(2_ft);
+  roll(on);
   pros::delay(600);
   drive(-2_ft);
 }
