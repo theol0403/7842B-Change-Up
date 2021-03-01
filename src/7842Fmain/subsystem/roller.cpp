@@ -69,6 +69,14 @@ bool Roller::shouldPoop(int shouldIntake) {
     state = rollerStates::timedPoop;
     return true;
   }
+
+  if (getTopLight() == colors::blue) {
+    macroTime.placeMark();
+    macroReturnState = state;
+    macroIntakeVel = shouldIntake;
+    state = rollerStates::topPoop;
+    return true;
+  }
   return false;
 }
 
@@ -125,10 +133,9 @@ void Roller::loop() {
         if (shouldSpacedShoot()) continue;
         // slow down blue ball
         if (getTopLight() == colors::blue) {
-          topRoller->moveVoltage(4000);
-        } else {
-          topRoller->moveVoltage(12000);
+          if (shouldPoop()) continue;
         }
+        topRoller->moveVoltage(12000);
         bottomRoller->moveVoltage(12000);
         intakes->moveVoltage(12000);
         break;
@@ -199,8 +206,8 @@ void Roller::loop() {
         topRoller->moveVoltage(-12000);
         bottomRoller->moveVoltage(12000);
         intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 0.3_s) {
-          macroTime.clearHardMark();
+        if (macroTime.getDtFromMark() >= 300_ms) {
+          macroTime.clearMark();
           state = macroReturnState;
           continue;
         }
@@ -210,7 +217,7 @@ void Roller::loop() {
         topRoller->moveVoltage(12000);
         bottomRoller->moveVoltage(0);
         intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 0.4_s) {
+        if (macroTime.getDtFromMark() >= 400_ms) {
           macroTime.placeMark();
           state = rollerStates::timedPoop;
           continue;
@@ -221,9 +228,20 @@ void Roller::loop() {
         topRoller->moveVoltage(12000);
         bottomRoller->moveVoltage(1000);
         intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 0.01_s) {
-          macroTime.clearHardMark();
+        if (macroTime.getDtFromMark() >= 20_ms) {
+          macroTime.clearMark();
           state = macroReturnState;
+          continue;
+        }
+        break;
+
+      case rollerStates::topPoop:
+        topRoller->moveVoltage(-12000);
+        bottomRoller->moveVoltage(-12000);
+        intakes->moveVoltage(macroIntakeVel);
+        if (macroTime.getDtFromMark() >= 200_ms) {
+          macroTime.placeMark();
+          state = rollerStates::timedPoop;
           continue;
         }
         break;

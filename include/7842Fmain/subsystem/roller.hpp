@@ -18,6 +18,7 @@ enum class rollerStates {
   timedPoop,
   timedShootPoop,
   spacedShoot, // all on but space the ball and no intakes
+  topPoop, // bring down then poop
 };
 
 class Roller : public StateMachine<rollerStates, rollerStates::off> {
