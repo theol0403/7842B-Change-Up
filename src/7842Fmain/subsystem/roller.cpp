@@ -49,11 +49,11 @@ Roller::colors Roller::getBottomLight() const {
   //             << ", Brightness: " << bottomLight->getBrightness()
   //             << ", Proximity: " << bottomLight->getProximity() << std::endl;
 
-  if (bottomLight->getProximity() < 100) return colors::none;
+  if (bottomLight->getProximity() < 110) return colors::none;
 
   int hue = bottomLight->getHue();
   switch (hue) {
-    case 160 ... 300: return colors::blue;
+    case 180 ... 300: return colors::blue;
     case 0 ... 40:
     case 350 ... 360: return colors::red;
     default: return colors::none;
@@ -143,14 +143,16 @@ void Roller::loop() {
           topRoller->moveVoltage(0);
           bottomRoller->moveVoltage(0);
           intakes->moveVoltage(12000);
-        } else if (getTopLight() == colors::red) {
           // will shoot blue if in bot
-          topRoller->moveVoltage(1500);
+        } else if (getTopLight() == colors::red) {
+          // balance between raising ball to prevent rubbing and bringing ball too high
+          topRoller->moveVoltage(2000);
           // slow down
           bottomRoller->moveVoltage(4000);
           intakes->moveVoltage(12000);
         } else {
-          topRoller->moveVoltage(4800);
+          // balance between bringing ball too fast and accidentally pooping
+          topRoller->moveVoltage(5000);
           bottomRoller->moveVoltage(12000);
           intakes->moveVoltage(12000);
         }
@@ -212,7 +214,7 @@ void Roller::loop() {
         topRoller->moveVoltage(12000);
         bottomRoller->moveVoltage(1000);
         intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 0.3_s) {
+        if (macroTime.getDtFromMark() >= 0.01_s) {
           macroTime.clearHardMark();
           state = macroReturnState;
           continue;
