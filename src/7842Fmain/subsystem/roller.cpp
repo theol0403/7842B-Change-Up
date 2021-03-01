@@ -120,8 +120,15 @@ void Roller::loop() {
       case rollerStates::on:
         if (shouldPoop()) continue;
         if (shouldShootPoop()) continue;
+        [[fallthrough]];
+      case rollerStates::onWithoutPoop:
         if (shouldSpacedShoot()) continue;
-        topRoller->moveVoltage(12000);
+        // slow down blue ball
+        if (getTopLight() == colors::blue) {
+          topRoller->moveVoltage(4000);
+        } else {
+          topRoller->moveVoltage(12000);
+        }
         bottomRoller->moveVoltage(12000);
         intakes->moveVoltage(12000);
         break;

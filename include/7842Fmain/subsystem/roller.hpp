@@ -6,6 +6,7 @@ enum class rollerStates {
   off, // all off
   out, // all backwards
   on, // all on
+  onWithoutPoop, // all on without poop
   shoot, // all on but don't move intakes
   intake, // load balls into robot. Disable rollers one by one, and auto poop
   intakeWithoutPoop, // load balls into robot. Disable rollers one by one
