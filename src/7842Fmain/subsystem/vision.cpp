@@ -22,6 +22,7 @@ void VisionTask::initialize() {
 }
 
 void VisionTask::loop() {
+  Rate r;
   while (true) {
     auto container = vision->getAll().sort(Vision::Query::area);
     container.remove(Vision::Query::area, std::less<double>(), 2000);
@@ -39,7 +40,7 @@ void VisionTask::loop() {
     blueOffset = blues.remove(Vision::Query::sig, std::not_equal_to<double>(), BLUE)
                    .get(0, Vision::Query::offsetCenterX);
 
-    pros::delay(10);
+    r.delayUntil(10_ms);
   }
 }
 
