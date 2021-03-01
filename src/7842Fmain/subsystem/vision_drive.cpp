@@ -8,8 +8,9 @@ const QLength visionCruise = 1.5_ft;
 
 const bool velocity = true;
 
-void XVisionGenerator::strafe(const Spline& spline, const ProfileFlags& flags,
-                              const PiecewiseTrapezoidal::Markers& markers, const Number& vision) {
+void XVisionGenerator::strafeBall(const Spline& spline, const Number& vision,
+                                  const ProfileFlags& flags,
+                                  const PiecewiseTrapezoidal::Markers& markers) {
   if (velocity && flags.start_v == 0_pct) {
     model->getTopLeftMotor()->moveVelocity(0);
     model->getTopRightMotor()->moveVelocity(0);
@@ -25,7 +26,7 @@ void XVisionGenerator::strafe(const Spline& spline, const ProfileFlags& flags,
     auto theta = pos.theta;
 
     if (k.d > visionD && k.d < visionD + visionCruise) {
-      theta -= Robot::vision()->getOffset() * 0.5_deg;
+      theta -= Robot::vision()->getOffset() * 0.6_deg;
     }
 
     // limit the velocity according to path angle.
@@ -57,8 +58,9 @@ void XVisionGenerator::strafe(const Spline& spline, const ProfileFlags& flags,
   Generator::generate(limits, runner, spline, dt, flags, markers);
 }
 
-void XVisionGenerator::curve(const Spline& spline, const ProfileFlags& flags,
-                             const PiecewiseTrapezoidal::Markers& markers, const Number& vision) {
+void XVisionGenerator::curveBall(const Spline& spline, const Number& vision,
+                                 const ProfileFlags& flags,
+                                 const PiecewiseTrapezoidal::Markers& markers) {
 
   if (velocity && flags.start_v == 0_pct) {
     model->getTopLeftMotor()->moveVelocity(0);

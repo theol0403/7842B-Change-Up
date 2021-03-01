@@ -20,7 +20,7 @@ Roller::Roller(const std::shared_ptr<AbstractMotor>& iintakes,
 void Roller::initialize() {
   topLight->setLedPWM(100);
   bottomLight->setLedPWM(100);
-  topRoller->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+  // topRoller->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 
   graph->withSeries("Bottom Sensor", LV_COLOR_BLACK, [&] { return bottomLight->getHue(); });
   graph->withSeries("Top Sensor", LV_COLOR_WHITE, [&] { return topLight->getHue(); });
@@ -28,29 +28,34 @@ void Roller::initialize() {
 
 Timer t;
 Roller::colors Roller::getTopLight() const {
-  if (t.repeat(200_ms))
-    std::cout << "Hue: " << topLight->getHue() << ", Brightness: " << topLight->getBrightness()
-              << ", Lightness: " << std::endl;
+  // if (t.repeat(200_ms))
+  //   std::cout << "Hue: " << topLight->getHue() << ", Brightness: " << topLight->getBrightness()
+  //             << ", Proximity: " << topLight->getProximity() << std::endl;
 
-  if (topLight->getBrightness() > 0.02) return colors::none;
+  if (topLight->getProximity() < 100) return colors::none;
 
   int hue = topLight->getHue();
   switch (hue) {
-    case 160 ... 250: return colors::blue;
+    case 160 ... 300: return colors::blue;
     case 0 ... 40:
-    case 340 ... 360: return colors::red;
+    case 350 ... 360: return colors::red;
     default: return colors::none;
   }
 }
 
 Roller::colors Roller::getBottomLight() const {
-  if (bottomLight->getBrightness() > 0.02) return colors::none;
+  // if (t.repeat(300_ms))
+  //   std::cout << "Hue: " << bottomLight->getHue()
+  //             << ", Brightness: " << bottomLight->getBrightness()
+  //             << ", Proximity: " << bottomLight->getProximity() << std::endl;
+
+  if (bottomLight->getProximity() < 100) return colors::none;
 
   int hue = bottomLight->getHue();
   switch (hue) {
-    case 160 ... 250: return colors::blue;
+    case 160 ... 300: return colors::blue;
     case 0 ... 40:
-    case 340 ... 360: return colors::red;
+    case 350 ... 360: return colors::red;
     default: return colors::none;
   }
 }
@@ -140,12 +145,12 @@ void Roller::loop() {
           intakes->moveVoltage(12000);
         } else if (getTopLight() == colors::red) {
           // will shoot blue if in bot
-          topRoller->moveVoltage(0);
+          topRoller->moveVoltage(1500);
           // slow down
-          bottomRoller->moveVoltage(8000);
+          bottomRoller->moveVoltage(4000);
           intakes->moveVoltage(12000);
         } else {
-          topRoller->moveVoltage(8000);
+          topRoller->moveVoltage(4800);
           bottomRoller->moveVoltage(12000);
           intakes->moveVoltage(12000);
         }
@@ -194,9 +199,9 @@ void Roller::loop() {
 
       case rollerStates::timedShootPoop:
         topRoller->moveVoltage(12000);
-        bottomRoller->moveVoltage(-2000); // what happens if you full reverse
+        bottomRoller->moveVoltage(0);
         intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 0.3_s) {
+        if (macroTime.getDtFromMark() >= 0.4_s) {
           macroTime.placeMark();
           state = rollerStates::timedPoop;
           continue;
@@ -205,7 +210,7 @@ void Roller::loop() {
 
       case rollerStates::spacedShoot:
         topRoller->moveVoltage(12000);
-        bottomRoller->moveVoltage(2000);
+        bottomRoller->moveVoltage(1000);
         intakes->moveVoltage(macroIntakeVel);
         if (macroTime.getDtFromMark() >= 0.3_s) {
           macroTime.clearHardMark();
