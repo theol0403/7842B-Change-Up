@@ -25,12 +25,15 @@ void autonomous() {
   Robot::imu()->reset(90_deg);
 
   roll(intake);
-  move->strafe(Line({0_ft, 0_ft}, {-2_ft, 0_ft}), {}, {});
-  move->curveBall(Mesh({0_ft, 0_ft, 0_deg}, {1.5_ft, 4_ft, 60_deg}), 5_pct, {}, {});
+  move->strafe(Line({0_ft, 0_ft}, {-2_ft, 0_ft}));
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {1.5_ft, 4_ft, 60_deg}),
+              {.ball_seek = 0_pct, .goal_seek = 50_pct});
   drive(-2_ft);
 
   turn(-79_deg);
   roll(intake);
+
+  /* move->strafe(Line({0_ft, 0_ft}, {0_ft, 4_ft}), {.goal_seek = 40_pct}); */
 }
 
 // void cornerGoal() {

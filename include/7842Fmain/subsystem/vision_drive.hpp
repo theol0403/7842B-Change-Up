@@ -3,6 +3,14 @@
 
 namespace lib7842 {
 
+struct ChassisFlags {
+  Number start_v = 0_pct;
+  Number end_v = 0_pct;
+  Number top_v = 100_pct;
+  Number ball_seek {105_pct};
+  Number goal_seek {105_pct};
+};
+
 class XVisionGenerator {
 public:
   virtual ~XVisionGenerator() = default;
@@ -14,21 +22,11 @@ public:
     limits.a *= std::sqrt(2);
   };
 
-  void strafeBall(const Spline& spline, const Number& vision, const ProfileFlags& flags = {},
-                  const PiecewiseTrapezoidal::Markers& markers = {});
+  void strafe(const Spline& spline, const ChassisFlags& flags = {},
+              const PiecewiseTrapezoidal::Markers& markers = {});
 
-  void strafe(const Spline& spline, const ProfileFlags& flags = {},
-              const PiecewiseTrapezoidal::Markers& markers = {}) {
-    strafeBall(spline, 105_pct, flags, markers);
-  }
-
-  void curveBall(const Spline& spline, const Number& vision, const ProfileFlags& flags = {},
-                 const PiecewiseTrapezoidal::Markers& markers = {});
-
-  void curve(const Spline& spline, const ProfileFlags& flags = {},
-             const PiecewiseTrapezoidal::Markers& markers = {}) {
-    curveBall(spline, 105_pct, flags, markers);
-  }
+  void curve(const Spline& spline, const ChassisFlags& flags = {},
+             const PiecewiseTrapezoidal::Markers& markers = {});
 
 protected:
   std::shared_ptr<XDriveModel> model;

@@ -4,13 +4,13 @@
 
 namespace lib7842 {
 
-const QLength visionCruise = 1.5_ft;
+const QLength ballCruise = 1.5_ft;
+const QLength goalStop = 0.0_ft;
 
 const bool velocity = true;
 
-void XVisionGenerator::strafeBall(const Spline& spline, const Number& vision,
-                                  const ProfileFlags& flags,
-                                  const PiecewiseTrapezoidal::Markers& markers) {
+void XVisionGenerator::strafe(const Spline& spline, const ChassisFlags& flags,
+                              const PiecewiseTrapezoidal::Markers& markers) {
   if (velocity && flags.start_v == 0_pct) {
     model->getTopLeftMotor()->moveVelocity(0);
     model->getTopRightMotor()->moveVelocity(0);
@@ -19,14 +19,20 @@ void XVisionGenerator::strafeBall(const Spline& spline, const Number& vision,
     pros::delay(10);
   }
 
-  auto visionD = spline.length() * vision;
+  auto length = spline.length();
+  auto ballD = length * flags.ball_seek;
+  auto goalD = length * flags.goal_seek;
+
   auto runner = [&](double t, KinematicState& k) {
     // get the location on the spline
     auto pos = spline.calc(t);
     auto theta = pos.theta;
 
-    if (k.d > visionD && k.d < visionD + visionCruise) {
+    if (k.d > ballD && k.d < ballD + ballCruise) {
       theta -= Robot::vision()->getOffset() * 0.6_deg;
+    }
+    if (k.d > goalD && k.d < length - goalStop) {
+      theta -= Robot::vision()->getBlueOffset() * 0.6_deg;
     }
 
     // limit the velocity according to path angle.
@@ -55,12 +61,12 @@ void XVisionGenerator::strafeBall(const Spline& spline, const Number& vision,
     }
   };
 
-  Generator::generate(limits, runner, spline, dt, flags, markers);
+  Generator::generate(limits, runner, spline, dt, {flags.start_v, flags.end_v, flags.top_v},
+                      markers);
 }
 
-void XVisionGenerator::curveBall(const Spline& spline, const Number& vision,
-                                 const ProfileFlags& flags,
-                                 const PiecewiseTrapezoidal::Markers& markers) {
+void XVisionGenerator::curve(const Spline& spline, const ChassisFlags& flags,
+                             const PiecewiseTrapezoidal::Markers& markers) {
 
   if (velocity && flags.start_v == 0_pct) {
     model->getTopLeftMotor()->moveVelocity(0);
@@ -70,7 +76,10 @@ void XVisionGenerator::curveBall(const Spline& spline, const Number& vision,
     pros::delay(10);
   }
 
-  auto visionD = spline.length() * vision;
+  auto length = spline.length();
+  auto ballD = length * flags.ball_seek;
+  auto goalD = length * flags.goal_seek;
+
   auto runner = [&](double t, KinematicState& k) {
     // get the curvature along the path
     auto curvature = spline.curvature(t);
@@ -89,8 +98,9 @@ void XVisionGenerator::curveBall(const Spline& spline, const Number& vision,
     Number rightSpeed = Generator::toWheel(right, scales, gearset);
 
     double offset = 0;
-    if (k.d > visionD && k.d < visionD + visionCruise) {
-      offset = Robot::vision()->getOffset() * 0.003;
+    if (k.d > ballD && k.d < ballD + ballCruise) { offset += Robot::vision()->getOffset() * 0.005; }
+    if (k.d > goalD && k.d < length - goalStop) {
+      offset += Robot::vision()->getBlueOffset() * 0.005;
     }
 
     double leftMotor = leftSpeed.convert(number);
@@ -109,7 +119,8 @@ void XVisionGenerator::curveBall(const Spline& spline, const Number& vision,
     }
   };
 
-  Generator::generate(limits, runner, spline, dt, flags, markers);
+  Generator::generate(limits, runner, spline, dt, {flags.start_v, flags.end_v, flags.top_v},
+                      markers);
 }
 
 } // namespace lib7842

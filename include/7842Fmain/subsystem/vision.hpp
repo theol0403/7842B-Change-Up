@@ -12,12 +12,14 @@ public:
              const std::shared_ptr<GUI::VisionPage>& idrawer);
 
   double getOffset() const;
+  double getBlueOffset() const;
 
 protected:
   const std::shared_ptr<Vision::Vision> vision;
   const std::shared_ptr<GUI::VisionPage> drawer;
 
   double offset {0};
+  double blueOffset {0};
 
 protected:
   /**
