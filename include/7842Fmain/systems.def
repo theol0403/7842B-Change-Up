@@ -1,7 +1,6 @@
 ADD(model, XDriveModel)
 ADD(screen, GUI::Screen)
 ADD(roller, Roller)
-ADD(imu, IMU)
 ADD(vision, VisionTask)
-
 ADD(chassis, XVisionGenerator)
+ADD(imu, IMUTurn)

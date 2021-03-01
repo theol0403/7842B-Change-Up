@@ -14,11 +14,21 @@ public:
     limits.a *= std::sqrt(2);
   };
 
+  void strafeBall(const Spline& spline, const Number& vision, const ProfileFlags& flags = {},
+                  const PiecewiseTrapezoidal::Markers& markers = {});
+
   void strafe(const Spline& spline, const ProfileFlags& flags = {},
-              const PiecewiseTrapezoidal::Markers& markers = {}, const Number& vision = 105_pct);
+              const PiecewiseTrapezoidal::Markers& markers = {}) {
+    strafeBall(spline, 105_pct, flags, markers);
+  }
+
+  void curveBall(const Spline& spline, const Number& vision, const ProfileFlags& flags = {},
+                 const PiecewiseTrapezoidal::Markers& markers = {});
 
   void curve(const Spline& spline, const ProfileFlags& flags = {},
-             const PiecewiseTrapezoidal::Markers& markers = {}, const Number& vision = 105_pct);
+             const PiecewiseTrapezoidal::Markers& markers = {}) {
+    curveBall(spline, 105_pct, flags, markers);
+  }
 
 protected:
   std::shared_ptr<XDriveModel> model;

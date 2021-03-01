@@ -1,6 +1,7 @@
 #pragma once
 #include "main.h"
 
+#include "subsystem/imu.hpp"
 #include "subsystem/roller.hpp"
 #include "subsystem/vision.hpp"
 #include "subsystem/vision_drive.hpp"

@@ -30,7 +30,7 @@ void Robot::_initializeChassis() {
     200, 12000);
 
   ChassisScales scales({3.25_in, 16_in}, 360);
-  Limits limits(scales, 200_rpm, 0.9_s, 1, 1);
+  Limits limits(scales, 200_rpm, 0.8_s, 1, 1);
   _chassis = std::make_shared<XVisionGenerator>(_model, 200_rpm, scales, limits, 10_ms);
 }
 
@@ -53,8 +53,9 @@ void Robot::_initializeDevices() {
     std::make_shared<Motor>(-19), std::make_shared<OpticalSensor>(9),
     std::make_shared<OpticalSensor>(15), _screen->makePage<GUI::Graph>("Roller"));
 
-  _imu = std::make_shared<IMU>(4);
-  _imu->calibrate();
+  _imu = std::make_shared<IMUTurn>(std::make_shared<pros::Imu>(4), _model,
+                                   std::make_shared<IterativePosPIDController>(
+                                     0.03, 0.0025, 0.0003, 0, TimeUtilFactory().create()));
 }
 
 /***

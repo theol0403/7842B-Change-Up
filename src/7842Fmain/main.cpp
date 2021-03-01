@@ -1,5 +1,5 @@
 #include "main.h"
-#include "config.hpp"
+#include "auton.hpp"
 #include "driver.hpp"
 
 void disabled() {}
@@ -21,74 +21,20 @@ void opcontrol() {
   }
 }
 
-// #define asyncTask(x) pros::Task([&]() { x });
+void autonomous() {
+  Robot::imu()->reset(90_deg);
 
-// void drive(const QLength& m) {
-//   Robot::generator()->follow(Line({0_m, 0_m}, {0_m, abs(m)}), m >= 0_m);
-// }
+  roll(intake);
+  move->strafe(Line({0_ft, 0_ft}, {-2_ft, 0_ft}), {}, {});
+  move->curveBall(Mesh({0_ft, 0_ft, 0_deg}, {1.5_ft, 4_ft, 60_deg}), 5_pct, {}, {});
+  drive(-2_ft);
 
-// auto ballDistance = 0.7_ft;
-// auto ballVel = 0.3;
-
-// void driveBall(const QLength& m, double ballPct) {
-//   auto generator = Robot::generator();
-
-//   auto startDist = m * ballPct;
-//   if ((m - startDist - ballDistance) < 0_m)
-//     throw std::runtime_error("Distance not enough to accelerate " +
-//                              std::to_string(startDist.convert(foot)) + "_ft and seek ball");
-
-//   // std::cout << "Accel: " << startDist.convert(foot) << std::endl;
-
-//   generator->follow(Line({0_m, 0_m}, {0_m, startDist}), true, 0, ballVel);
-
-//   auto seek = Trapezoidal(generator->limits, ballDistance, ballVel, ballVel, ballVel + 0.01);
-//   std::cout << seek.time.convert(second) << std::endl;
-
-//   // std::cout << "Seek: " << seek.length.convert(foot) << std::endl;
-
-//   Timer t;
-//   while (t.getDtFromStart() < seek.time) {
-//     QAngularSpeed leftWheel = (seek.vel / (1_pi * generator->scales.wheelDiameter)) * 360_deg;
-//     QAngularSpeed rightWheel = (seek.vel / (1_pi * generator->scales.wheelDiameter)) * 360_deg;
-
-//     double offset = Robot::vision()->getOffset() * 0.0055;
-
-//     auto leftSpeed = (leftWheel / generator->gearset).convert(number) + offset;
-//     auto rightSpeed = (rightWheel / generator->gearset).convert(number) - offset;
-
-//     Robot::model()->tank(leftSpeed, rightSpeed);
-//     pros::delay(10);
-//   }
-//   Robot::model()->tank(0, 0);
-
-//   auto endDist = m - startDist - ballDistance;
-//   // std::cout << "Decel: " << endDist.convert(foot) << std::endl;
-//   generator->follow(Line({0_m, 0_m}, {0_m, endDist}), true, ballVel, 0);
-// }
-
-// IterativePosPIDController pid(0.028, 0, 0.0004, 0, TimeUtilFactory().create());
-
-// void turn(QAngle a) {
-//   QAngle error = 0_deg;
-//   pid.controllerSet(0);
-//   Timer t;
-//   Timer settleTime;
-//   do {
-//     error = util::rollAngle180(a - Robot::imu()->getRemapped(180, -180) * degree);
-//     double out = pid.step(-error.convert(degree));
-//     Robot::model()->tank(out, -out);
-//     if (abs(error) < 3_deg) settleTime.placeHardMark();
-//     pros::delay(10);
-//   } while ((abs(error) >= 3_deg && t.getDtFromStart() < 3_s) ||
-//            settleTime.getDtFromHardMark() < 0.15_s);
-//   Robot::model()->tank(0, 0);
-// }
-
-// #define roll(x) Robot::roller()->setNewState(rollerStates::x)
+  turn(-79_deg);
+  roll(intake);
+}
 
 // void cornerGoal() {
-//   roll(loading);
+//   roll(intake);
 //   pros::delay(200);
 //   roll(onWithoutPoop);
 //   pros::delay(700);
@@ -102,14 +48,14 @@ void opcontrol() {
 //   // deploy
 //   roll(deploy);
 //   pros::delay(500);
-//   roll(loading);
+//   roll(intake);
 
 //   drive(2.3_ft);
 //   turn(135_deg);
 //   drive(2.7_ft);
 
 //   // 1 shoot first corner goal
-//   roll(loading);
+//   roll(intake);
 //   pros::delay(200);
 //   roll(topOut);
 //   pros::delay(400);
@@ -122,7 +68,7 @@ void opcontrol() {
 //   pros::delay(200);
 //   // to ball
 //   turn(-79_deg);
-//   roll(loading);
+//   roll(intake);
 //   driveBall(3.2_ft, 0.6);
 
 //   // 2 to first edge goal
@@ -141,7 +87,7 @@ void opcontrol() {
 //   });
 //   // to ball
 //   turn(-92_deg);
-//   roll(loading);
+//   roll(intake);
 //   driveBall(3.45_ft, 0.2);
 
 //   // 3 to second corner goal
@@ -155,7 +101,7 @@ void opcontrol() {
 //   drive(-1_ft);
 //   // to ball
 //   turn(-9_deg);
-//   roll(loading);
+//   roll(intake);
 //   driveBall(3.85_ft, 0.6);
 
 //   // 4 to second edge goal
@@ -171,7 +117,7 @@ void opcontrol() {
 //   roll(purge);
 //   // to ball
 //   turn(-2_deg);
-//   roll(loading);
+//   roll(intake);
 //   driveBall(3.4_ft, 0.5);
 
 //   // 5 to third corner goal
@@ -187,7 +133,7 @@ void opcontrol() {
 //   roll(poop);
 //   // to ball
 //   turn(110_deg);
-//   roll(loading);
+//   roll(intake);
 //   driveBall(3.8_ft, 0.6);
 //   // 6 to third edge goal
 //   turn(-8_deg);
@@ -202,7 +148,7 @@ void opcontrol() {
 //   drive(-1_ft);
 //   // to ball
 //   turn(75_deg);
-//   roll(loading);
+//   roll(intake);
 //   driveBall(3.8_ft, 0.3);
 //   // 7 to fourth corner goal
 //   turn(37_deg);
@@ -215,7 +161,7 @@ void opcontrol() {
 //   drive(-1.5_ft);
 //   // to ball
 //   turn(170_deg);
-//   roll(loading);
+//   roll(intake);
 //   driveBall(3.8_ft, 0.6);
 
 //   // 8 to fourth edge goal
@@ -231,7 +177,7 @@ void opcontrol() {
 //   pros::delay(800);
 //   // to ball
 //   turn(-101_deg);
-//   roll(loading);
+//   roll(intake);
 //   driveBall(2_ft, 0.4);
 //   turn(-101_deg);
 //   Robot::model()->xArcade(1, 0, 0);
