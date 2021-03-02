@@ -119,7 +119,7 @@ void Roller::loop() {
         break;
 
       case rollerStates::out:
-        if (shouldPoop(-12000)) continue;
+        // if (shouldPoop(-12000)) continue;
         topRoller->moveVoltage(-12000);
         bottomRoller->moveVoltage(-12000);
         intakes->moveVoltage(-12000);
