@@ -6,12 +6,13 @@ namespace lib7842 {
 
 const QLength ballCruise = 2_ft;
 const QLength ballStop = 0.7_ft;
+const Number ballSpeed = 30_pct;
 const QLength goalStop = 0.8_ft;
 
 const bool velocity = true;
 
 void XVisionGenerator::strafe(const Spline& spline, const ChassisFlags& flags,
-                              const PiecewiseTrapezoidal::Markers& markers) {
+                              PiecewiseTrapezoidal::Markers&& markers) {
   if (velocity && flags.start_v == 0_pct) {
     model->getTopLeftMotor()->moveVelocity(0);
     model->getTopRightMotor()->moveVelocity(0);
@@ -64,12 +65,13 @@ void XVisionGenerator::strafe(const Spline& spline, const ChassisFlags& flags,
     }
   };
 
+  if (flags.ball_seek < 100_pct) markers.emplace_back(flags.ball_seek, ballSpeed);
   Generator::generate(limits, runner, spline, dt, {flags.start_v, flags.end_v, flags.top_v},
                       markers);
 }
 
 void XVisionGenerator::curve(const Spline& spline, const ChassisFlags& flags,
-                             const PiecewiseTrapezoidal::Markers& markers) {
+                             PiecewiseTrapezoidal::Markers&& markers) {
 
   if (velocity && flags.start_v == 0_pct) {
     model->getTopLeftMotor()->moveVelocity(0);
@@ -124,6 +126,7 @@ void XVisionGenerator::curve(const Spline& spline, const ChassisFlags& flags,
     }
   };
 
+  if (flags.ball_seek < 100_pct) markers.emplace_back(flags.ball_seek, ballSpeed);
   Generator::generate(limits, runner, spline, dt, {flags.start_v, flags.end_v, flags.top_v},
                       markers);
 }

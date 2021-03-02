@@ -23,10 +23,10 @@ public:
   };
 
   void strafe(const Spline& spline, const ChassisFlags& flags = {},
-              const PiecewiseTrapezoidal::Markers& markers = {});
+              PiecewiseTrapezoidal::Markers&& markers = {});
 
   void curve(const Spline& spline, const ChassisFlags& flags = {},
-             const PiecewiseTrapezoidal::Markers& markers = {});
+             PiecewiseTrapezoidal::Markers&& markers = {});
 
 protected:
   std::shared_ptr<XDriveModel> model;
