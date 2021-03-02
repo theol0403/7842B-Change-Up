@@ -37,9 +37,11 @@ public:
   colors getTopLight() const;
   colors getBottomLight() const;
 
-  bool shouldPoop(int shouldIntake = 12000);
-  bool shouldShootPoop(int shouldIntake = 12000);
-  bool shouldSpacedShoot(int shouldIntake = 12000);
+  bool shouldPoop();
+  bool shouldShootPoop();
+  bool shouldSpacedShoot();
+
+  int getIntake();
 
   void initialize() override;
   void loop() override;

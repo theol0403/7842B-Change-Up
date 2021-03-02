@@ -22,8 +22,8 @@ void Roller::initialize() {
   bottomLight->setLedPWM(100);
   // topRoller->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 
-  graph->withSeries("Bottom Sensor", LV_COLOR_BLACK, [&] { return bottomLight->getHue(); });
-  graph->withSeries("Top Sensor", LV_COLOR_WHITE, [&] { return topLight->getHue(); });
+  graph->withSeries("Bottom Sensor", LV_COLOR_BLACK, [&] { return bottomLight->getProximity(); });
+  graph->withSeries("Top Sensor", LV_COLOR_WHITE, [&] { return topLight->getProximity(); });
 }
 
 Timer t;
@@ -60,12 +60,12 @@ Roller::colors Roller::getBottomLight() const {
   }
 }
 
-bool Roller::shouldPoop(int shouldIntake) {
+bool Roller::shouldPoop() {
   // if blue ball in bottom but no red in top
   if (getTopLight() != colors::red && getBottomLight() == colors::blue) {
     macroTime.placeMark();
     macroReturnState = state;
-    macroIntakeVel = shouldIntake;
+    macroIntakeVel = getIntake();
     state = rollerStates::timedPoop;
     return true;
   }
@@ -73,35 +73,43 @@ bool Roller::shouldPoop(int shouldIntake) {
   if (getTopLight() == colors::blue) {
     macroTime.placeMark();
     macroReturnState = state;
-    macroIntakeVel = shouldIntake;
+    macroIntakeVel = getIntake();
     state = rollerStates::topPoop;
     return true;
   }
   return false;
 }
 
-bool Roller::shouldShootPoop(int shouldIntake) {
+bool Roller::shouldShootPoop() {
   // if red ball in top but blue in bottom
   if (getTopLight() == colors::red && getBottomLight() == colors::blue) {
     macroTime.placeMark();
     macroReturnState = state;
-    macroIntakeVel = shouldIntake;
+    macroIntakeVel = getIntake();
     state = rollerStates::timedShootPoop;
     return true;
   }
   return false;
 }
 
-bool Roller::shouldSpacedShoot(int shouldIntake) {
+bool Roller::shouldSpacedShoot() {
   // if double shot
   if (getTopLight() == colors::red && getBottomLight() == colors::red) {
     macroTime.placeMark();
     macroReturnState = state;
-    macroIntakeVel = shouldIntake;
+    macroIntakeVel = getIntake();
     state = rollerStates::spacedShoot;
     return true;
   }
   return false;
+}
+
+int Roller::getIntake() {
+  switch (state) {
+    case rollerStates::off:
+    case rollerStates::shoot: return 0;
+    default: return 12000;
+  }
 }
 
 void Roller::loop() {
@@ -112,7 +120,7 @@ void Roller::loop() {
     switch (state) {
 
       case rollerStates::off:
-        if (shouldPoop(0)) continue;
+        if (shouldPoop()) continue;
         topRoller->moveVoltage(0);
         bottomRoller->moveVoltage(0);
         intakes->moveVoltage(0);
@@ -126,10 +134,12 @@ void Roller::loop() {
         break;
 
       case rollerStates::on:
+      case rollerStates::shoot:
         if (shouldPoop()) continue;
         if (shouldShootPoop()) continue;
         [[fallthrough]];
       case rollerStates::onWithoutPoop:
+      case rollerStates::shootWithoutPoop:
         if (shouldSpacedShoot()) continue;
         topRoller->moveVoltage(12000);
         if (getBottomLight() == colors::blue) {
@@ -141,26 +151,7 @@ void Roller::loop() {
         } else {
           bottomRoller->moveVoltage(12000);
         }
-        intakes->moveVoltage(12000);
-        break;
-
-      case rollerStates::shoot:
-        if (shouldPoop(0)) continue;
-        if (shouldShootPoop(0)) continue;
-        [[fallthrough]];
-      case rollerStates::shootWithoutPoop:
-        if (shouldSpacedShoot(0)) continue;
-        topRoller->moveVoltage(12000);
-        if (getBottomLight() == colors::blue) {
-          if (getTopLight() != colors::red) {
-            bottomRoller->moveVoltage(-2000);
-          } else {
-            bottomRoller->moveVoltage(2000);
-          }
-        } else {
-          bottomRoller->moveVoltage(12000);
-        }
-        intakes->moveVoltage(0);
+        intakes->moveVoltage(getIntake());
         break;
 
       case rollerStates::intake:
