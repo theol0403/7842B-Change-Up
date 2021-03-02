@@ -29,7 +29,7 @@ void shootCorner() {
 
 void shootEdge() {
   roll(shootWithoutPoop);
-  pros::delay(300);
+  pros::delay(400);
   roll(intakeWithoutPoop);
 }
 
@@ -75,15 +75,15 @@ void autonomous() {
 
   // purge and turn
   pros::delay(200);
-  turn(-76_deg);
+  turn(-75_deg);
 
   // to ball
   roll(intake);
-  drive(3.8_ft, {.ball_seek = 50_pct});
+  drive(3.8_ft, {.ball_seek = 30_pct});
 
   // to goal
   turn(177_deg);
-  drive(3_ft, {.goal_seek = 70_pct});
+  drive(3_ft, {.goal_seek = 50_pct});
 
   // shoot
   shootEdge();
@@ -103,7 +103,7 @@ void autonomous() {
   // to ball and goal
   pros::delay(200);
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.5_ft, 6.2_ft, -80_deg}), {.ball_seek = 0_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.5_ft, 6.2_ft, -80_deg}), {.ball_seek = 10_pct});
 
   // shoot
   shootCorner();
@@ -124,7 +124,7 @@ void autonomous() {
 
   // to goal
   turn(-91_deg);
-  drive(4_ft, {.goal_seek = 60_pct});
+  drive(4_ft, {.goal_seek = 50_pct});
 
   // shoot
   roll(onWithoutPoop);
@@ -151,7 +151,7 @@ void autonomous() {
 
   // to goal
   turn(-58_deg);
-  drive(4.5_ft);
+  drive(4.5_ft, {.goal_seek = 50_pct});
 
   // shoot
   shootCorner();
@@ -163,22 +163,22 @@ void autonomous() {
 
   // purge and turn
   roll(poopIn);
-  turn(110_deg);
+  turn(113_deg);
 
   // to ball
   roll(intake);
   drive(5_ft, {.ball_seek = 60_pct});
 
   // to goal
-  turn(-8_deg);
-  drive(3.5_ft, {.goal_seek = 70_pct});
+  turn(-6_deg);
+  drive(3.5_ft, {.goal_seek = 50_pct});
 
   // shoot
   shootEdge();
   roll(poopIn);
 
   // back up
-  drive(-1_ft);
+  drive(-1.2_ft);
 
   /* --------------------------- fourth corner goal --------------------------- */
 
@@ -200,11 +200,11 @@ void autonomous() {
 
   // purge and turn
   roll(poopIn);
-  turn(170_deg);
+  turn(168_deg);
 
   // to ball
   roll(intake);
-  drive(3.8_ft, {.ball_seek = 60_pct});
+  drive(4.5_ft, {.ball_seek = 60_pct});
 
   // to goal
   turn(80_deg);

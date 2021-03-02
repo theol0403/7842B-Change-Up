@@ -29,10 +29,10 @@ void XVisionGenerator::strafe(const Spline& spline, const ChassisFlags& flags,
     auto theta = pos.theta;
 
     if (k.d > ballD && k.d < ballD + ballCruise) {
-      theta -= Robot::vision()->getOffset() * 0.6_deg;
+      theta -= Robot::vision()->getOffset() * 0.7_deg;
     }
     if (k.d > goalD && k.d < length - goalStop) {
-      theta -= Robot::vision()->getBlueOffset() * 0.6_deg;
+      theta -= Robot::vision()->getBlueOffset() * 0.7_deg;
     }
 
     // limit the velocity according to path angle.

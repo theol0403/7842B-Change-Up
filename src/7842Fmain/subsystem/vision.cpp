@@ -45,9 +45,9 @@ void VisionTask::loop() {
 }
 
 double VisionTask::getOffset() const {
-  return offset - 10;
+  return offset - 20;
 }
 
 double VisionTask::getBlueOffset() const {
-  return blueOffset - 10;
+  return blueOffset - 20;
 }
