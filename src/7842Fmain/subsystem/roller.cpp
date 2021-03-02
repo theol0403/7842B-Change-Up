@@ -157,8 +157,7 @@ void Roller::loop() {
           topRoller->moveVoltage(0);
           bottomRoller->moveVoltage(0);
           intakes->moveVoltage(12000);
-          // will shoot blue if in bot
-        } else if (getTopLight() == colors::red) {
+        } else if (getTopLight() != colors::none) {
           // balance between raising ball to prevent rubbing and bringing ball too high
           topRoller->moveVoltage(2000);
           // slow down
@@ -166,7 +165,7 @@ void Roller::loop() {
           intakes->moveVoltage(12000);
         } else {
           // balance between bringing ball too fast and accidentally pooping
-          topRoller->moveVoltage(5000);
+          topRoller->moveVoltage(4000);
           bottomRoller->moveVoltage(12000);
           intakes->moveVoltage(12000);
         }
@@ -206,7 +205,7 @@ void Roller::loop() {
         topRoller->moveVoltage(-12000);
         bottomRoller->moveVoltage(12000);
         intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 300_ms) {
+        if (macroTime.getDtFromMark() >= 200_ms) {
           macroTime.clearMark();
           state = macroReturnState;
           continue;
@@ -239,7 +238,7 @@ void Roller::loop() {
         topRoller->moveVoltage(-12000);
         bottomRoller->moveVoltage(-12000);
         intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 200_ms) {
+        if (macroTime.getDtFromMark() >= 150_ms) {
           macroTime.placeMark();
           state = rollerStates::timedPoop;
           continue;

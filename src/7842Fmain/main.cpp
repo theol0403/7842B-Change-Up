@@ -23,14 +23,14 @@ void opcontrol() {
 
 void shootCorner() {
   roll(onWithoutPoop);
-  pros::delay(500);
+  pros::delay(800);
   roll(intakeWithoutPoop);
-  pros::delay(500);
+  pros::delay(300);
 }
 
 void shootEdge() {
   roll(onWithoutPoop);
-  pros::delay(500);
+  pros::delay(400);
   roll(intakeWithoutPoop);
 }
 
@@ -47,37 +47,42 @@ void autonomous() {
 
   // deploy after strafing from edge
   asyncTask({
-    pros::delay(300);
+    pros::delay(400);
     roll(deploy);
+    pros::delay(200);
+    roll(intake);
   });
-  move->strafe(Line({0_ft, 0_ft}, {-1.5_ft, 0_ft}));
+  move->strafe(Line({0_ft, 0_ft}, {-1.3_ft, 0_ft}));
   roll(intake);
 
   /* ------------------------------- first corner goal ------------------------------- */
 
   // to ball and goal
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {1.5_ft, 4_ft, 60_deg}), {.ball_seek = 0_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 60_deg}), {.ball_seek = 0_pct});
 
   // shoot
   shootCorner();
 
   // back up
+  asyncTask({
+    pros::delay(200);
+    roll(purge);
+  });
   drive(-2.5_ft);
 
   /* ----------------------------- first edge goal ---------------------------- */
 
   // purge and turn
-  roll(purge);
   pros::delay(200);
-  turn(-79_deg);
+  turn(-76_deg);
 
   // to ball
   roll(intake);
-  drive(3.2_ft, {.ball_seek = 60_pct});
+  drive(3.7_ft, {.ball_seek = 50_pct, .goal_seek = 70_pct});
 
   // to goal
-  turn(172_deg);
-  drive(3.75_ft);
+  turn(179_deg);
+  drive(3_ft);
 
   // shoot
   shootEdge();
@@ -96,7 +101,7 @@ void autonomous() {
 
   // to ball and goal
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-1.5_ft, 5_ft, -60_deg}), {.ball_seek = 10_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.5_ft, 6_ft, -75_deg}), {.ball_seek = 0_pct});
 
   // shoot
   shootCorner();
@@ -108,15 +113,16 @@ void autonomous() {
 
   // purge and turn
   roll(purge);
-  turn(-9_deg);
+  pros::delay(300);
+  turn(21_deg);
 
   // to ball
   roll(intake);
-  drive(3.85_ft, {.ball_seek = 60_pct});
+  drive(5_ft, {.ball_seek = 60_pct, .goal_seek = 70_pct});
 
   // to goal
   turn(-94_deg);
-  drive(1.2_ft);
+  drive(4_ft);
 
   // shoot
   shootEdge();

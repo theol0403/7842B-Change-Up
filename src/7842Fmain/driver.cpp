@@ -30,7 +30,7 @@ void driverBaseControl() {
   double rightY = mAnalog(RIGHT_Y);
   double leftX = mAnalog(LEFT_X);
 
-  if (mDigital(L1)) { rightX += Robot::vision()->getOffset() * 0.02; }
+  if (mDigital(L1)) { rightX += Robot::vision()->getOffset() * 0.015; }
 
   Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
                           std::pow(rightY, 2) * util::sgn(rightY), std::pow(leftX, 3));
@@ -50,7 +50,7 @@ void driverBaseControl() {
 void driverDeviceControl() {
 
   // roller control
-  if (mDigital(R2) && mDigital(R1)) {
+  if ((mDigital(L1) || mDigital(R2)) && mDigital(R1)) {
     system(roller, on);
   } else if (mDigital(R1) && mDigital(A)) {
     system(roller, on);
@@ -66,7 +66,7 @@ void driverDeviceControl() {
     system(roller, poopOut);
   } else if (mDigital(DOWN)) {
     system(roller, topOut);
-  } else if (mDigital(R2)) {
+  } else if (mDigital(L1) || mDigital(R2)) {
     system(roller, intake);
   } else {
     system(roller, off);
