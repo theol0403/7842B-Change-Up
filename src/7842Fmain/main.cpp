@@ -23,7 +23,7 @@ void opcontrol() {
 
 void shootCorner() {
   roll(onWithoutPoop);
-  pros::delay(800);
+  pros::delay(400);
   roll(intakeWithoutPoop);
   pros::delay(300);
 }
@@ -46,14 +46,11 @@ void autonomous() {
   Robot::imu()->reset(90_deg);
 
   // deploy after strafing from edge
-  asyncTask({
-    pros::delay(400);
-    roll(deploy);
-    pros::delay(200);
-    roll(intake);
-  });
   move->strafe(Line({0_ft, 0_ft}, {-1.4_ft, 0_ft}));
-  roll(intake);
+
+  roll(deploy);
+  pros::delay(500);
+  roll(intakeWithoutPoop);
 
   /* ------------------------------- first corner goal ------------------------------- */
 
@@ -61,7 +58,10 @@ void autonomous() {
   move->curve(Mesh({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 60_deg}), {});
 
   // shoot
-  shootCorner();
+  roll(onWithoutPoop);
+  pros::delay(400);
+  roll(intakeWithoutPoop);
+  pros::delay(300);
 
   // back up
   asyncTask({

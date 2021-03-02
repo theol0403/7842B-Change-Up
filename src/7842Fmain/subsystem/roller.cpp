@@ -132,7 +132,11 @@ void Roller::loop() {
       case rollerStates::onWithoutPoop:
         if (shouldSpacedShoot()) continue;
         topRoller->moveVoltage(12000);
-        bottomRoller->moveVoltage(12000);
+        if (getBottomLight() == colors::blue) {
+          bottomRoller->moveVoltage(-2000);
+        } else {
+          bottomRoller->moveVoltage(12000);
+        }
         intakes->moveVoltage(12000);
         break;
 
@@ -142,8 +146,12 @@ void Roller::loop() {
         if (shouldSpacedShoot(0)) continue;
         [[fallthrough]];
       case rollerStates::shootWithoutPoop:
-        topRoller->moveVoltage(12000);
-        bottomRoller->moveVoltage(12000);
+        if (getBottomLight() == colors::blue) {
+          topRoller->moveVoltage(12000);
+          bottomRoller->moveVoltage(-2000);
+        } else {
+          bottomRoller->moveVoltage(12000);
+        }
         intakes->moveVoltage(0);
         break;
 
@@ -164,7 +172,11 @@ void Roller::loop() {
         } else {
           // balance between bringing ball too fast and accidentally pooping
           topRoller->moveVoltage(4000);
-          bottomRoller->moveVoltage(12000);
+          if (getBottomLight() == colors::blue) {
+            bottomRoller->moveVoltage(-2000);
+          } else {
+            bottomRoller->moveVoltage(12000);
+          }
           intakes->moveVoltage(12000);
         }
         break;
@@ -225,7 +237,7 @@ void Roller::loop() {
         topRoller->moveVoltage(12000);
         bottomRoller->moveVoltage(1000);
         intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 20_ms) {
+        if (macroTime.getDtFromMark() >= 100_ms) {
           macroTime.clearMark();
           state = macroReturnState;
           continue;
