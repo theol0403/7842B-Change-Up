@@ -132,8 +132,12 @@ void Roller::loop() {
       case rollerStates::onWithoutPoop:
         if (shouldSpacedShoot()) continue;
         topRoller->moveVoltage(12000);
-        if (getBottomLight() == colors::blue && getTopLight() != colors::red) {
-          bottomRoller->moveVoltage(-2000);
+        if (getBottomLight() == colors::blue) {
+          if (getTopLight() != colors::red) {
+            bottomRoller->moveVoltage(-2000);
+          } else {
+            bottomRoller->moveVoltage(2000);
+          }
         } else {
           bottomRoller->moveVoltage(12000);
         }
@@ -147,8 +151,12 @@ void Roller::loop() {
       case rollerStates::shootWithoutPoop:
         if (shouldSpacedShoot(0)) continue;
         topRoller->moveVoltage(12000);
-        if (getBottomLight() == colors::blue && getTopLight() != colors::red) {
-          bottomRoller->moveVoltage(-2000);
+        if (getBottomLight() == colors::blue) {
+          if (getTopLight() != colors::red) {
+            bottomRoller->moveVoltage(-2000);
+          } else {
+            bottomRoller->moveVoltage(2000);
+          }
         } else {
           bottomRoller->moveVoltage(12000);
         }
@@ -161,7 +169,11 @@ void Roller::loop() {
       case rollerStates::intakeWithoutPoop:
         if (getTopLight() != colors::none && getBottomLight() != colors::none) {
           topRoller->moveVoltage(0);
-          bottomRoller->moveVoltage(0);
+          if (getBottomLight() == colors::blue) {
+            bottomRoller->moveVoltage(-2000);
+          } else {
+            bottomRoller->moveVoltage(0);
+          }
           intakes->moveVoltage(12000);
         } else if (getTopLight() != colors::none) {
           // balance between raising ball to prevent rubbing and bringing ball too high
