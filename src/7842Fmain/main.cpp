@@ -52,13 +52,13 @@ void autonomous() {
     pros::delay(200);
     roll(intake);
   });
-  move->strafe(Line({0_ft, 0_ft}, {-1.3_ft, 0_ft}));
+  move->strafe(Line({0_ft, 0_ft}, {-1.4_ft, 0_ft}));
   roll(intake);
 
   /* ------------------------------- first corner goal ------------------------------- */
 
   // to ball and goal
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 60_deg}), {.ball_seek = 0_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {2_ft, 4_ft, 60_deg}), {});
 
   // shoot
   shootCorner();
@@ -74,11 +74,11 @@ void autonomous() {
 
   // purge and turn
   pros::delay(200);
-  turn(-76_deg);
+  turn(-75_deg);
 
   // to ball
   roll(intake);
-  drive(3.7_ft, {.ball_seek = 50_pct, .goal_seek = 70_pct});
+  drive(3.8_ft, {.ball_seek = 50_pct, .goal_seek = 60_pct});
 
   // to goal
   turn(179_deg);
@@ -88,7 +88,7 @@ void autonomous() {
   shootEdge();
 
   // back up
-  drive(-0.8_ft);
+  drive(-1_ft);
 
   /* --------------------------- second corner goal --------------------------- */
 
@@ -100,8 +100,9 @@ void autonomous() {
   turn(-92_deg);
 
   // to ball and goal
+  pros::delay(200);
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.5_ft, 6_ft, -75_deg}), {.ball_seek = 0_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.5_ft, 6_ft, -80_deg}), {.ball_seek = 10_pct});
 
   // shoot
   shootCorner();
@@ -113,7 +114,7 @@ void autonomous() {
 
   // purge and turn
   roll(purge);
-  pros::delay(300);
+  pros::delay(600);
   turn(21_deg);
 
   // to ball
@@ -125,7 +126,9 @@ void autonomous() {
   drive(4_ft);
 
   // shoot
-  shootEdge();
+  roll(shootWithoutPoop);
+  pros::delay(800);
+  roll(intakeWithoutPoop);
 
   // back up
   drive(-1.6_ft);
@@ -141,11 +144,11 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(3.4_ft, {.ball_seek = 50_pct});
+  drive(4.5_ft, {.ball_seek = 50_pct});
 
   // to goal
   turn(-56_deg);
-  drive(3.6_ft);
+  drive(4.5_ft);
 
   // shoot
   shootCorner();
@@ -161,7 +164,7 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(3.8_ft, {.ball_seek = 60_pct});
+  drive(5_ft, {.ball_seek = 60_pct});
 
   // to goal
   turn(-8_deg);
