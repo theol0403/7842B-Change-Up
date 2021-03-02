@@ -124,14 +124,14 @@ void autonomous() {
 
   // to goal
   turn(-91_deg);
-  drive(4_ft, {.goal_seek = 50_pct});
+  drive(3.8_ft, {.goal_seek = 50_pct});
 
   // shoot
   roll(onWithoutPoop);
-  pros::delay(200);
+  pros::delay(100);
   roll(shootWithoutPoop);
-  pros::delay(600);
-  roll(intakeWithoutPoop);
+  pros::delay(800);
+  roll(out);
 
   // back up
   drive(-1.6_ft);
@@ -143,14 +143,14 @@ void autonomous() {
     pros::delay(200);
     roll(poopIn);
   });
-  turn(-3_deg);
+  turn(-2_deg);
 
   // to ball
   roll(intake);
   drive(4.5_ft, {.ball_seek = 50_pct});
 
   // to goal
-  turn(-58_deg);
+  turn(-60_deg);
   drive(4.5_ft, {.goal_seek = 50_pct});
 
   // shoot
@@ -162,20 +162,20 @@ void autonomous() {
   /* ----------------------------- third edge goal ---------------------------- */
 
   // purge and turn
-  roll(poopIn);
+  roll(out);
   turn(113_deg);
 
   // to ball
   roll(intake);
-  drive(5_ft, {.ball_seek = 60_pct});
+  drive(5.2_ft, {.ball_seek = 60_pct});
 
   // to goal
-  turn(-6_deg);
+  turn(-5_deg);
   drive(3.5_ft, {.goal_seek = 50_pct});
 
   // shoot
   shootEdge();
-  roll(poopIn);
+  roll(out);
 
   // back up
   drive(-1.2_ft);
@@ -188,7 +188,7 @@ void autonomous() {
 
   // to ball and goal
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-1.5_ft, 6_ft, -60_deg}), {.ball_seek = 20_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-2_ft, 6_ft, -75_deg}), {.ball_seek = 20_pct});
 
   // shoot
   shootCorner();
@@ -199,12 +199,13 @@ void autonomous() {
   /* ---------------------------- fourth edge goal ---------------------------- */
 
   // purge and turn
-  roll(poopIn);
-  turn(168_deg);
+  roll(out);
+  pros::delay(200);
+  turn(173_deg);
 
   // to ball
   roll(intake);
-  drive(4.5_ft, {.ball_seek = 60_pct});
+  drive(4_ft, {.ball_seek = 60_pct});
 
   // to goal
   turn(80_deg);
@@ -214,14 +215,14 @@ void autonomous() {
   shootEdge();
 
   // back up
-  drive(-0.5_ft);
+  drive(-0.8_ft);
 
   /* ------------------------------- center goal ------------------------------ */
 
   // purge and turn
-  roll(purge);
-  pros::delay(800);
-  turn(-101_deg);
+  roll(out);
+  pros::delay(400);
+  turn(-104_deg);
 
   // to ball
   roll(intake);
@@ -229,15 +230,15 @@ void autonomous() {
 
   // recenter
   turn(-101_deg);
-  align(1_s);
+  align(0.3_s);
 
   // move to poke
-  move->strafe(Line({0_ft, 0_ft}, {0.6_ft, 0_ft}));
-  drive(2_ft);
+  move->strafe(Line({0_ft, 0_ft}, {0.4_ft, 0_ft}));
+  drive(1.5_ft);
 
   // back up and allign
-  drive(-1.5_ft);
-  align(1_s);
+  drive(-1_ft);
+  align(0.4_s);
 
   // shoot
   drive(2_ft);

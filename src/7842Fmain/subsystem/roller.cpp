@@ -173,7 +173,7 @@ void Roller::loop() {
           // balance between bringing ball too fast and accidentally pooping
           topRoller->moveVoltage(4000);
           if (getBottomLight() == colors::blue) {
-            bottomRoller->moveVoltage(-2000);
+            bottomRoller->moveVoltage(-3000);
           } else {
             bottomRoller->moveVoltage(12000);
           }

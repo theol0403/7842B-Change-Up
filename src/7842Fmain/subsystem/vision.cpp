@@ -25,9 +25,10 @@ void VisionTask::loop() {
   Rate r;
   while (true) {
     auto container = vision->getAll().sort(Vision::Query::area);
-    container.remove(Vision::Query::area, std::less<double>(), 2000);
+    container.remove(Vision::Query::area, std::less<double>(), 3000)
+      .remove(Vision::Query::area, std::greater<double>(), 35000);
 
-    // std::cout << "Area: " << container.get(0, Vision::Query::area) << std::endl;
+    /* std::cout << "Area: " << container.get(0, Vision::Query::area) << std::endl; */
 
     drawer->clear();
     drawer->makeLayer().withColor(LV_COLOR_RED, RED).withColor(LV_COLOR_BLUE, BLUE).draw(container);
@@ -45,9 +46,9 @@ void VisionTask::loop() {
 }
 
 double VisionTask::getOffset() const {
-  return offset - 20;
+  return offset;
 }
 
 double VisionTask::getBlueOffset() const {
-  return blueOffset - 20;
+  return blueOffset;
 }
