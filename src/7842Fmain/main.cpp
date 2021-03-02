@@ -101,13 +101,17 @@ void autonomous() {
   shootCorner();
 
   // back up
+  asyncTask({
+    pros::delay(200);
+    roll(out);
+  });
   drive(-1_ft);
 
   /* ---------------------------- second edge goal ---------------------------- */
 
   // purge and turn
   roll(out);
-  pros::delay(500);
+  pros::delay(200);
   turn(21_deg);
 
   // to ball
@@ -123,18 +127,18 @@ void autonomous() {
   pros::delay(400);
   roll(shootWithoutPoop);
   pros::delay(500);
-  roll(out);
 
   // back up
+  asyncTask({
+    pros::delay(200);
+    roll(out);
+  });
   drive(-1.6_ft);
 
   /* ---------------------------- third corner goal --------------------------- */
 
   // purge and turn
-  asyncTask({
-    pros::delay(200);
-    roll(poopIn);
-  });
+  roll(poopIn);
   turn(-2_deg);
 
   // to ball
@@ -149,13 +153,17 @@ void autonomous() {
   shootCorner();
 
   // back up
+  asyncTask({
+    pros::delay(200);
+    roll(out);
+  });
   drive(-1.3_ft);
 
   /* ----------------------------- third edge goal ---------------------------- */
 
   // purge and turn
   roll(out);
-  pros::delay(500);
+  pros::delay(200);
   turn(115_deg);
 
   // to ball
@@ -168,9 +176,12 @@ void autonomous() {
 
   // shoot
   shootEdge();
-  roll(out);
 
   // back up
+  asyncTask({
+    pros::delay(200);
+    roll(out);
+  });
   drive(-1.1_ft);
 
   /* --------------------------- fourth corner goal --------------------------- */
@@ -187,13 +198,17 @@ void autonomous() {
   shootCorner();
 
   // back up
+  asyncTask({
+    pros::delay(200);
+    roll(out);
+  });
   drive(-1.8_ft);
 
   /* ---------------------------- fourth edge goal ---------------------------- */
 
   // purge and turn
   roll(out);
-  pros::delay(400);
+  pros::delay(200);
   turn(173_deg);
 
   // to ball
@@ -208,13 +223,17 @@ void autonomous() {
   shootEdge();
 
   // back up
+  asyncTask({
+    pros::delay(200);
+    roll(out);
+  });
   drive(-0.8_ft);
 
   /* ------------------------------- center goal ------------------------------ */
 
   // purge and turn
   roll(out);
-  pros::delay(400);
+  pros::delay(200);
   turn(-100_deg);
 
   // to ball
