@@ -132,7 +132,7 @@ void Roller::loop() {
       case rollerStates::onWithoutPoop:
         if (shouldSpacedShoot()) continue;
         topRoller->moveVoltage(12000);
-        if (getBottomLight() == colors::blue) {
+        if (getBottomLight() == colors::blue && getTopLight() != colors::red) {
           bottomRoller->moveVoltage(-2000);
         } else {
           bottomRoller->moveVoltage(12000);
@@ -143,11 +143,11 @@ void Roller::loop() {
       case rollerStates::shoot:
         if (shouldPoop(0)) continue;
         if (shouldShootPoop(0)) continue;
-        if (shouldSpacedShoot(0)) continue;
         [[fallthrough]];
       case rollerStates::shootWithoutPoop:
-        if (getBottomLight() == colors::blue) {
-          topRoller->moveVoltage(12000);
+        if (shouldSpacedShoot(0)) continue;
+        topRoller->moveVoltage(12000);
+        if (getBottomLight() == colors::blue && getTopLight() != colors::red) {
           bottomRoller->moveVoltage(-2000);
         } else {
           bottomRoller->moveVoltage(12000);
@@ -237,7 +237,7 @@ void Roller::loop() {
         topRoller->moveVoltage(12000);
         bottomRoller->moveVoltage(1000);
         intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 100_ms) {
+        if (macroTime.getDtFromMark() >= 10_ms) {
           macroTime.clearMark();
           state = macroReturnState;
           continue;
