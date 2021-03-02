@@ -116,13 +116,13 @@ void autonomous() {
 
   // to goal
   turn(-92_deg);
-  drive(3.8_ft, {.goal_seek = 50_pct});
+  drive(3.5_ft, {.goal_seek = 50_pct});
 
   // shoot
   roll(onWithoutPoop);
   pros::delay(400);
   roll(shootWithoutPoop);
-  pros::delay(400);
+  pros::delay(500);
   roll(out);
 
   // back up
@@ -139,11 +139,11 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(4.5_ft, {.ball_seek = 50_pct});
+  drive(4.3_ft, {.ball_seek = 50_pct});
 
   // to goal
-  turn(-60_deg);
-  drive(4.5_ft, {.goal_seek = 50_pct});
+  turn(-61_deg);
+  drive(3.5_ft, {.goal_seek = 50_pct});
 
   // shoot
   shootCorner();

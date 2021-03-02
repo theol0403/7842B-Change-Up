@@ -5,8 +5,8 @@
 namespace lib7842 {
 
 const QLength ballCruise = 2_ft;
-const QLength ballStop = 0.5_ft;
-const QLength goalStop = 0.5_ft;
+const QLength ballStop = 0.7_ft;
+const QLength goalStop = 0.8_ft;
 
 const bool velocity = true;
 
