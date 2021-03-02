@@ -29,12 +29,14 @@ void XVisionGenerator::strafe(const Spline& spline, const ChassisFlags& flags,
     auto pos = spline.calc(t);
     auto theta = pos.theta;
 
+    QAngle offset = 0_deg;
     if (k.d > ballD && k.d < ballD + ballCruise && k.d < length - ballStop) {
-      theta -= Robot::vision()->getOffset() * 0.7_deg;
+      offset += Robot::vision()->getOffset() * 0.7_deg;
     }
     if (k.d > goalD && k.d < length - goalStop) {
-      theta -= Robot::vision()->getBlueOffset() * 0.7_deg;
+      offset += Robot::vision()->getBlueOffset() * 0.7_deg;
     }
+    theta -= std::clamp(offset, -50_deg, 50_deg);
 
     // limit the velocity according to path angle.
     // since this is passed by reference it will affect the generator code
