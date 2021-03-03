@@ -86,7 +86,7 @@ void autonomous() {
   shootEdge();
 
   // back up
-  drive(-0.8_ft);
+  drive(-0.85_ft);
 
   /* --------------------------- second corner goal --------------------------- */
 
@@ -106,18 +106,18 @@ void autonomous() {
   shootCorner();
 
   // back up
-  drive(-1_ft);
+  drive(-3_ft);
 
   /* ---------------------------- second edge goal ---------------------------- */
 
   // purge and turn
   roll(out);
   pros::delay(200);
-  turn(21_deg);
+  turn(19_deg);
 
   // to ball
   roll(intake);
-  drive(5.2_ft, {.ball_seek = 60_pct});
+  drive(3.1_ft, {.ball_seek = 60_pct});
 
   // to goal
   turn(-92_deg);
@@ -127,8 +127,8 @@ void autonomous() {
   roll(topOut);
   pros::delay(400);
   roll(shootWithoutPoop);
-  pros::delay(400);
-  roll(out);
+  pros::delay(300);
+  roll(intakeWithoutPoop);
 
   // back up
   drive(-1.6_ft);
@@ -136,7 +136,10 @@ void autonomous() {
   /* ---------------------------- third corner goal --------------------------- */
 
   // purge and turn
-  roll(poopIn);
+  asyncTask({
+    pros::delay(400);
+    roll(poopIn);
+  });
   turn(-2_deg);
 
   // to ball
@@ -158,11 +161,11 @@ void autonomous() {
   // purge and turn
   roll(out);
   pros::delay(200);
-  turn(114_deg);
+  turn(113_deg);
 
   // to ball
   roll(intake);
-  drive(5_ft, {.ball_seek = 60_pct});
+  drive(4.9_ft, {.ball_seek = 60_pct});
 
   // to goal
   turn(-5_deg);
@@ -172,16 +175,15 @@ void autonomous() {
   shootEdge();
 
   // back up
-  asyncTask({
-    pros::delay(200);
-    roll(out);
-  });
   drive(-1.2_ft);
 
   /* --------------------------- fourth corner goal --------------------------- */
 
   // purge and turn
-  roll(poopIn);
+  asyncTask({
+    pros::delay(400);
+    roll(poopIn);
+  });
   turn(77_deg);
 
   // to ball and goal
@@ -199,11 +201,11 @@ void autonomous() {
   // purge and turn
   roll(out);
   pros::delay(200);
-  turn(173_deg);
+  turn(172_deg);
 
   // to ball
   roll(intake);
-  drive(4_ft, {.ball_seek = 60_pct});
+  drive(4.2_ft, {.ball_seek = 60_pct});
 
   // to goal
   turn(80_deg);
@@ -235,22 +237,14 @@ void autonomous() {
   Timer t;
   t.placeMark();
   while (t.getDtFromMark() < 0.3_s) {
-    Robot::model()->xArcade((Robot::vision()->getBlueOffset() + 60) * 0.02, 0, 0);
+    Robot::model()->xArcade((Robot::vision()->getBlueOffset() + 60) * 0.022, 0, 0);
   }
 
   // move to poke
   drive(2.5_ft);
+  drive(-0.8_ft);
+  drive(1.8_ft);
   roll(on);
   pros::delay(600);
-  drive(-2_ft);
-
-  // recenter
-  t.placeMark();
-  while (t.getDtFromMark() < 0.3_s) {
-    Robot::model()->xArcade((Robot::vision()->getBlueOffset() + 30) * 0.02, 0, 0);
-  }
-
-  // move to poke
-  drive(1.5_ft);
   drive(-2_ft);
 }

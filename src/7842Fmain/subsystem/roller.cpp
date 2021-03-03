@@ -204,7 +204,7 @@ void Roller::loop() {
 
       case rollerStates::topOut:
         topRoller->moveVoltage(12000);
-        bottomRoller->moveVoltage(5000);
+        bottomRoller->moveVoltage(4000);
         intakes->moveVoltage(0);
         break;
 
