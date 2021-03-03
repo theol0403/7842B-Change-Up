@@ -100,7 +100,7 @@ void autonomous() {
   // to ball and goal
   pros::delay(200);
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.5_ft, 6_ft, -85_deg}), {.ball_seek = 10_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.5_ft, 5.7_ft, -85_deg}), {.ball_seek = 10_pct});
 
   // shoot
   shootCorner();
@@ -113,11 +113,11 @@ void autonomous() {
   // purge and turn
   roll(out);
   pros::delay(200);
-  turn(19_deg);
+  turn(18_deg);
 
   // to ball
   roll(intake);
-  drive(3.1_ft, {.ball_seek = 60_pct});
+  drive(3.1_ft, {.ball_seek = 40_pct});
 
   // to goal
   turn(-92_deg);
@@ -144,7 +144,7 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(4.4_ft, {.ball_seek = 50_pct});
+  drive(4.3_ft, {.ball_seek = 50_pct});
 
   // to goal
   turn(-61_deg);
@@ -154,18 +154,18 @@ void autonomous() {
   shootCorner();
 
   // back up
-  drive(-1.3_ft);
+  drive(-2_ft);
 
   /* ----------------------------- third edge goal ---------------------------- */
 
   // purge and turn
   roll(out);
   pros::delay(200);
-  turn(113_deg);
+  turn(112_deg);
 
   // to ball
   roll(intake);
-  drive(4.9_ft, {.ball_seek = 60_pct});
+  drive(4.2_ft, {.ball_seek = 60_pct});
 
   // to goal
   turn(-5_deg);
@@ -188,7 +188,7 @@ void autonomous() {
 
   // to ball and goal
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3_ft, 6_ft, -80_deg}), {.ball_seek = 20_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3_ft, 6.2_ft, -80_deg}), {.ball_seek = 20_pct});
 
   // shoot
   shootCorner();
@@ -201,7 +201,7 @@ void autonomous() {
   // purge and turn
   roll(out);
   pros::delay(200);
-  turn(172_deg);
+  turn(171_deg);
 
   // to ball
   roll(intake);
@@ -216,7 +216,7 @@ void autonomous() {
 
   // back up
   asyncTask({
-    pros::delay(200);
+    pros::delay(300);
     roll(out);
   });
   drive(-0.8_ft);
@@ -230,7 +230,7 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(2_ft, {.ball_seek = 0_pct});
+  drive(1.5_ft, {.ball_seek = 0_pct});
 
   // recenter
   turn(-101_deg);
