@@ -26,6 +26,10 @@ void shootCorner() {
   pros::delay(400);
   roll(intakeWithoutPoop);
   pros::delay(200);
+  asyncTask({
+    pros::delay(400);
+    roll(out);
+  });
 }
 
 void shootEdge() {
@@ -35,6 +39,7 @@ void shootEdge() {
 }
 
 void autonomous() {
+
   // start facing right
   Robot::imu()->reset(90_deg);
 
@@ -51,12 +56,11 @@ void autonomous() {
   move->curve(Mesh({0_ft, 0_ft, 0_deg}, {1.9_ft, 3.8_ft, 70_deg}), {});
 
   // shoot
+  roll(topOut);
+  pros::delay(400);
   roll(onWithoutPoop);
-  pros::delay(100);
-  roll(shootWithoutPoop);
-  pros::delay(500);
-  roll(onWithoutPoop);
-  pros::delay(500);
+  pros::delay(400);
+  roll(intakeWithoutPoop);
 
   // back up
   asyncTask({
@@ -102,10 +106,6 @@ void autonomous() {
   shootCorner();
 
   // back up
-  asyncTask({
-    pros::delay(200);
-    roll(out);
-  });
   drive(-1_ft);
 
   /* ---------------------------- second edge goal ---------------------------- */
@@ -124,17 +124,13 @@ void autonomous() {
   drive(3.5_ft, {.goal_seek = 50_pct});
 
   // shoot
-  roll(onWithoutPoop);
-  pros::delay(100);
+  roll(topOut);
+  pros::delay(400);
   roll(shootWithoutPoop);
-  pros::delay(500);
-  roll(intakeWithoutPoop);
+  pros::delay(400);
+  roll(out);
 
   // back up
-  asyncTask({
-    pros::delay(200);
-    roll(out);
-  });
   drive(-1.6_ft);
 
   /* ---------------------------- third corner goal --------------------------- */
@@ -155,10 +151,6 @@ void autonomous() {
   shootCorner();
 
   // back up
-  asyncTask({
-    pros::delay(200);
-    roll(out);
-  });
   drive(-1.3_ft);
 
   /* ----------------------------- third edge goal ---------------------------- */
@@ -200,10 +192,6 @@ void autonomous() {
   shootCorner();
 
   // back up
-  asyncTask({
-    pros::delay(200);
-    roll(out);
-  });
   drive(-1.6_ft);
 
   /* ---------------------------- fourth edge goal ---------------------------- */
