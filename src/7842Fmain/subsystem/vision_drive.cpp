@@ -32,10 +32,10 @@ void XVisionGenerator::strafe(const Spline& spline, const ChassisFlags& flags,
 
     QAngle offset = 0_deg;
     if (k.d > ballD && k.d < ballD + ballCruise && k.d < length - ballStop) {
-      offset += Robot::vision()->getOffset() * 0.7_deg;
+      offset += Robot::vision()->getOffset() * 0.65_deg;
     }
     if (k.d > goalD && k.d < length - goalStop) {
-      offset += Robot::vision()->getBlueOffset() * 0.7_deg;
+      offset += Robot::vision()->getBlueOffset() * 0.65_deg;
     }
     theta -= std::clamp(offset, -50_deg, 50_deg);
 
@@ -65,7 +65,7 @@ void XVisionGenerator::strafe(const Spline& spline, const ChassisFlags& flags,
     }
   };
 
-  if (flags.ball_seek < 100_pct) markers.emplace_back(flags.ball_seek, ballSpeed);
+  // if (flags.ball_seek < 100_pct) markers.emplace_back(flags.ball_seek, ballSpeed);
   Generator::generate(limits, runner, spline, dt, {flags.start_v, flags.end_v, flags.top_v},
                       markers);
 }
@@ -126,7 +126,7 @@ void XVisionGenerator::curve(const Spline& spline, const ChassisFlags& flags,
     }
   };
 
-  if (flags.ball_seek < 100_pct) markers.emplace_back(flags.ball_seek, ballSpeed);
+  // if (flags.ball_seek < 100_pct) markers.emplace_back(flags.ball_seek, ballSpeed);
   Generator::generate(limits, runner, spline, dt, {flags.start_v, flags.end_v, flags.top_v},
                       markers);
 }

@@ -22,9 +22,10 @@ void opcontrol() {
 }
 
 void shootCorner() {
-  roll(shootWithoutPoop);
-  pros::delay(600);
+  roll(topOut);
+  pros::delay(400);
   roll(intakeWithoutPoop);
+  pros::delay(200);
 }
 
 void shootEdge() {
@@ -47,15 +48,15 @@ void autonomous() {
   /* ------------------------------- first corner goal ------------------------------- */
 
   // to ball and goal
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {1.9_ft, 3.8_ft, 60_deg}), {});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {1.9_ft, 3.8_ft, 70_deg}), {});
 
   // shoot
   roll(onWithoutPoop);
   pros::delay(100);
   roll(shootWithoutPoop);
-  pros::delay(800);
+  pros::delay(500);
   roll(onWithoutPoop);
-  pros::delay(200);
+  pros::delay(500);
 
   // back up
   asyncTask({
@@ -71,7 +72,7 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(3.7_ft, {.ball_seek = 30_pct});
+  drive(3.75_ft, {.ball_seek = 30_pct});
 
   // to goal
   turn(177_deg);
@@ -87,7 +88,7 @@ void autonomous() {
 
   // purge and turn
   asyncTask({
-    pros::delay(200);
+    pros::delay(400);
     roll(poopIn);
   });
   turn(-92_deg);
@@ -95,7 +96,7 @@ void autonomous() {
   // to ball and goal
   pros::delay(200);
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.5_ft, 6_ft, -80_deg}), {.ball_seek = 10_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.5_ft, 6_ft, -85_deg}), {.ball_seek = 10_pct});
 
   // shoot
   shootCorner();
@@ -124,9 +125,10 @@ void autonomous() {
 
   // shoot
   roll(onWithoutPoop);
-  pros::delay(400);
+  pros::delay(100);
   roll(shootWithoutPoop);
   pros::delay(500);
+  roll(intakeWithoutPoop);
 
   // back up
   asyncTask({
@@ -143,7 +145,7 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(4.3_ft, {.ball_seek = 50_pct});
+  drive(4.4_ft, {.ball_seek = 50_pct});
 
   // to goal
   turn(-61_deg);
@@ -164,11 +166,11 @@ void autonomous() {
   // purge and turn
   roll(out);
   pros::delay(200);
-  turn(115_deg);
+  turn(114_deg);
 
   // to ball
   roll(intake);
-  drive(5.2_ft, {.ball_seek = 60_pct});
+  drive(5_ft, {.ball_seek = 60_pct});
 
   // to goal
   turn(-5_deg);
@@ -182,7 +184,7 @@ void autonomous() {
     pros::delay(200);
     roll(out);
   });
-  drive(-1.1_ft);
+  drive(-1.2_ft);
 
   /* --------------------------- fourth corner goal --------------------------- */
 
@@ -192,7 +194,7 @@ void autonomous() {
 
   // to ball and goal
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-2_ft, 6_ft, -80_deg}), {.ball_seek = 20_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3_ft, 6_ft, -80_deg}), {.ball_seek = 20_pct});
 
   // shoot
   shootCorner();
@@ -202,7 +204,7 @@ void autonomous() {
     pros::delay(200);
     roll(out);
   });
-  drive(-1.8_ft);
+  drive(-1.6_ft);
 
   /* ---------------------------- fourth edge goal ---------------------------- */
 
@@ -213,7 +215,7 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(3.9_ft, {.ball_seek = 60_pct});
+  drive(4_ft, {.ball_seek = 60_pct});
 
   // to goal
   turn(80_deg);
@@ -245,11 +247,11 @@ void autonomous() {
   Timer t;
   t.placeMark();
   while (t.getDtFromMark() < 0.3_s) {
-    Robot::model()->xArcade((Robot::vision()->getBlueOffset() + 30) * 0.02, 0, 0);
+    Robot::model()->xArcade((Robot::vision()->getBlueOffset() + 60) * 0.02, 0, 0);
   }
 
   // move to poke
-  drive(2_ft);
+  drive(2.5_ft);
   roll(on);
   pros::delay(600);
   drive(-2_ft);
