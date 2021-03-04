@@ -50,9 +50,7 @@ void driverBaseControl() {
 void driverDeviceControl() {
 
   // roller control
-  if (mDigital(L2)) {
-    system(roller, intakeWithoutPoop);
-  } else if ((mDigital(L1) || mDigital(R2)) && mDigital(R1)) {
+  if ((mDigital(L1) || mDigital(R2)) && mDigital(R1)) {
     system(roller, on);
   } else if (mDigital(R1) && mDigital(A)) {
     system(roller, on);
