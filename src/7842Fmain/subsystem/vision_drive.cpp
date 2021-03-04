@@ -7,7 +7,7 @@ namespace lib7842 {
 const QLength ballCruise = 2_ft;
 const QLength ballStop = 0.7_ft;
 const Number ballSpeed = 30_pct;
-const QLength goalStop = 1_ft;
+const QLength goalStop = 1.5_ft;
 
 const bool velocity = true;
 
@@ -32,10 +32,10 @@ void XVisionGenerator::strafe(const Spline& spline, const ChassisFlags& flags,
 
     QAngle offset = 0_deg;
     if (k.d > ballD && k.d < ballD + ballCruise && k.d < length - ballStop) {
-      offset += Robot::vision()->getOffset() * 0.65_deg;
+      offset += Robot::vision()->getOffset() * 0.6_deg;
     }
     if (k.d > goalD && k.d < length - goalStop) {
-      offset += Robot::vision()->getBlueOffset() * 0.65_deg;
+      offset += Robot::vision()->getBlueOffset() * 0.5_deg;
     }
     theta -= std::clamp(offset, -50_deg, 50_deg);
 

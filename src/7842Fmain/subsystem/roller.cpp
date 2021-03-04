@@ -121,6 +121,7 @@ void Roller::loop() {
 
       case rollerStates::off:
         if (shouldPoop()) continue;
+      case rollerStates::offWithoutPoop:
         topRoller->moveVoltage(0);
         bottomRoller->moveVoltage(0);
         intakes->moveVoltage(0);

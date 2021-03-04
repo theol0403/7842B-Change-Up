@@ -4,6 +4,7 @@
 
 enum class rollerStates {
   off, // all off
+  offWithoutPoop, // all off
   out, // all backwards
   on, // all on
   onWithoutPoop, // all on without poop
