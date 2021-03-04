@@ -100,7 +100,7 @@ void autonomous() {
   // to ball and goal
   pros::delay(200);
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.5_ft, 5.7_ft, -85_deg}), {.ball_seek = 10_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.4_ft, 5.6_ft, -85_deg}), {.ball_seek = 10_pct});
 
   // shoot
   shootCorner();
@@ -113,7 +113,7 @@ void autonomous() {
   // purge and turn
   roll(out);
   pros::delay(200);
-  turn(18_deg);
+  turn(17_deg);
 
   // to ball
   roll(intake);
@@ -121,7 +121,7 @@ void autonomous() {
 
   // to goal
   turn(-92_deg);
-  drive(3.5_ft, {.goal_seek = 50_pct});
+  drive(3.1_ft, {.goal_seek = 50_pct});
 
   // shoot
   roll(topOut);
@@ -148,7 +148,7 @@ void autonomous() {
 
   // to goal
   turn(-61_deg);
-  drive(3.5_ft, {.goal_seek = 50_pct});
+  drive(3.3_ft, {.goal_seek = 50_pct});
 
   // shoot
   shootCorner();
@@ -161,11 +161,11 @@ void autonomous() {
   // purge and turn
   roll(out);
   pros::delay(200);
-  turn(112_deg);
+  turn(113_deg);
 
   // to ball
   roll(intake);
-  drive(4.2_ft, {.ball_seek = 60_pct});
+  drive(4.4_ft, {.ball_seek = 40_pct});
 
   // to goal
   turn(-5_deg);
@@ -181,7 +181,7 @@ void autonomous() {
 
   // purge and turn
   asyncTask({
-    pros::delay(400);
+    pros::delay(300);
     roll(poopIn);
   });
   turn(77_deg);
@@ -201,7 +201,7 @@ void autonomous() {
   // purge and turn
   roll(out);
   pros::delay(200);
-  turn(171_deg);
+  turn(172_deg);
 
   // to ball
   roll(intake);
@@ -230,21 +230,30 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(1.5_ft, {.ball_seek = 0_pct});
+  drive(2_ft, {.ball_seek = 0_pct});
+
+  auto f = [&] {
+    Timer t;
+    t.placeMark();
+    while (t.getDtFromMark() < 0.3_s) {
+      Robot::model()->xArcade((Robot::vision()->getBlueOffset() + 60) * 0.022, 0, 0);
+      pros::delay(10);
+    }
+  };
 
   // recenter
   turn(-101_deg);
-  Timer t;
-  t.placeMark();
-  while (t.getDtFromMark() < 0.3_s) {
-    Robot::model()->xArcade((Robot::vision()->getBlueOffset() + 60) * 0.022, 0, 0);
-  }
+  f();
 
   // move to poke
-  drive(2.5_ft);
+  drive(1.5_ft);
   drive(-0.8_ft);
-  drive(1.8_ft);
-  roll(on);
+  f();
+  drive(1.4_ft);
+  roll(onWithoutPoop);
   pros::delay(600);
+  drive(-0.8_ft);
+  f();
+  drive(1.4_ft);
   drive(-2_ft);
 }
