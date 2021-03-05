@@ -169,7 +169,7 @@ void Roller::loop() {
           intakes->moveVoltage(12000);
         } else if (getTopLight() != colors::none) {
           // balance between raising ball to prevent rubbing and bringing ball too high
-          topRoller->moveVoltage(2000);
+          topRoller->moveVoltage(1800);
           // slow down
           bottomRoller->moveVoltage(4000);
           intakes->moveVoltage(12000);

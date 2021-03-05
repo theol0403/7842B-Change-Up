@@ -50,7 +50,7 @@ void Robot::_initializeDevices() {
 
   _roller = std::make_shared<Roller>(
     std::make_shared<MotorGroup>(MotorGroup {-10, 12}), std::make_shared<Motor>(7),
-    std::make_shared<Motor>(-19), std::make_shared<OpticalSensor>(9),
+    std::make_shared<Motor>(-8), std::make_shared<OpticalSensor>(9),
     std::make_shared<OpticalSensor>(15), _screen->makePage<GUI::Graph>("Roller"));
 
   _imu = std::make_shared<IMUTurn>(std::make_shared<pros::Imu>(4), _model,

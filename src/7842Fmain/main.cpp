@@ -34,7 +34,7 @@ void shootCorner() {
 
 void shootEdge() {
   roll(topOut);
-  pros::delay(500);
+  pros::delay(550);
   roll(intakeWithoutPoop);
 }
 
@@ -213,6 +213,8 @@ void autonomous() {
 
   // shoot
   shootEdge();
+  roll(onWithoutPoop);
+  pros::delay(200);
 
   // back up
   asyncTask({
@@ -241,10 +243,10 @@ void autonomous() {
   move->strafe(Line({0_ft, 0_ft}, {0.55_ft, 0_ft}));
 
   // move to poke
-  drive(1.3_ft);
+  drive(1.42_ft);
   drive(-1_ft);
   turn(-97_deg);
-  move->strafe(Line({0_ft, 0_ft}, {-0.5_ft, 0_ft}));
+  move->strafe(Line({0_ft, 0_ft}, {-0.4_ft, 0_ft}));
   drive(1.4_ft);
   roll(shootWithoutPoop);
   pros::delay(600);
