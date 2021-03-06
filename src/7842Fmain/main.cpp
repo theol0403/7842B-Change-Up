@@ -25,7 +25,7 @@ void shootCorner() {
   roll(topOut);
   pros::delay(500);
   roll(intakeWithoutPoop);
-  pros::delay(100);
+  pros::delay(60);
   asyncTask({
     pros::delay(400);
     roll(out);
@@ -34,9 +34,9 @@ void shootCorner() {
 
 void shootEdge() {
   roll(topOut);
-  pros::delay(500);
+  pros::delay(400);
   asyncTask({
-    pros::delay(200);
+    pros::delay(500);
     roll(intakeWithoutPoop);
   });
 }
@@ -65,7 +65,7 @@ void autonomous() {
   pros::delay(400);
   roll(onWithoutPoop);
   pros::delay(500);
-  roll(intakeWithoutPoop);
+  roll(off);
 
   // back up
   asyncTask({
@@ -134,7 +134,7 @@ void autonomous() {
   roll(shootWithoutPoop);
   pros::delay(500);
   asyncTask({
-    pros::delay(300);
+    pros::delay(350);
     roll(intakeWithoutPoop);
   });
 
@@ -173,7 +173,7 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(4.3_ft, {.ball_seek = 30_pct});
+  drive(4.35_ft, {.ball_seek = 30_pct});
 
   // to goal
   turn(-5_deg);
@@ -216,7 +216,7 @@ void autonomous() {
   drive(4.2_ft, {.ball_seek = 40_pct});
 
   // to goal
-  turn(80_deg);
+  turn(81_deg);
   drive(0.9_ft);
 
   // shoot
@@ -256,7 +256,7 @@ void autonomous() {
   turn(-97_deg);
   move->strafe(Line({0_ft, 0_ft}, {-0.4_ft, 0_ft}));
   drive(1.4_ft);
-  roll(shootWithoutPoop);
+  roll(onWithoutPoop);
   pros::delay(600);
   drive(-1_ft);
   turn(-97_deg);
