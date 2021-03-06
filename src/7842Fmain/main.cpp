@@ -100,7 +100,7 @@ void autonomous() {
   // to ball and goal
   pros::delay(200);
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.4_ft, 5.7_ft, -85_deg}), {.ball_seek = 10_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.4_ft, 5.75_ft, -85_deg}), {.ball_seek = 10_pct});
 
   // shoot
   shootCorner();
@@ -188,7 +188,7 @@ void autonomous() {
 
   // to ball and goal
   roll(intake);
-  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3_ft, 6.2_ft, -80_deg}), {.ball_seek = 10_pct});
+  move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3_ft, 6.25_ft, -80_deg}), {.ball_seek = 10_pct});
 
   // shoot
   shootCorner();

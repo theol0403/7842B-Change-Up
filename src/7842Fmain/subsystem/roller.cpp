@@ -107,7 +107,8 @@ bool Roller::shouldSpacedShoot() {
 int Roller::getIntake() {
   switch (state) {
     case rollerStates::off:
-    case rollerStates::shoot: return 0;
+    case rollerStates::shoot:
+    case rollerStates::shootWithoutPoop: return 0;
     default: return 12000;
   }
 }
