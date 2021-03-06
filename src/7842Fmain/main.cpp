@@ -25,7 +25,7 @@ void shootCorner() {
   roll(topOut);
   pros::delay(500);
   roll(intakeWithoutPoop);
-  pros::delay(200);
+  pros::delay(100);
   asyncTask({
     pros::delay(400);
     roll(out);
@@ -34,8 +34,11 @@ void shootCorner() {
 
 void shootEdge() {
   roll(topOut);
-  pros::delay(550);
-  roll(intakeWithoutPoop);
+  pros::delay(500);
+  asyncTask({
+    pros::delay(200);
+    roll(intakeWithoutPoop);
+  });
 }
 
 void autonomous() {
@@ -56,10 +59,12 @@ void autonomous() {
   move->curve(Mesh({0_ft, 0_ft, 0_deg}, {1.9_ft, 3.8_ft, 70_deg}), {});
 
   // shoot
+  roll(intakeWithoutPoop);
+  pros::delay(100);
   roll(topOut);
   pros::delay(400);
   roll(onWithoutPoop);
-  pros::delay(400);
+  pros::delay(500);
   roll(intakeWithoutPoop);
 
   // back up
@@ -125,10 +130,13 @@ void autonomous() {
 
   // shoot
   roll(topOut);
-  pros::delay(400);
+  pros::delay(500);
   roll(shootWithoutPoop);
   pros::delay(500);
-  roll(offWithoutPoop);
+  asyncTask({
+    pros::delay(300);
+    roll(intakeWithoutPoop);
+  });
 
   // back up
   drive(-1.6_ft);
