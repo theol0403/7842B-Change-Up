@@ -213,7 +213,7 @@ void autonomous() {
 
   // to ball
   roll(intake);
-  drive(4.2_ft, {.ball_seek = 40_pct});
+  drive(4.27_ft, {.ball_seek = 40_pct});
 
   // to goal
   turn(81_deg);
@@ -222,7 +222,7 @@ void autonomous() {
   // shoot
   shootEdge();
   roll(onWithoutPoop);
-  pros::delay(200);
+  pros::delay(300);
 
   // back up
   asyncTask({

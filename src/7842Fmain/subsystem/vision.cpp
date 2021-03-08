@@ -31,7 +31,10 @@ void VisionTask::loop() {
     /* std::cout << "Area: " << container.get(0, Vision::Query::area) << std::endl; */
 
     drawer->clear();
-    drawer->makeLayer().withColor(LV_COLOR_RED, RED).withColor(LV_COLOR_BLUE, BLUE).draw(container);
+    drawer->makeLayer()
+      .withColor(LV_COLOR_RED, LV_COLOR_BLACK, RED)
+      .withColor(LV_COLOR_BLUE, LV_COLOR_BLACK, BLUE)
+      .draw(container);
 
     auto reds = container;
     offset = reds.remove(Vision::Query::sig, std::not_equal_to<double>(), RED)
