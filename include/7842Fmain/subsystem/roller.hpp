@@ -2,26 +2,68 @@
 #include "7842Fmain/util/statemachine.hpp"
 #include "main.h"
 
+#define ENUM_FLAG_OPERATORS(T)                                                                     \
+  constexpr T operator~(T a) {                                                                     \
+    return static_cast<T>(~static_cast<std::underlying_type_t<T>>(a));                             \
+  }                                                                                                \
+  constexpr T operator|(T a, T b) {                                                                \
+    return static_cast<T>(static_cast<std::underlying_type_t<T>>(a) |                              \
+                          static_cast<std::underlying_type_t<T>>(b));                              \
+  }                                                                                                \
+  constexpr T operator&(T a, T b) {                                                                \
+    return static_cast<T>(static_cast<std::underlying_type_t<T>>(a) &                              \
+                          static_cast<std::underlying_type_t<T>>(b));                              \
+  }                                                                                                \
+  constexpr T operator^(T a, T b) {                                                                \
+    return static_cast<T>(static_cast<std::underlying_type_t<T>>(a) ^                              \
+                          static_cast<std::underlying_type_t<T>>(b));                              \
+  }                                                                                                \
+  constexpr T operator|=(T& a, T b) {                                                              \
+    a = static_cast<T>(static_cast<std::underlying_type_t<T>>(a) |                                 \
+                       static_cast<std::underlying_type_t<T>>(b));                                 \
+    return a;                                                                                      \
+  }                                                                                                \
+  constexpr T operator&=(T& a, T b) {                                                              \
+    a = static_cast<T>(static_cast<std::underlying_type_t<T>>(a) &                                 \
+                       static_cast<std::underlying_type_t<T>>(b));                                 \
+    return a;                                                                                      \
+  }
+
+// The first 5 bits enable various flags that control the behavior of the rollers. These can then be combined to encode various states.
+// The bits after enumerate other states/actions.
+constexpr uint8_t fbits = 5; // the number of feature bits
 enum class rollerStates {
-  off, // all off
-  offWithoutPoop, // all off
-  out, // all backwards
-  on, // all on
-  onWithoutPoop, // all on without poop
-  shoot, // all on but don't move intakes
-  shootWithoutPoop, // all on but don't move intakes
-  intake, // load balls into robot. Disable rollers one by one, and auto poop
-  intakeWithoutPoop, // load balls into robot. Disable rollers one by one
-  poopIn, // poop while intaking
-  poopOut, // poop while outtaking
-  purge, // shoot while outtaking
-  topOut, // only spin top roller
-  deploy,
-  timedPoop,
-  timedShootPoop,
-  spacedShoot, // all on but space the ball and no intakes
-  topPoop, // bring down then poop
+  off = 0, // all off, no poop
+
+  intake = 1 << 0, // move intakes
+  bottom = 1 << 1, // move bottom roller
+  top = 1 << 2, // move top roller
+
+  poop = 1 << 3, // enable auto poop
+  out = 1 << 4, // outtake all motors except for the ones enabled
+
+  // helper combinations
+  on = intake | bottom | top, // all on
+  shoot = bottom | top, // all on but don't move intakes
+  loading = intake | bottom, // load balls into robot. Disable rollers one by one
+  compress = out | intake, // reverse top and botton while intaking
+  purge = out | top, // shoot top while outtaking rest
+  shootOut = out | shoot, // shoot top and bottom while outtaking
+
+  onPoop = on | poop,
+  outPoop = out | poop,
+  shootPoop = shoot | poop,
+  loadingPoop = loading | poop,
+
+  // other actions
+  deploy = 1 << fbits,
+  timedPoop = 2 << fbits,
+  timedShootPoop = 3 << fbits,
+  spacedShoot = 4 << fbits, // all on but space the ball
+  topPoop = 5 << fbits, // bring down then poop
 };
+
+ENUM_FLAG_OPERATORS(rollerStates)
 
 class Roller : public StateMachine<rollerStates, rollerStates::off> {
 public:

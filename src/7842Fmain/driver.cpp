@@ -2,9 +2,13 @@
 #include "lib7842/api/other/utility.hpp"
 using namespace lib7842;
 
-#define mDigital(x)                                                                                \
-  (pros::c::controller_get_digital(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_DIGITAL_##x) ||   \
-   pros::c::controller_get_digital(pros::E_CONTROLLER_PARTNER, pros::E_CONTROLLER_DIGITAL_##x))
+#define master(x)                                                                                  \
+  pros::c::controller_get_digital(pros::E_CONTROLLER_MASTER, pros::E_CONTROLLER_DIGITAL_##x)
+
+#define partner(x)                                                                                 \
+  pros::c::controller_get_digital(pros::E_CONTROLLER_PARTNER, pros::E_CONTROLLER_DIGITAL_##x)
+
+#define either(x) (master(x) || partner(x))
 
 #define mDigitalPressed(x)                                                                         \
   pros::c::controller_get_digital_new_press(pros::E_CONTROLLER_MASTER,                             \
@@ -30,12 +34,12 @@ void driverBaseControl() {
   double rightY = mAnalog(RIGHT_Y);
   double leftX = mAnalog(LEFT_X);
 
-  if (mDigital(L1)) { rightX += Robot::vision()->getOffset() * 0.015; }
+  if (master(L1)) { rightX += Robot::vision()->getOffset() * 0.015; }
 
   Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
                           std::pow(rightY, 2) * util::sgn(rightY), std::pow(leftX, 3));
 
-  if (mDigital(X) && !pros::competition::is_connected()) autonomous();
+  if (master(X) && !pros::competition::is_connected()) autonomous();
 }
 
 /***
@@ -49,30 +53,51 @@ void driverBaseControl() {
 
 void driverDeviceControl() {
 
-  // roller control
-  if ((mDigital(L1) || mDigital(R2)) && mDigital(R1)) {
-    system(roller, on);
-  } else if (mDigital(R1) && mDigital(A)) {
-    system(roller, on);
-  } else if (mDigital(A)) {
-    system(roller, poopIn);
-  } else if (mDigital(R1)) {
-    system(roller, shoot);
-  } else if (mDigital(L2)) {
-    system(roller, out);
-  } else if (mDigital(B)) {
-    system(roller, deploy);
-  } else if (mDigital(LEFT)) {
-    system(roller, poopOut);
-  } else if (mDigital(DOWN)) {
-    system(roller, topOut);
-  } else if (mDigital(L1) || mDigital(R2)) {
-    system(roller, intake);
-  } else {
-    system(roller, off);
-  }
+  // initial state
+  rollerStates state {rollerStates::off};
 
-  if (mDigital(Y) && !pros::competition::is_connected()) {
+  // if master L2 or partner R1, add outtake
+  if (master(L2) || partner(R1)) { state |= rollerStates::out; }
+
+  // if either of the R2 are pressed, add intake
+  if (master(R2) || partner(R2)) { state |= rollerStates::intake; }
+
+  // if master R1 is pressed, add shoot
+  if (master(R1)) { state |= rollerStates::shoot; }
+
+  // if both partner are pressed, disable intake and out
+  if (partner(R1) && partner(R2)) { state &= ~(rollerStates::out | rollerStates::intake); }
+
+  // if partner R1 is pressed, disable intaking
+  if (partner(R1)) { state &= ~rollerStates::intake; }
+
+  // if none of the partner is pressed add poop
+  if (!(partner(R2) || partner(R1))) { state |= rollerStates::poop; }
+
+  // // roller control
+  // if ((master(L1) || master(R2)) && master(R1)) {
+  //   system(roller, on);
+  // } else if (master(R1) && master(A)) {
+  //   system(roller, on);
+  // } else if (master(A)) {
+  //   system(roller, poopIn);
+  // } else if (master(R1)) {
+  //   system(roller, shoot);
+  // } else if (master(L2)) {
+  //   system(roller, out);
+  // } else if (master(B)) {
+  //   system(roller, deploy);
+  // } else if (master(LEFT)) {
+  //   system(roller, poopOut);
+  // } else if (master(DOWN)) {
+  //   system(roller, topOut);
+  // } else if (master(L1) || master(R2)) {
+  //   system(roller, intake);
+  // } else {
+  //   system(roller, off);
+  // }
+
+  if (either(Y) && !pros::competition::is_connected()) {
     Robot::roller()->initialize();
     Robot::imu()->calibrate();
   }
