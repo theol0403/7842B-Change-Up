@@ -54,25 +54,25 @@ void driverBaseControl() {
 void driverDeviceControl() {
 
   // initial state
-  rollerStates state {rollerStates::off};
+  rollerStates state {rollerStates::poop};
 
-  // if master L2 or partner R1, add outtake
-  if (master(L2) || partner(R1)) { state |= rollerStates::out; }
+  // if R2, add intake
+  if (master(R2)) { state |= rollerStates::intake; }
 
-  // if either of the R2 are pressed, add intake
-  if (master(R2) || partner(R2)) { state |= rollerStates::intake; }
+  // if L2, add outtake
+  if (master(L2)) { state |= rollerStates::out; }
 
-  // if master R1 is pressed, add shoot
+  // if any of the partner buttons are pressed, the poop is removed. Shoot can still be added later.
+  if (partner(R2) && partner(R1)) {
+    state = rollerStates::off;
+  } else if (partner(R2)) {
+    state = rollerStates::intake;
+  } else if (partner(R1)) {
+    state = rollerStates::out;
+  }
+
+  // if R1, add shoot
   if (master(R1)) { state |= rollerStates::shoot; }
-
-  // if both partner are pressed, disable intake and out
-  if (partner(R1) && partner(R2)) { state &= ~(rollerStates::out | rollerStates::intake); }
-
-  // if partner R1 is pressed, disable intaking
-  if (partner(R1)) { state &= ~rollerStates::intake; }
-
-  // if none of the partner is pressed add poop
-  if (!(partner(R2) || partner(R1))) { state |= rollerStates::poop; }
 
   // // roller control
   // if ((master(L1) || master(R2)) && master(R1)) {

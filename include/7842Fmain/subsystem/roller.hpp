@@ -47,7 +47,8 @@ enum class rollerStates {
   shoot = bottom | top, // all on but don't move intakes
   loading = intake | bottom, // load balls into robot. Disable rollers one by one
   compress = out | intake, // reverse top and botton while intaking
-  purge = out | top, // shoot top while outtaking rest
+  fill = out | shoot, // shoot top and bottom while outtaking
+  purge = out | top, // shoot top while reversing rest
   shootOut = out | shoot, // shoot top and bottom while outtaking
 
   onPoop = on | poop,
