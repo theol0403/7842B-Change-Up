@@ -29,9 +29,9 @@
     return a;                                                                                      \
   }
 
-// The first 5 bits enable various flags that control the behavior of the rollers. These can then be combined to encode various states.
+// The first few bits enable various flags that control the behavior of the rollers. These can then be combined to encode various states.
 // The bits after enumerate other states/actions.
-constexpr uint8_t fbits = 5; // the number of feature bits
+constexpr uint8_t fbits = 8; // the number of flag bits
 enum class rollerStates {
   off = 0, // all off, no poop
 
@@ -39,22 +39,28 @@ enum class rollerStates {
   bottom = 1 << 1, // move bottom roller
   top = 1 << 2, // move top roller
 
-  poop = 1 << 3, // enable auto poop
-  out = 1 << 4, // outtake all motors except for the ones enabled
+  intakeRev = 1 << 3, // reverse intakes
+  bottomRev = 1 << 4, // reverse bottom roller
+  topRev = 1 << 5, // reverse top roller
+
+  poop = 1 << 6, // enable auto poop
 
   // helper combinations
-  on = intake | bottom | top, // all on
-  shoot = bottom | top, // all on but don't move intakes
   loading = intake | bottom, // load balls into robot. Disable rollers one by one
-  compress = out | intake, // reverse top and botton while intaking
-  fill = out | shoot, // shoot top and bottom while outtaking
-  purge = out | top, // shoot top while reversing rest
-  shootOut = out | shoot, // shoot top and bottom while outtaking
+  shoot = bottom | top, // all on but don't move intakes
+  on = intake | bottom | top, // all on
 
-  onPoop = on | poop,
-  outPoop = out | poop,
-  shootPoop = shoot | poop,
-  loadingPoop = loading | poop,
+  rollersRev = bottomRev | topRev, // reverse bottom and top roller
+  out = intakeRev | bottomRev | topRev, // all reverse
+
+  compress = intake | rollersRev, // reverse top and botton rollers while intaking
+  fill = intakeRev | shoot, // shoot top and bottom while outtaking
+  purge = intakeRev | bottomRev | top, // shoot top while reversing rest
+
+  // onPoop = on | poop,
+  // outPoop = out | poop,
+  // shootPoop = shoot | poop,
+  // loadingPoop = loading | poop,
 
   // other actions
   deploy = 1 << fbits,
