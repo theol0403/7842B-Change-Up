@@ -75,7 +75,7 @@ void driverDeviceControl() {
   if (master(R1)) { state |= rollerStates::shoot; }
 
   // if L1, add top out
-  if (master(L1)) { state |= rollerStates::topOut; }
+  if (master(L1)) { state |= rollerStates::shootRev; }
 
   // // roller control
   // if ((master(L1) || master(R2)) && master(R1)) {

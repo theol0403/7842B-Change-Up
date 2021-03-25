@@ -62,19 +62,20 @@ enum class rollerStates {
   timedShootPoop = 3 << fbits,
   spacedShoot = 4 << fbits, // all on but space the ball
   topPoop = 5 << fbits, // bring down then poop
-  topOut = 6 << fbits, // bring top roller back
+  shootRev = 6 << fbits, // bring rollers back
+
+  flags = 0b11111, // bitmask for flags
+  actions = 0b11100000, // bitmask for actions
 };
 
 ENUM_FLAG_OPERATORS(rollerStates)
 
-class Roller : public StateMachine<rollerStates, rollerStates::off> {
+class Roller : public StateMachine<rollerStates, rollerStates::poop> {
 public:
   Roller(const std::shared_ptr<AbstractMotor>& iintakes,
-         const std::shared_ptr<AbstractMotor>& ibottomRoller,
-         const std::shared_ptr<AbstractMotor>& itopRoller,
+         const std::shared_ptr<AbstractMotor>& ibottom, const std::shared_ptr<AbstractMotor>& itop,
          const std::shared_ptr<OpticalSensor>& itoplight,
-         const std::shared_ptr<OpticalSensor>& ibottomLight,
-         const std::shared_ptr<GUI::Graph>& igraph);
+         const std::shared_ptr<OpticalSensor>& ibottomLight);
 
 public:
   enum class colors { none = 0, red, blue };
@@ -86,19 +87,14 @@ public:
   bool shouldShootPoop();
   bool shouldSpacedShoot();
 
-  int getIntake();
-
   void initialize() override;
   void loop() override;
 
   std::shared_ptr<AbstractMotor> intakes {nullptr};
-  std::shared_ptr<AbstractMotor> bottomRoller {nullptr};
-  std::shared_ptr<AbstractMotor> topRoller {nullptr};
+  std::shared_ptr<AbstractMotor> bottom {nullptr};
+  std::shared_ptr<AbstractMotor> top {nullptr};
   std::shared_ptr<OpticalSensor> topLight {nullptr};
   std::shared_ptr<OpticalSensor> bottomLight {nullptr};
-  std::shared_ptr<GUI::Graph> graph {nullptr};
 
   Timer macroTime;
-  rollerStates macroReturnState = rollerStates::off;
-  int macroIntakeVel = 12000;
 };
