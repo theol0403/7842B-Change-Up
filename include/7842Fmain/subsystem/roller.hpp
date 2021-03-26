@@ -14,10 +14,6 @@
     return static_cast<T>(static_cast<std::underlying_type_t<T>>(a) &                              \
                           static_cast<std::underlying_type_t<T>>(b));                              \
   }                                                                                                \
-  constexpr T operator^(T a, T b) {                                                                \
-    return static_cast<T>(static_cast<std::underlying_type_t<T>>(a) ^                              \
-                          static_cast<std::underlying_type_t<T>>(b));                              \
-  }                                                                                                \
   constexpr T operator|=(T& a, T b) {                                                              \
     a = static_cast<T>(static_cast<std::underlying_type_t<T>>(a) |                                 \
                        static_cast<std::underlying_type_t<T>>(b));                                 \
@@ -32,41 +28,45 @@
     return !static_cast<bool>(a);                                                                  \
   }
 
-// The first few bits enable various flags that control the behavior of the rollers. These can then be combined to encode various states.
-// The bits after enumerate other states/actions.
-constexpr uint8_t fbits = 5; // the number of flag bits
+// The first 3 bits toggle the state of each roller.
+// The next few bits modify the behavior of the rollers.
+// The last few bits enumerate additional actions.
+// Bits can be combined to represent compound states.
 enum class rollerStates {
   off = 0, // all off, no poop
 
+  // toggle bits
   intake = 1 << 0, // move intakes
   bottom = 1 << 1, // move bottom roller
   top = 1 << 2, // move top roller
 
+  // modifier bits
   out = 1 << 3, // reverse anything that is not enabled
   poop = 1 << 4, // enable auto poop
 
+  // action bits
+  deploy = 1 << 5,
+  timedPoop = 2 << 5, // poop for time
+  backPoop = 3 << 5, // bring blue down then poop
+  shootRev = 4 << 5, // bring rollers back manually
+
   // state combinations
-  loading = intake | bottom, // load balls into robot. Disable rollers one by one
+  loading = intake | bottom, // load balls into robot. Disable rollers one by one.
   shoot = bottom | top, // all on but don't move intakes
   on = intake | bottom | top, // all on
 
-  compress = out | intake, // reverse top and botton rollers while intaking
+  compact = out | intake, // reverse top and botton rollers while intaking
   fill = out | shoot, // shoot top and bottom while outtaking
   purge = out | top, // shoot top while reversing rest
 
-  // loadingPoop = loading | poop,
-  // shootPoop = shoot | poop,
-  // onPoop = on | poop,
-  // outPoop = out | poop,
+  loadingPoop = loading | poop,
+  shootPoop = shoot | poop,
+  onPoop = on | poop,
+  outPoop = out | poop,
 
-  // other actions
-  deploy = 1 << fbits,
-  timedPoop = 2 << fbits,
-  backPoop = 3 << fbits, // bring down then poop
-  shootRev = 4 << fbits, // bring rollers back
-
+  toggles = 0b00000111, // bitmask for roller toggles
+  modifiers = 0b00011000, // bitmask for roller modifiers
   flags = 0b00011111, // bitmask for flags
-  rollerFlags = 0b00000111, // bitmask for roller flags
   actions = 0b11100000, // bitmask for actions
 };
 
@@ -87,28 +87,19 @@ public:
     initialize();
   }
 
-public:
-  enum class colors { none = 0, red, blue };
-
   void initialize();
 
+  enum class colors { none, red, blue };
   colors getTopLight() const;
   colors getBottomLight() const;
 
+  // set an action
+  Timer macroTime;
   void runAction(const rollerStates& action);
+
+  // modifier processors
   bool shouldPoop();
-
   int getIntake();
-
-  void intake(int v) {
-    intakeMotor->moveVoltage(v);
-  }
-  void bottom(int v) {
-    bottomMotor->moveVoltage(v);
-  }
-  void top(int v) {
-    topMotor->moveVoltage(v);
-  }
 
   void loop() override;
 
@@ -117,6 +108,4 @@ public:
   std::shared_ptr<AbstractMotor> topMotor {nullptr};
   std::shared_ptr<OpticalSensor> topLight {nullptr};
   std::shared_ptr<OpticalSensor> bottomLight {nullptr};
-
-  Timer macroTime;
 };

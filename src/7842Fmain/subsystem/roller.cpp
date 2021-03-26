@@ -1,5 +1,9 @@
 #include "roller.hpp"
 
+#define intake(v) intakeMotor->moveVoltage(v);
+#define bottom(v) bottomMotor->moveVoltage(v);
+#define top(v) topMotor->moveVoltage(v);
+
 void Roller::initialize() {
 
   topLight->setLedPWM(100);
@@ -64,7 +68,7 @@ bool Roller::shouldPoop() {
   }
 
   // if blue ball in bottom but no red in top, poop it
-  if (getTopLight() != colors::red && getBottomLight() == colors::blue) {
+  if (getBottomLight() == colors::blue && getTopLight() != colors::red) {
     runAction(rollerStates::timedPoop);
     return true;
   }
@@ -73,7 +77,7 @@ bool Roller::shouldPoop() {
 }
 
 int Roller::getIntake() {
-  return ((state & rollerStates::intake) == rollerStates::intake) ? 12000 : 0;
+  return !!(state & rollerStates::intake) ? 12000 : (!!(state & rollerStates::out) ? -12000 : 0);
 }
 
 void Roller::loop() {
@@ -122,19 +126,63 @@ void Roller::loop() {
       continue;
     }
 
-    switch (auto rollerFlags = state & rollerStates::rollerFlags; rollerFlags) {
+    // if out is enabled
+    bool out = !!(state & rollerStates::out);
+
+    switch (auto toggles = state & rollerStates::toggles; toggles) {
 
       case rollerStates::off:
         if (shouldPoop()) continue;
-        top(0);
-        bottom(0);
-        intake(0);
+        top(out ? -12000 : 0);
+        bottom(out ? -12000 : 0);
+        intake(out ? -12000 : 0);
         break;
 
-      case rollerStates::on:
-      case rollerStates::shoot:
+      case rollerStates::top:
         if (shouldPoop()) continue;
         top(12000);
+        bottom(out ? -12000 : 0);
+        intake(out ? -12000 : 0);
+        break;
+
+      case rollerStates::intake:
+        if (shouldPoop()) continue;
+        if (out) {
+          top(-12000);
+          bottom(-12000);
+        } else if (getTopLight() != colors::none && getBottomLight() != colors::none) {
+          top(0);
+          if (getBottomLight() == colors::blue) {
+            bottom(-2000);
+          } else {
+            bottom(0);
+          }
+        } else if (getTopLight() != colors::none) {
+          // balance between raising ball to prevent rubbing and bringing ball too high
+          top(1800);
+          bottom(6000);
+        } else {
+          // balance between bringing ball too fast and accidentally pooping
+          top(4000);
+          // if there is a blue but it can't poop
+          if (getBottomLight() == colors::blue) {
+            bottom(0);
+          } else {
+            bottom(12000);
+          }
+        }
+        intake(getIntake());
+        break;
+
+      case rollerStates::shoot:
+      case rollerStates::on:
+        if (shouldPoop()) continue;
+        // don't shoot a blue ball
+        if (getTopLight() != colors::blue) {
+          top(12000);
+        } else {
+          top(-1000);
+        }
         // if red on the top needs to be separated from bottom ball
         if (getTopLight() == colors::red && getBottomLight() != colors::none) {
           if (getBottomLight() == colors::blue) {
@@ -148,39 +196,7 @@ void Roller::loop() {
         intake(getIntake());
         break;
 
-      case rollerStates::intake:
-        if (shouldPoop()) continue;
-        if (getTopLight() != colors::none && getBottomLight() != colors::none) {
-          top(0);
-          if (getBottomLight() == colors::blue) {
-            bottom(-2000);
-          } else {
-            bottom(0);
-          }
-          intake(12000);
-        } else if (getTopLight() != colors::none) {
-          // balance between raising ball to prevent rubbing and bringing ball too high
-          top(1800);
-          // slow down
-          bottom(4000);
-          intake(12000);
-        } else {
-          // balance between bringing ball too fast and accidentally pooping
-          top(4000);
-          if (getBottomLight() == colors::blue) {
-            bottom(-2000);
-          } else {
-            bottom(12000);
-          }
-          intake(12000);
-        }
-        break;
-
-      case rollerStates::purge:
-        top(12000);
-        bottom(12000);
-        intake(-12000);
-        break;
+      default: break;
     }
 
     rate.delayUntil(5_ms);

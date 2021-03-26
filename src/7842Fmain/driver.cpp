@@ -76,8 +76,12 @@ void driverDeviceControl() {
   // if R1, add shoot
   if (master(R1)) { state |= rollerStates::shoot; }
 
-  // if L1, add top out
-  if (master(L1)) { state |= rollerStates::shootRev; }
+  // add actions
+  if (either(B)) {
+    state |= rollerStates::deploy;
+  } else if (master(L1)) {
+    state |= rollerStates::shootRev;
+  }
 
   Robot::roller()->setNewState(state);
 
