@@ -1,9 +1,11 @@
 #include "roller.hpp"
+#include <bitset>
+#include <iostream>
 
 #define intake(v) intakeMotor->moveVoltage(v);
 #define bottom(v) bottomMotor->moveVoltage(v);
 #define top(v) topMotor->moveVoltage(v);
-#define rs rollerStates
+using rs = rollerStates;
 
 void Roller::initialize() {
   topLight->setLedPWM(100);
@@ -120,32 +122,37 @@ void Roller::loop() {
           intake(getIntake());
           break;
 
-        default: break;
+        default:
+          std::cout << "Error: action not found: "
+                    << std::bitset<sizeof(rs)>(static_cast<std::underlying_type_t<rs>>(state))
+                    << std::endl;
+          break;
       }
       continue;
     }
 
+    // run auto poop if needed
+    if (shouldPoop()) continue;
+
     // if out is enabled
     bool out = !!(state & rs::out);
 
+    // strip toggles from state
     switch (auto toggles = state & rs::toggles; toggles) {
 
       case rs::off:
-        if (shouldPoop()) continue;
         top(out ? -12000 : 0);
         bottom(out ? -12000 : 0);
         intake(out ? -12000 : 0);
         break;
 
       case rs::top:
-        if (shouldPoop()) continue;
         top(12000);
         bottom(out ? -12000 : 0);
         intake(out ? -12000 : 0);
         break;
 
       case rs::intake:
-        if (shouldPoop()) continue;
         if (out) {
           top(-12000);
           bottom(-12000);
@@ -170,17 +177,16 @@ void Roller::loop() {
             bottom(12000);
           }
         }
-        intake(getIntake());
+        intake(12000);
         break;
 
       case rs::shoot:
       case rs::on:
-        if (shouldPoop()) continue;
         // don't shoot a blue ball
-        if (getTopLight() != colors::blue) {
-          top(12000);
-        } else {
+        if (getTopLight() == colors::blue) {
           top(-1000);
+        } else {
+          top(12000);
         }
         // if red on the top needs to be separated from bottom ball
         if (getTopLight() == colors::red && getBottomLight() != colors::none) {
@@ -195,7 +201,11 @@ void Roller::loop() {
         intake(getIntake());
         break;
 
-      default: break;
+      default:
+        std::cout << "Error: toggle not found: "
+                  << std::bitset<sizeof(rs)>(static_cast<std::underlying_type_t<rs>>(state))
+                  << std::endl;
+        break;
     }
 
     rate.delayUntil(5_ms);
