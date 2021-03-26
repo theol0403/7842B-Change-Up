@@ -85,28 +85,5 @@ void driverDeviceControl() {
 
   Robot::roller()->setNewState(state);
 
-  // // roller control
-  // if ((master(L1) || master(R2)) && master(R1)) {
-  //   system(roller, on);
-  // } else if (master(R1) && master(A)) {
-  //   system(roller, on);
-  // } else if (master(A)) {
-  //   system(roller, poopIn);
-  // } else if (master(R1)) {
-  //   system(roller, shoot);
-  // } else if (master(L2)) {
-  //   system(roller, out);
-  // } else if (master(B)) {
-  //   system(roller, deploy);
-  // } else if (master(LEFT)) {
-  //   system(roller, poopOut);
-  // } else if (master(DOWN)) {
-  //   system(roller, topOut);
-  // } else if (master(L1) || master(R2)) {
-  //   system(roller, intake);
-  // } else {
-  //   system(roller, off);
-  // }
-
   if (either(Y) && !pros::competition::is_connected()) { Robot::imu()->calibrate(); }
 }

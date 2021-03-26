@@ -1,32 +1,7 @@
 #pragma once
+#include "7842Fmain/util/enum.hpp"
 #include "7842Fmain/util/statemachine.hpp"
 #include "main.h"
-
-#define ENUM_FLAG_OPERATORS(T)                                                                     \
-  constexpr T operator~(T a) {                                                                     \
-    return static_cast<T>(~static_cast<std::underlying_type_t<T>>(a));                             \
-  }                                                                                                \
-  constexpr T operator|(T a, T b) {                                                                \
-    return static_cast<T>(static_cast<std::underlying_type_t<T>>(a) |                              \
-                          static_cast<std::underlying_type_t<T>>(b));                              \
-  }                                                                                                \
-  constexpr T operator&(T a, T b) {                                                                \
-    return static_cast<T>(static_cast<std::underlying_type_t<T>>(a) &                              \
-                          static_cast<std::underlying_type_t<T>>(b));                              \
-  }                                                                                                \
-  constexpr T operator|=(T& a, T b) {                                                              \
-    a = static_cast<T>(static_cast<std::underlying_type_t<T>>(a) |                                 \
-                       static_cast<std::underlying_type_t<T>>(b));                                 \
-    return a;                                                                                      \
-  }                                                                                                \
-  constexpr T operator&=(T& a, T b) {                                                              \
-    a = static_cast<T>(static_cast<std::underlying_type_t<T>>(a) &                                 \
-                       static_cast<std::underlying_type_t<T>>(b));                                 \
-    return a;                                                                                      \
-  }                                                                                                \
-  constexpr bool operator!(T a) {                                                                  \
-    return !static_cast<bool>(a);                                                                  \
-  }
 
 // The first 3 bits toggle the state of each roller.
 // The next few bits modify the behavior of the rollers.

@@ -3,13 +3,12 @@
 #define intake(v) intakeMotor->moveVoltage(v);
 #define bottom(v) bottomMotor->moveVoltage(v);
 #define top(v) topMotor->moveVoltage(v);
+#define rs rollerStates
 
 void Roller::initialize() {
-
   topLight->setLedPWM(100);
   bottomLight->setLedPWM(100);
   // top->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
-
   startTask("Roller");
 }
 
@@ -48,28 +47,28 @@ Roller::colors Roller::getBottomLight() const {
   }
 }
 
-void Roller::runAction(const rollerStates& action) {
+void Roller::runAction(const rs& action) {
   // mark action start time
   macroTime.placeMark();
   // clear prev action
-  state &= ~rollerStates::actions;
+  state &= ~rs::actions;
   // add new action
   state |= action;
 }
 
 bool Roller::shouldPoop() {
   // if poop is not enabled, don't do anything
-  if (!(state & rollerStates::poop)) return false;
+  if (!(state & rs::poop)) return false;
 
   // if a blue is in the top, lower it before pooping
   if (getTopLight() == colors::blue) {
-    runAction(rollerStates::backPoop);
+    runAction(rs::backPoop);
     return true;
   }
 
   // if blue ball in bottom but no red in top, poop it
   if (getBottomLight() == colors::blue && getTopLight() != colors::red) {
-    runAction(rollerStates::timedPoop);
+    runAction(rs::timedPoop);
     return true;
   }
 
@@ -77,7 +76,7 @@ bool Roller::shouldPoop() {
 }
 
 int Roller::getIntake() {
-  return !!(state & rollerStates::intake) ? 12000 : (!!(state & rollerStates::out) ? -12000 : 0);
+  return !!(state & rs::intake) ? 12000 : (!!(state & rs::out) ? -12000 : 0);
 }
 
 void Roller::loop() {
@@ -86,36 +85,36 @@ void Roller::loop() {
   while (true) {
 
     // strip flags from action. If action, execute it, and skip flags.
-    if (auto action = state & rollerStates::actions; action != rollerStates::off) {
+    if (auto action = state & rs::actions; action != rs::off) {
       switch (action) {
 
-        case rollerStates::deploy:
+        case rs::deploy:
           top(12000);
           bottom(-800);
           intake(-12000);
           break;
 
-        case rollerStates::timedPoop:
+        case rs::timedPoop:
           top(-12000);
           bottom(12000);
           intake(getIntake());
           if (macroTime.getDtFromMark() >= 200_ms) {
-            runAction(rollerStates::off);
+            runAction(rs::off);
             continue;
           }
           break;
 
-        case rollerStates::backPoop:
+        case rs::backPoop:
           top(-12000);
           bottom(-12000);
           intake(getIntake());
           if (macroTime.getDtFromMark() >= 150_ms) {
-            runAction(rollerStates::off);
+            runAction(rs::off);
             continue;
           }
           break;
 
-        case rollerStates::shootRev:
+        case rs::shootRev:
           top(-12000);
           bottom(-12000);
           intake(getIntake());
@@ -127,25 +126,25 @@ void Roller::loop() {
     }
 
     // if out is enabled
-    bool out = !!(state & rollerStates::out);
+    bool out = !!(state & rs::out);
 
-    switch (auto toggles = state & rollerStates::toggles; toggles) {
+    switch (auto toggles = state & rs::toggles; toggles) {
 
-      case rollerStates::off:
+      case rs::off:
         if (shouldPoop()) continue;
         top(out ? -12000 : 0);
         bottom(out ? -12000 : 0);
         intake(out ? -12000 : 0);
         break;
 
-      case rollerStates::top:
+      case rs::top:
         if (shouldPoop()) continue;
         top(12000);
         bottom(out ? -12000 : 0);
         intake(out ? -12000 : 0);
         break;
 
-      case rollerStates::intake:
+      case rs::intake:
         if (shouldPoop()) continue;
         if (out) {
           top(-12000);
@@ -174,8 +173,8 @@ void Roller::loop() {
         intake(getIntake());
         break;
 
-      case rollerStates::shoot:
-      case rollerStates::on:
+      case rs::shoot:
+      case rs::on:
         if (shouldPoop()) continue;
         // don't shoot a blue ball
         if (getTopLight() != colors::blue) {
