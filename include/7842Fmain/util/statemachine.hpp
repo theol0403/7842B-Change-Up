@@ -71,11 +71,6 @@ public:
 
 protected:
   /**
-   * Override this method to implement setup procedures.
-   */
-  virtual void initialize() = 0;
-
-  /**
    * Override this method to implement the statemachine task
    */
   void loop() override = 0;

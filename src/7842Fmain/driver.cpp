@@ -54,7 +54,7 @@ void driverBaseControl() {
 void driverDeviceControl() {
 
   // initial state
-  rollerStates state {rollerStates::poop};
+  rollerStates state {rollerStates::off};
 
   // if L2, add outtake
   if (master(L2)) { state |= rollerStates::out; }
@@ -69,6 +69,8 @@ void driverDeviceControl() {
     state = rollerStates::intake;
   } else if (partner(R1)) {
     state = rollerStates::out;
+  } else {
+    state |= rollerStates::poop;
   }
 
   // if R1, add shoot
@@ -76,6 +78,8 @@ void driverDeviceControl() {
 
   // if L1, add top out
   if (master(L1)) { state |= rollerStates::shootRev; }
+
+  Robot::roller()->setNewState(state);
 
   // // roller control
   // if ((master(L1) || master(R2)) && master(R1)) {
@@ -100,8 +104,5 @@ void driverDeviceControl() {
   //   system(roller, off);
   // }
 
-  if (either(Y) && !pros::competition::is_connected()) {
-    Robot::roller()->initialize();
-    Robot::imu()->calibrate();
-  }
+  if (either(Y) && !pros::competition::is_connected()) { Robot::imu()->calibrate(); }
 }

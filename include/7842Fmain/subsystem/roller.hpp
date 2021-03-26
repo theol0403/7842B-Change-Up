@@ -27,6 +27,9 @@
     a = static_cast<T>(static_cast<std::underlying_type_t<T>>(a) &                                 \
                        static_cast<std::underlying_type_t<T>>(b));                                 \
     return a;                                                                                      \
+  }                                                                                                \
+  constexpr bool operator!(T a) {                                                                  \
+    return !static_cast<bool>(a);                                                                  \
   }
 
 // The first few bits enable various flags that control the behavior of the rollers. These can then be combined to encode various states.
@@ -42,7 +45,7 @@ enum class rollerStates {
   out = 1 << 3, // reverse anything that is not enabled
   poop = 1 << 4, // enable auto poop
 
-  // helper combinations
+  // state combinations
   loading = intake | bottom, // load balls into robot. Disable rollers one by one
   shoot = bottom | top, // all on but don't move intakes
   on = intake | bottom | top, // all on
@@ -51,20 +54,19 @@ enum class rollerStates {
   fill = out | shoot, // shoot top and bottom while outtaking
   purge = out | top, // shoot top while reversing rest
 
+  // loadingPoop = loading | poop,
+  // shootPoop = shoot | poop,
   // onPoop = on | poop,
   // outPoop = out | poop,
-  // shootPoop = shoot | poop,
-  // loadingPoop = loading | poop,
 
   // other actions
   deploy = 1 << fbits,
   timedPoop = 2 << fbits,
-  timedShootPoop = 3 << fbits,
-  spacedShoot = 4 << fbits, // all on but space the ball
-  topPoop = 5 << fbits, // bring down then poop
-  shootRev = 6 << fbits, // bring rollers back
+  backPoop = 3 << fbits, // bring down then poop
+  shootRev = 4 << fbits, // bring rollers back
 
-  flags = 0b11111, // bitmask for flags
+  flags = 0b00011111, // bitmask for flags
+  rollerFlags = 0b00000111, // bitmask for roller flags
   actions = 0b11100000, // bitmask for actions
 };
 
@@ -72,27 +74,47 @@ ENUM_FLAG_OPERATORS(rollerStates)
 
 class Roller : public StateMachine<rollerStates, rollerStates::poop> {
 public:
-  Roller(const std::shared_ptr<AbstractMotor>& iintakes,
-         const std::shared_ptr<AbstractMotor>& ibottom, const std::shared_ptr<AbstractMotor>& itop,
-         const std::shared_ptr<OpticalSensor>& itoplight,
-         const std::shared_ptr<OpticalSensor>& ibottomLight);
+  Roller(const std::shared_ptr<AbstractMotor>& iintakeMotor,
+         const std::shared_ptr<AbstractMotor>& ibottomMotor,
+         const std::shared_ptr<AbstractMotor>& itopMotor,
+         const std::shared_ptr<OpticalSensor>& itopLight,
+         const std::shared_ptr<OpticalSensor>& ibottomLight) :
+    intakeMotor(iintakeMotor),
+    bottomMotor(ibottomMotor),
+    topMotor(itopMotor),
+    topLight(itopLight),
+    bottomLight(ibottomLight) {
+    initialize();
+  }
 
 public:
   enum class colors { none = 0, red, blue };
 
+  void initialize();
+
   colors getTopLight() const;
   colors getBottomLight() const;
 
+  void runAction(const rollerStates& action);
   bool shouldPoop();
-  bool shouldShootPoop();
-  bool shouldSpacedShoot();
 
-  void initialize() override;
+  int getIntake();
+
+  void intake(int v) {
+    intakeMotor->moveVoltage(v);
+  }
+  void bottom(int v) {
+    bottomMotor->moveVoltage(v);
+  }
+  void top(int v) {
+    topMotor->moveVoltage(v);
+  }
+
   void loop() override;
 
-  std::shared_ptr<AbstractMotor> intakes {nullptr};
-  std::shared_ptr<AbstractMotor> bottom {nullptr};
-  std::shared_ptr<AbstractMotor> top {nullptr};
+  std::shared_ptr<AbstractMotor> intakeMotor {nullptr};
+  std::shared_ptr<AbstractMotor> bottomMotor {nullptr};
+  std::shared_ptr<AbstractMotor> topMotor {nullptr};
   std::shared_ptr<OpticalSensor> topLight {nullptr};
   std::shared_ptr<OpticalSensor> bottomLight {nullptr};
 

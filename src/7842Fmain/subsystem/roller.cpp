@@ -1,34 +1,17 @@
 #include "roller.hpp"
 
-Roller::Roller(const std::shared_ptr<AbstractMotor>& iintakes,
-               const std::shared_ptr<AbstractMotor>& ibottomRoller,
-               const std::shared_ptr<AbstractMotor>& itopRoller,
-               const std::shared_ptr<OpticalSensor>& itopLight,
-               const std::shared_ptr<OpticalSensor>& ibottomLight,
-               const std::shared_ptr<GUI::Graph>& igraph) :
-  intakes(iintakes),
-  bottomRoller(ibottomRoller),
-  topRoller(itopRoller),
-  topLight(itopLight),
-  bottomLight(ibottomLight),
-  graph(igraph) {
-  pros::delay(100); // allow sensors to initialize
-  initialize();
+void Roller::initialize() {
+
+  topLight->setLedPWM(100);
+  bottomLight->setLedPWM(100);
+  // top->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+
   startTask("Roller");
 }
 
-void Roller::initialize() {
-  topLight->setLedPWM(100);
-  bottomLight->setLedPWM(100);
-  // topRoller->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
-
-  graph->withSeries("Bottom Sensor", LV_COLOR_BLACK, [&] { return bottomLight->getProximity(); });
-  graph->withSeries("Top Sensor", LV_COLOR_WHITE, [&] { return topLight->getProximity(); });
-}
-
-Timer t;
 Roller::colors Roller::getTopLight() const {
-  // if (t.repeat(200_ms))
+  // static Timer t;
+  // if (t.repeat(300_ms))
   //   std::cout << "Hue: " << topLight->getHue() << ", Brightness: " << topLight->getBrightness()
   //             << ", Proximity: " << topLight->getProximity() << std::endl;
 
@@ -44,6 +27,7 @@ Roller::colors Roller::getTopLight() const {
 }
 
 Roller::colors Roller::getBottomLight() const {
+  // static Timer t;
   // if (t.repeat(300_ms))
   //   std::cout << "Hue: " << bottomLight->getHue()
   //             << ", Brightness: " << bottomLight->getBrightness()
@@ -60,57 +44,36 @@ Roller::colors Roller::getBottomLight() const {
   }
 }
 
+void Roller::runAction(const rollerStates& action) {
+  // mark action start time
+  macroTime.placeMark();
+  // clear prev action
+  state &= ~rollerStates::actions;
+  // add new action
+  state |= action;
+}
+
 bool Roller::shouldPoop() {
-  // if blue ball in bottom but no red in top
-  if (getTopLight() != colors::red && getBottomLight() == colors::blue) {
-    macroTime.placeMark();
-    macroReturnState = state;
-    macroIntakeVel = getIntake();
-    state = rollerStates::timedPoop;
-    return true;
-  }
+  // if poop is not enabled, don't do anything
+  if (!(state & rollerStates::poop)) return false;
 
+  // if a blue is in the top, lower it before pooping
   if (getTopLight() == colors::blue) {
-    macroTime.placeMark();
-    macroReturnState = state;
-    macroIntakeVel = getIntake();
-    state = rollerStates::topPoop;
+    runAction(rollerStates::backPoop);
     return true;
   }
-  return false;
-}
 
-bool Roller::shouldShootPoop() {
-  // if red ball in top but blue in bottom
-  if (getTopLight() == colors::red && getBottomLight() == colors::blue) {
-    macroTime.placeMark();
-    macroReturnState = state;
-    macroIntakeVel = getIntake();
-    state = rollerStates::timedShootPoop;
+  // if blue ball in bottom but no red in top, poop it
+  if (getTopLight() != colors::red && getBottomLight() == colors::blue) {
+    runAction(rollerStates::timedPoop);
     return true;
   }
-  return false;
-}
 
-bool Roller::shouldSpacedShoot() {
-  // if double shot
-  if (getTopLight() == colors::red && getBottomLight() == colors::red) {
-    macroTime.placeMark();
-    macroReturnState = state;
-    macroIntakeVel = getIntake();
-    state = rollerStates::spacedShoot;
-    return true;
-  }
   return false;
 }
 
 int Roller::getIntake() {
-  switch (state) {
-    case rollerStates::off:
-    case rollerStates::shoot:
-    case rollerStates::shootWithoutPoop: return 0;
-    default: return 12000;
-  }
+  return ((state & rollerStates::intake) == rollerStates::intake) ? 12000 : 0;
 }
 
 void Roller::loop() {
@@ -118,146 +81,105 @@ void Roller::loop() {
 
   while (true) {
 
-    switch (state) {
+    // strip flags from action. If action, execute it, and skip flags.
+    if (auto action = state & rollerStates::actions; action != rollerStates::off) {
+      switch (action) {
+
+        case rollerStates::deploy:
+          top(12000);
+          bottom(-800);
+          intake(-12000);
+          break;
+
+        case rollerStates::timedPoop:
+          top(-12000);
+          bottom(12000);
+          intake(getIntake());
+          if (macroTime.getDtFromMark() >= 200_ms) {
+            runAction(rollerStates::off);
+            continue;
+          }
+          break;
+
+        case rollerStates::backPoop:
+          top(-12000);
+          bottom(-12000);
+          intake(getIntake());
+          if (macroTime.getDtFromMark() >= 150_ms) {
+            runAction(rollerStates::off);
+            continue;
+          }
+          break;
+
+        case rollerStates::shootRev:
+          top(-12000);
+          bottom(-12000);
+          intake(getIntake());
+          break;
+
+        default: break;
+      }
+      continue;
+    }
+
+    switch (auto rollerFlags = state & rollerStates::rollerFlags; rollerFlags) {
 
       case rollerStates::off:
         if (shouldPoop()) continue;
-      case rollerStates::offWithoutPoop:
-        topRoller->moveVoltage(0);
-        bottomRoller->moveVoltage(0);
-        intakes->moveVoltage(0);
-        break;
-
-      case rollerStates::out:
-        // if (shouldPoop(-12000)) continue;
-        topRoller->moveVoltage(-12000);
-        bottomRoller->moveVoltage(-12000);
-        intakes->moveVoltage(-12000);
+        top(0);
+        bottom(0);
+        intake(0);
         break;
 
       case rollerStates::on:
       case rollerStates::shoot:
         if (shouldPoop()) continue;
-        if (shouldShootPoop()) continue;
-        [[fallthrough]];
-      case rollerStates::onWithoutPoop:
-      case rollerStates::shootWithoutPoop:
-        if (shouldSpacedShoot()) continue;
-        topRoller->moveVoltage(12000);
-        if (getBottomLight() == colors::blue) {
-          if (getTopLight() != colors::red) {
-            bottomRoller->moveVoltage(-2000);
+        top(12000);
+        // if red on the top needs to be separated from bottom ball
+        if (getTopLight() == colors::red && getBottomLight() != colors::none) {
+          if (getBottomLight() == colors::blue) {
+            bottom(0);
           } else {
-            bottomRoller->moveVoltage(2000);
+            bottom(2000);
           }
         } else {
-          bottomRoller->moveVoltage(12000);
+          bottom(12000);
         }
-        intakes->moveVoltage(getIntake());
+        intake(getIntake());
         break;
 
       case rollerStates::intake:
         if (shouldPoop()) continue;
-        [[fallthrough]];
-      case rollerStates::intakeWithoutPoop:
         if (getTopLight() != colors::none && getBottomLight() != colors::none) {
-          topRoller->moveVoltage(0);
+          top(0);
           if (getBottomLight() == colors::blue) {
-            bottomRoller->moveVoltage(-2000);
+            bottom(-2000);
           } else {
-            bottomRoller->moveVoltage(0);
+            bottom(0);
           }
-          intakes->moveVoltage(12000);
+          intake(12000);
         } else if (getTopLight() != colors::none) {
           // balance between raising ball to prevent rubbing and bringing ball too high
-          topRoller->moveVoltage(1800);
+          top(1800);
           // slow down
-          bottomRoller->moveVoltage(4000);
-          intakes->moveVoltage(12000);
+          bottom(4000);
+          intake(12000);
         } else {
           // balance between bringing ball too fast and accidentally pooping
-          topRoller->moveVoltage(4000);
+          top(4000);
           if (getBottomLight() == colors::blue) {
-            bottomRoller->moveVoltage(-2000);
+            bottom(-2000);
           } else {
-            bottomRoller->moveVoltage(12000);
+            bottom(12000);
           }
-          intakes->moveVoltage(12000);
+          intake(12000);
         }
-        break;
-
-      case rollerStates::poopIn:
-        topRoller->moveVoltage(-12000);
-        bottomRoller->moveVoltage(12000);
-        intakes->moveVoltage(12000);
-        break;
-
-      case rollerStates::poopOut:
-        topRoller->moveVoltage(-12000);
-        bottomRoller->moveVoltage(12000);
-        intakes->moveVoltage(-12000);
         break;
 
       case rollerStates::purge:
-        topRoller->moveVoltage(12000);
-        bottomRoller->moveVoltage(12000);
-        intakes->moveVoltage(-12000);
-        break;
-
-      case rollerStates::topOut:
-        topRoller->moveVoltage(12000);
-        bottomRoller->moveVoltage(4000);
-        intakes->moveVoltage(0);
-        break;
-
-      case rollerStates::deploy:
-        topRoller->moveVoltage(12000);
-        bottomRoller->moveVoltage(-800);
-        intakes->moveVoltage(-12000);
-        break;
-
-      case rollerStates::timedPoop:
-        topRoller->moveVoltage(-12000);
-        bottomRoller->moveVoltage(12000);
-        intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 200_ms) {
-          macroTime.clearMark();
-          state = macroReturnState;
-          continue;
-        }
-        break;
-
-      case rollerStates::timedShootPoop:
-        topRoller->moveVoltage(12000);
-        bottomRoller->moveVoltage(0);
-        intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 400_ms) {
-          macroTime.placeMark();
-          state = rollerStates::timedPoop;
-          continue;
-        }
-        break;
-
-      case rollerStates::spacedShoot:
-        topRoller->moveVoltage(12000);
-        bottomRoller->moveVoltage(1000);
-        intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 10_ms) {
-          macroTime.clearMark();
-          state = macroReturnState;
-          continue;
-        }
-        break;
-
-      case rollerStates::topPoop:
-        topRoller->moveVoltage(-12000);
-        bottomRoller->moveVoltage(-12000);
-        intakes->moveVoltage(macroIntakeVel);
-        if (macroTime.getDtFromMark() >= 150_ms) {
-          macroTime.placeMark();
-          state = rollerStates::timedPoop;
-          continue;
-        }
+        top(12000);
+        bottom(12000);
+        intake(-12000);
         break;
     }
 
