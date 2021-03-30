@@ -69,6 +69,7 @@ void driverDeviceControl() {
     state = rollerStates::intake;
   } else if (partner(R1)) {
     state = rollerStates::out;
+  } else if (master(RIGHT)) {
   } else {
     state |= rollerStates::poop;
   }

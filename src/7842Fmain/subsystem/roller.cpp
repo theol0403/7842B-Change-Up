@@ -10,7 +10,7 @@ using rs = rollerStates;
 void Roller::initialize() {
   topLight->setLedPWM(100);
   bottomLight->setLedPWM(100);
-  // top->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+  topMotor->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
   startTask("Roller");
 }
 
@@ -110,7 +110,7 @@ void Roller::loop() {
           top(-12000);
           bottom(-12000);
           intake(getIntake());
-          if (macroTime.getDtFromMark() >= 150_ms) {
+          if (macroTime.getDtFromMark() >= 100_ms) {
             runAction(rs::off);
             continue;
           }
@@ -158,24 +158,16 @@ void Roller::loop() {
           bottom(-12000);
         } else if (getTopLight() != colors::none && getBottomLight() != colors::none) {
           top(0);
-          if (getBottomLight() == colors::blue) {
-            bottom(-2000);
-          } else {
-            bottom(0);
-          }
+          bottom(0);
         } else if (getTopLight() != colors::none) {
           // balance between raising ball to prevent rubbing and bringing ball too high
-          top(1800);
+          top(0);
           bottom(6000);
         } else {
           // balance between bringing ball too fast and accidentally pooping
-          top(4000);
+          top(7000);
           // if there is a blue but it can't poop
-          if (getBottomLight() == colors::blue) {
-            bottom(0);
-          } else {
-            bottom(12000);
-          }
+          bottom(12000);
         }
         intake(12000);
         break;
@@ -184,7 +176,11 @@ void Roller::loop() {
       case rs::on:
         // don't shoot a blue ball
         if (getTopLight() == colors::blue) {
-          top(-1000);
+          // move to intake mode
+          state &= ~rs::shoot;
+          top(-6000);
+          pros::delay(100);
+          continue;
         } else {
           top(12000);
         }
