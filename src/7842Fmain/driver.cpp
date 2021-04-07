@@ -65,7 +65,7 @@ void driverDeviceControl() {
   // if any of the partner buttons are pressed, the poop is removed. Shoot can still be added later.
   if (partner(R2) && partner(R1)) {
     state = rollerStates::off;
-  } else if (partner(R2)) {
+  } else if (partner(R2) || partner(B)) {
     state = rollerStates::intake;
   } else if (partner(R1)) {
     state = rollerStates::out;
@@ -73,6 +73,8 @@ void driverDeviceControl() {
   } else {
     state |= rollerStates::poop;
   }
+
+  if (partner(B)) { state |= rollerStates::poop; }
 
   // if R1, add shoot
   if (master(R1)) { state |= rollerStates::shoot; }
