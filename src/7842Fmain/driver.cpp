@@ -57,7 +57,7 @@ void driverDeviceControl() {
   rollerStates state {rollerStates::off};
 
   // if L2, add outtake
-  if (master(L2)) { state |= rollerStates::out; }
+  if (either(L2)) { state |= rollerStates::out; }
 
   // if R2, add intake
   if (master(R2)) { state |= rollerStates::intake; }
@@ -67,9 +67,8 @@ void driverDeviceControl() {
     state = rollerStates::off;
   } else if (partner(R2) || partner(B)) {
     state = rollerStates::intake;
-  } else if (partner(R1)) {
-    state = rollerStates::out;
-  } else if (master(RIGHT)) {
+  } else if (partner(L2) || master(RIGHT) || partner(R1)) {
+    // don't turn on poop
   } else {
     state |= rollerStates::poop;
   }
@@ -80,7 +79,7 @@ void driverDeviceControl() {
   if (master(R1)) { state |= rollerStates::shoot; }
 
   // add actions
-  if (either(B)) {
+  if (master(B)) {
     state |= rollerStates::deploy;
   } else if (master(L1)) {
     state |= rollerStates::shootRev;
