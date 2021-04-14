@@ -21,10 +21,8 @@ void Robot::_initializeChassis() {
 
   _model = std::make_shared<XDriveModel>(
     // motors
-    topLeft, // top left
-    topRight, // top right
-    bottomRight, // bottom right
-    bottomLeft, // bottom left
+    topLeft, topRight, bottomRight, bottomLeft,
+    // sensors
     std::make_shared<IntegratedEncoder>(11), std::make_shared<IntegratedEncoder>(-5),
     // limits
     200, 12000);
