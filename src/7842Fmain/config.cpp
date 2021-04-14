@@ -10,8 +10,8 @@
  */
 void Robot::_initializeChassis() {
   auto topLeft = std::make_shared<Motor>(11); // top left
-  auto topRight = std::make_shared<Motor>(-5); // top right
-  auto bottomRight = std::make_shared<Motor>(-6); // bottom right
+  auto topRight = std::make_shared<Motor>(-18); // top right
+  auto bottomRight = std::make_shared<Motor>(-19); // bottom right
   auto bottomLeft = std::make_shared<Motor>(2); // bottom left
 
   topLeft->setBrakeMode(AbstractMotor::brakeMode::brake);
@@ -45,15 +45,15 @@ void Robot::_initializeChassis() {
 void Robot::_initializeDevices() {
   _screen = std::make_shared<GUI::Screen>(lv_scr_act(), LV_COLOR_ORANGE);
 
-  _vision = std::make_shared<VisionTask>(std::make_shared<Vision::Vision>(3),
+  _vision = std::make_shared<VisionTask>(std::make_shared<Vision::Vision>(10),
                                          _screen->makePage<GUI::VisionPage>("Vision"));
 
-  _roller = std::make_shared<Roller>(std::make_shared<MotorGroup>(MotorGroup {-10, 12}),
-                                     std::make_shared<Motor>(7), std::make_shared<Motor>(-8),
-                                     std::make_shared<OpticalSensor>(9),
-                                     std::make_shared<OpticalSensor>(15));
+  _roller = std::make_shared<Roller>(std::make_shared<MotorGroup>(MotorGroup {-17, 12}),
+                                     std::make_shared<Motor>(4), std::make_shared<Motor>(-20),
+                                     std::make_shared<OpticalSensor>(6),
+                                     std::make_shared<OpticalSensor>(3));
 
-  _imu = std::make_shared<IMUTurn>(std::make_shared<pros::Imu>(4), _model,
+  _imu = std::make_shared<IMUTurn>(std::make_shared<pros::Imu>(5), _model,
                                    std::make_shared<IterativePosPIDController>(
                                      0.03, 0.0025, 0.0003, 0, TimeUtilFactory().create()));
 }

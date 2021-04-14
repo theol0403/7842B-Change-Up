@@ -175,15 +175,15 @@ void Roller::loop() {
       case rs::shoot:
       case rs::on:
         // don't shoot a blue ball
-        if (getTopLight() == colors::blue) {
-          // move to intake mode
-          state &= ~rs::shoot;
-          top(-6000);
-          pros::delay(100);
-          continue;
-        } else {
-          top(12000);
-        }
+        // if (getTopLight() == colors::blue) {
+        // move to intake mode
+        // state &= ~rs::shoot;
+        // top(-6000);
+        // pros::delay(100);
+        // continue;
+        // } else {
+        top(12000);
+        // }
         // if red on the top needs to be separated from bottom ball
         if (getTopLight() == colors::red && getBottomLight() != colors::none) {
           if (getBottomLight() == colors::blue) {
