@@ -63,13 +63,13 @@ bool Roller::shouldPoop() {
   if (!(state & rs::poop)) return false;
 
   // if a blue is in the top, lower it before pooping
-  if (getTopLight() == colors::blue) {
+  if (getTopLight() == colors::blue && !(state & rs::top)) {
     runAction(rs::backPoop);
     return true;
   }
 
   // if blue ball in bottom but no red in top, poop it
-  if (getBottomLight() == colors::blue && getTopLight() != colors::red) {
+  if (getBottomLight() == colors::blue && getTopLight() != colors::red && !(state & rs::top)) {
     runAction(rs::timedPoop);
     return true;
   }
@@ -100,7 +100,7 @@ void Roller::loop() {
           top(-12000);
           bottom(12000);
           intake(getIntake());
-          if (macroTime.getDtFromMark() >= 200_ms) {
+          if (macroTime.getDtFromMark() >= 100_ms) {
             runAction(rs::off);
             continue;
           }
@@ -157,15 +157,15 @@ void Roller::loop() {
           top(-12000);
           bottom(-12000);
         } else if (getTopLight() != colors::none && getBottomLight() != colors::none) {
-          top(0);
-          bottom(0);
+          top(2000);
+          bottom(-1000);
         } else if (getTopLight() != colors::none) {
           // balance between raising ball to prevent rubbing and bringing ball too high
-          top(0);
-          bottom(6000);
+          top(2000);
+          bottom(5000);
         } else {
           // balance between bringing ball too fast and accidentally pooping
-          top(7000);
+          top(8000);
           // if there is a blue but it can't poop
           bottom(12000);
         }
@@ -176,11 +176,11 @@ void Roller::loop() {
       case rs::on:
         // don't shoot a blue ball
         // if (getTopLight() == colors::blue) {
-        // move to intake mode
-        // state &= ~rs::shoot;
-        // top(-6000);
-        // pros::delay(100);
-        // continue;
+        //   //  move to intake mode
+        //   state &= ~rs::shoot;
+        //   top(-6000);
+        //   pros::delay(100);
+        //   continue;
         // } else {
         top(12000);
         // }
@@ -192,7 +192,11 @@ void Roller::loop() {
             bottom(2000);
           }
         } else {
-          bottom(12000);
+          if (getBottomLight() == colors::blue) {
+            bottom(2000);
+          } else {
+            bottom(12000);
+          }
         }
         intake(getIntake());
         break;
