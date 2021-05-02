@@ -36,8 +36,10 @@ void driverBaseControl() {
 
   if (master(DOWN)) { rightX += Robot::vision()->getOffset() * 0.015; }
 
-  Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
-                          std::pow(rightY, 2) * util::sgn(rightY), std::pow(leftX, 3));
+  // Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
+  //                         std::pow(rightY, 2) * util::sgn(rightY), std::pow(leftX, 3));
+
+  Robot::model()->xArcade(rightX, rightY, leftX);
 
   if (master(X) && !pros::competition::is_connected()) autonomous();
 }
