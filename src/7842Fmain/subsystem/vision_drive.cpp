@@ -4,131 +4,22 @@
 
 namespace lib7842 {
 
-const QLength ballCruise = 2_ft;
-const QLength ballStop = 0.7_ft;
-const Number ballSpeed = 30_pct;
-const QLength goalStop = 1.5_ft;
+Rotator makeVisionRotator(const VisionFlags& flags, const Rotator& other) {
+  return [=](const Profile<>::State& state) {
+    auto ballD = state.length * flags.ball; // how far for ball seek
+    auto goalD = state.length * flags.goal; // how far for gol seek
 
-const bool velocity = true;
-
-void XVisionGenerator::strafe(const Spline& spline, const ChassisFlags& flags,
-                              PiecewiseTrapezoidal::Markers&& markers) {
-  if (velocity && flags.start_v == 0_pct) {
-    model->getTopLeftMotor()->moveVelocity(0);
-    model->getTopRightMotor()->moveVelocity(0);
-    model->getBottomLeftMotor()->moveVelocity(0);
-    model->getBottomRightMotor()->moveVelocity(0);
-    pros::delay(10);
-  }
-
-  auto length = spline.length();
-  auto ballD = length * flags.ball_seek;
-  auto goalD = length * flags.goal_seek;
-
-  auto runner = [&](double t, KinematicState& k) {
-    // get the location on the spline
-    auto pos = spline.calc(t);
-    auto theta = pos.theta;
-
-    QAngle offset = 0_deg;
-    if (k.d > ballD && k.d < ballD + ballCruise && k.d < length - ballStop) {
-      offset += Robot::vision()->getOffset() * 0.6_deg;
+    double error = 0;
+    if (state.d > ballD && state.d < ballD + flags.ballCruise &&
+        state.d < state.length - flags.ballStop) {
+      error += Robot::vision()->getOffset();
     }
-    if (k.d > goalD && k.d < length - goalStop) {
-      offset += Robot::vision()->getBlueOffset() * 0.5_deg;
+    if (state.d > goalD && state.d < state.length - flags.goalStop) {
+      error += Robot::vision()->getBlueOffset();
     }
-    theta -= std::clamp(offset, -50_deg, 50_deg);
 
-    // limit the velocity according to path angle.
-    // since this is passed by reference it will affect the generator code
-    k.v = std::min(k.v, limits.v / (sin(theta).abs() + cos(theta).abs()));
-
-    auto left = k.v * sin(theta + 45_deg);
-    auto right = k.v * sin(theta - 45_deg);
-
-    Number topLeftSpeed = Generator::toWheel(left, scales, gearset);
-    Number topRightSpeed = Generator::toWheel(right, scales, gearset);
-
-    double topLeft = topLeftSpeed.convert(number);
-    double topRight = topRightSpeed.convert(number);
-
-    if (velocity) {
-      model->getTopLeftMotor()->moveVelocity(topLeft * gearset.convert(rpm));
-      model->getTopRightMotor()->moveVelocity(topRight * gearset.convert(rpm));
-      model->getBottomLeftMotor()->moveVelocity(topRight * gearset.convert(rpm));
-      model->getBottomRightMotor()->moveVelocity(topLeft * gearset.convert(rpm));
-    } else {
-      model->getTopLeftMotor()->moveVoltage(topLeft * 12000);
-      model->getTopRightMotor()->moveVoltage(topRight * 12000);
-      model->getBottomLeftMotor()->moveVoltage(topRight * 12000);
-      model->getBottomRightMotor()->moveVoltage(topLeft * 12000);
-    }
+    return other(state) + error * 0.001_deg / second;
   };
-
-  // if (flags.ball_seek < 100_pct) markers.emplace_back(flags.ball_seek, ballSpeed);
-  Generator::generate(limits, runner, spline, dt, {flags.start_v, flags.end_v, flags.top_v},
-                      markers);
-}
-
-void XVisionGenerator::curve(const Spline& spline, const ChassisFlags& flags,
-                             PiecewiseTrapezoidal::Markers&& markers) {
-
-  if (velocity && flags.start_v == 0_pct) {
-    model->getTopLeftMotor()->moveVelocity(0);
-    model->getTopRightMotor()->moveVelocity(0);
-    model->getBottomLeftMotor()->moveVelocity(0);
-    model->getBottomRightMotor()->moveVelocity(0);
-    pros::delay(10);
-  }
-
-  auto length = spline.length();
-  auto ballD = length * flags.ball_seek;
-  auto goalD = length * flags.goal_seek;
-
-  auto runner = [&](double t, KinematicState& k) {
-    // get the curvature along the path
-    auto curvature = spline.curvature(t);
-
-    // limit the velocity according to curvature.
-    // since this is passed by reference it will affect the generator code
-    k.v = std::min(k.v, limits.max_vel_at_curvature(curvature));
-
-    // angular speed is curvature times limited speed
-    QAngularSpeed w = curvature * k.v * radian;
-
-    QSpeed left = k.v / std::sqrt(2) - (w / radian * scales.wheelTrack) / 2;
-    QSpeed right = k.v / std::sqrt(2) + (w / radian * scales.wheelTrack) / 2;
-
-    Number leftSpeed = Generator::toWheel(left, scales, gearset);
-    Number rightSpeed = Generator::toWheel(right, scales, gearset);
-
-    double offset = 0;
-    if (k.d > ballD && k.d < ballD + ballCruise && k.d < length - ballStop) {
-      offset += Robot::vision()->getOffset() * 0.005;
-    }
-    if (k.d > goalD && k.d < length - goalStop) {
-      offset += Robot::vision()->getBlueOffset() * 0.005;
-    }
-
-    double leftMotor = leftSpeed.convert(number);
-    double rightMotor = rightSpeed.convert(number);
-
-    if (velocity) {
-      model->getTopLeftMotor()->moveVelocity((leftMotor + offset) * gearset.convert(rpm));
-      model->getTopRightMotor()->moveVelocity((rightMotor - offset) * gearset.convert(rpm));
-      model->getBottomLeftMotor()->moveVelocity((leftMotor - offset) * gearset.convert(rpm));
-      model->getBottomRightMotor()->moveVelocity((rightMotor + offset) * gearset.convert(rpm));
-    } else {
-      model->getTopLeftMotor()->moveVoltage((leftMotor + offset) * 12000);
-      model->getTopRightMotor()->moveVoltage((rightMotor - offset) * 12000);
-      model->getBottomLeftMotor()->moveVoltage((leftMotor - offset) * 12000);
-      model->getBottomRightMotor()->moveVoltage((rightMotor + offset) * 12000);
-    }
-  };
-
-  // if (flags.ball_seek < 100_pct) markers.emplace_back(flags.ball_seek, ballSpeed);
-  Generator::generate(limits, runner, spline, dt, {flags.start_v, flags.end_v, flags.top_v},
-                      markers);
 }
 
 } // namespace lib7842
