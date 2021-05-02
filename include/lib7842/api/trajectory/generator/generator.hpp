@@ -12,12 +12,12 @@ namespace lib7842 {
 class Generator {
 public:
   // execute trajectory as a function of location on the path and profiled speed
-  using Runner = std::function<void(double, KinematicState&)>;
+  using Runner = std::function<void(double, Profile<>::State&)>;
 
   // method that brings everything together
-  static PiecewiseTrapezoidal generate(const Limits& limits, const Runner& runner,
+  static PiecewiseTrapezoidal generate(const Limits<>& limits, const Runner& runner,
                                        const Spline& spline, const QTime& dt = 10_ms,
-                                       const ProfileFlags& flags = {},
+                                       const Profile<>::Flags& flags = {},
                                        const PiecewiseTrapezoidal::Markers& markers = {});
 
   // convert wheel velocity to wheel percentage
@@ -25,12 +25,15 @@ public:
 
   struct Step {
     State p;
-    KinematicState k;
+    Profile<>::State k;
     QAngularSpeed w;
     QCurvature c;
     QSpeed p_vel;
-    Number left {0_pct};
-    Number right {0_pct};
+    double left {0};
+    double right {0};
+    double leftBack {0};
+    double rightBack {0};
+    QAngle robot {0_deg};
   };
 
   using Output = std::pair<PiecewiseTrapezoidal, std::vector<Step>>;
