@@ -9,8 +9,8 @@
 #define roll(x) Robot::roller()->setNewState(rollerStates::x)
 
 // drive a certain distance
-inline void drive(const QLength& m, const ChassisFlags& flags = {}) {
-  Robot::chassis()->strafe(Line({0_m, 0_m}, {0_m, m}), flags);
+inline void drive(const QLength& m, const XFlags& flags = {}) {
+  Robot::chassis()->follow(Line({0_m, 0_m}, {0_m, m}), flags);
 }
 
 inline void turn(const QAngle& a) {

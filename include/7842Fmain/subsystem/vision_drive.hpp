@@ -14,15 +14,15 @@ struct VisionFlags {
   const QLength goalStop {1.5_ft};
 };
 
-Rotator makeVisionRotator(const VisionFlags& flags, const Rotator& other = makeRotator(0_rpm));
+Rotator makeVision(const VisionFlags& flags, const Rotator& other = makeRotator(0_rpm));
 
-inline Rotator makeVisionRotator(const VisionFlags& flags, const QAngularSpeed& speed) {
-  return makeVisionRotator(flags, makeRotator(speed));
+inline Rotator makeVision(const VisionFlags& flags, const QAngularSpeed& speed) {
+  return makeVision(flags, makeRotator(speed));
 }
 
-inline Rotator makeVisionRotator(const VisionFlags& flags, const QAngle& angle,
-                                 const Limits<QAngle>& limits) {
-  return makeVisionRotator(flags, makeRotator(angle, limits));
+inline Rotator makeVision(const VisionFlags& flags, const QAngle& angle,
+                          const Limits<QAngle>& limits) {
+  return makeVision(flags, makeRotator(angle, limits));
 }
 
 } // namespace lib7842
