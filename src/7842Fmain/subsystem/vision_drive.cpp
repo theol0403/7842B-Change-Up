@@ -4,7 +4,7 @@
 
 namespace lib7842 {
 
-Rotator makeVisionRotator(const VisionFlags& flags, const Rotator& other) {
+Rotator makeVision(const VisionFlags& flags, const Rotator& other) {
   return [=](const Profile<>::State& state) {
     auto ballD = state.length * flags.ball; // how far for ball seek
     auto goalD = state.length * flags.goal; // how far for gol seek
@@ -18,7 +18,7 @@ Rotator makeVisionRotator(const VisionFlags& flags, const Rotator& other) {
       error += Robot::vision()->getBlueOffset();
     }
 
-    return other(state) + error * 0.001_deg / second;
+    return other(state) + error * 0.7_deg / second;
   };
 }
 

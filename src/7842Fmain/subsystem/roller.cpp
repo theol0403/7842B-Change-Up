@@ -147,9 +147,10 @@ void Roller::loop() {
         break;
 
       case rs::top:
+      case rs::topIntake:
         top(12000);
         bottom(out ? -12000 : 0);
-        intake(out ? -12000 : 0);
+        intake(getIntake());
         break;
 
       case rs::intake:

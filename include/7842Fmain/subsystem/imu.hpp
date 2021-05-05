@@ -41,7 +41,6 @@ public:
     reset();
   }
 
-protected:
   std::shared_ptr<pros::Imu> imu;
   std::shared_ptr<XDriveModel> model;
   std::shared_ptr<IterativePosPIDController> pid;
