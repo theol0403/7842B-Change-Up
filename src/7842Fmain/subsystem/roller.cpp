@@ -154,6 +154,7 @@ void Roller::loop() {
         break;
 
       case rs::intake:
+      case rs::loading:
         if (out) {
           top(-12000);
           bottom(-12000);

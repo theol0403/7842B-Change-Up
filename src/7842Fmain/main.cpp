@@ -58,13 +58,13 @@ void autonomous() {
   Robot::model()->stop();
 
   move(QuinticHermite({0_ft, 0_ft, -180_deg}, {-0.0_ft, -1.9_ft, -45_deg}, 1.1),
-       {.rotator = makeRotator(-45_deg, Limits<QAngle>(0.5_s, 60_deg / second))});
+       {.rotator = makeRotator(-42_deg, Limits<QAngle>(0.5_s, 60_deg / second))});
 
   // shoot
   roll(on);
-  pros::delay(600);
-  roll(intake);
-  pros::delay(200);
+  pros::delay(800);
+  roll(topIntake);
+  pros::delay(100);
   roll(off);
 
   asyncTask(pros::delay(700); roll(out););
@@ -72,10 +72,10 @@ void autonomous() {
   move(QuinticHermite({0_ft, 0_ft, 135_deg}, {-3.6_ft, 3.4_ft, 180_deg}),
        {.curve = true, .start = -45_deg});
 
-  turn(90_deg);
+  turn(88_deg);
 
   roll(intake);
-  move(QuinticHermite({0_ft, 0_ft, 110_deg}, {3.5_ft, 2.0_ft, 0_deg}, 1.7, 3),
+  move(QuinticHermite({0_ft, 0_ft, 110_deg}, {3.3_ft, 2.2_ft, 0_deg}, 1.7, 3),
        {.curve = true,
         .start = 110_deg,
         .rotator = makeVision({.goal = 80_pct}, [](const Profile<>::State& state) {
@@ -89,8 +89,9 @@ void autonomous() {
   Robot::model()->stop();
 
   shootEdge();
+  asyncTask(pros::delay(400); roll(out););
 
-  drive(-3_ft, {.rotator = [](const Profile<>::State& state) {
+  drive(-2.8_ft, {.rotator = [](const Profile<>::State& state) {
     auto error = util::rollAngle180(
       0_deg - (-1 * Robot::imu()->imu->get_rotation() * degree - Robot::imu()->offset));
     return Robot::imu()->pid->step(-error.convert(degree)) * rpm * 20;
@@ -99,12 +100,14 @@ void autonomous() {
   turn(225_deg);
 
   roll(loadingPoop);
-  move(QuinticHermite({0_ft, 0_ft, 205_deg}, {-2.5_ft, -5.5_ft, -90_deg}, 1.5, 4),
+  move(QuinticHermite({0_ft, 0_ft, 205_deg}, {-3_ft, -5.5_ft, -90_deg}, 2, 4.5),
        {.curve = true, .start = 205_deg});
 
-  shootEdge();
+  roll(topIntake);
+  pros::delay(500);
+  roll(off);
 
-  drive(-1_ft);
+  drive(-0.7_ft);
 
   /* ---------------------------- third corner goal --------------------------- */
 
@@ -113,7 +116,10 @@ void autonomous() {
     pros::delay(400);
     roll(loadingPoop);
   });
-  turn(-190_deg);
+  turn(190_deg);
+
+  move(QuarticBezier({{0_ft, 0_ft}, {0_ft, 1_ft}, {-2_ft, 2_ft}, {3_ft, 4_ft}, {3_ft, 5.7_ft}}),
+       {.curve = true, .start = 90_deg});
 
   // shoot
   // shootCorner();
