@@ -84,7 +84,7 @@ void autonomous() {
   shootEdge();
   asyncTask(pros::delay(400); roll(out););
 
-  drive(-2.8_ft, {.rotator = Injector().addImu(0_deg)});
+  drive(-2.8_ft, {.rotator = Injector().addImu(0_deg).build()});
 
   turn(225_deg);
 

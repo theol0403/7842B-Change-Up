@@ -1,5 +1,6 @@
 #pragma once
 #include "main.h"
+#include "roller.hpp"
 #include <variant>
 
 namespace lib7842 {
@@ -19,6 +20,6 @@ public:
   Rotator build();
 
 protected:
-  std::vector<Rotator> rotators {};
+  std::vector<std::tuple<Rotator, Marker, Marker>> rotators {};
 };
 } // namespace lib7842
