@@ -18,7 +18,7 @@ Rotator makeVision(const VisionFlags& flags, const Rotator& other) {
       error += Robot::vision()->getBlueOffset();
     }
 
-    return other(state) + error * 0.7_deg / second;
+    return other(state) - error * 0.7_deg / second;
   };
 }
 

@@ -12,8 +12,16 @@ const int RED = 2;
 const int BLUE = 1;
 
 void VisionTask::initialize() {
+  // pros::vision_signature_s_t RED_SIG =
+  //   pros::Vision::signature_from_utility(RED, 6553, 8863, 7708, -477, 115, -182, 4.700, 0);
+  // vision->set_signature(RED, &RED_SIG);
+
+  // pros::vision_signature_s_t BLUE_SIG =
+  //   pros::Vision::signature_from_utility(BLUE, -2409, -1563, -1986, 7527, 10923, 9224, 3.500, 0);
+  // vision->set_signature(BLUE, &BLUE_SIG);
+
   pros::vision_signature_s_t RED_SIG =
-    pros::Vision::signature_from_utility(RED, 6553, 8863, 7708, -477, 115, -182, 4.700, 0);
+    pros::Vision::signature_from_utility(RED, 7423, 10707, 9065, -1479, -109, -794, 3.700, 0);
   vision->set_signature(RED, &RED_SIG);
 
   pros::vision_signature_s_t BLUE_SIG =

@@ -8,7 +8,7 @@ struct VisionFlags {
   Number ball {105_pct}; // how far along the path before vision seeking
   Number goal {105_pct}; // how far along the path before goal seeking
 
-  const QLength ballCruise {2_ft}; // how much distance to seek the ball
+  const QLength ballCruise {2.5_ft}; // how much distance to seek the ball
   const QLength ballStop {0.7_ft}; // how far from the end of the path to seek the ball
   // how far from the end of the path to seek the ball while goal seeking while goal seeking
   const QLength goalStop {1.5_ft};

@@ -47,8 +47,10 @@ void autonomous() {
   Robot::imu()->reset(29_deg);
 
   roll(intake);
-  move(Mesh({0_ft, 0_ft, 29_deg}, {4.2_ft, 2.5_ft, -10_deg}),
-       {.end_v = 0.1_pct, .curve = true, .start = 29_deg});
+  move(Line({0_ft, 0_ft}, {2_ft, 0_ft}), {.end_v = 90_pct});
+  move(Mesh({0_ft, 0_ft, 29_deg}, {2.6_ft, 1.3_ft, -3_deg}),
+       {.start_v = 90_pct, .end_v = 0.1_pct, .curve = true, .start = 29_deg});
+  Robot::model()->stop();
 
   move(QuinticHermite({0_ft, 0_ft, -180_deg}, {-0.1_ft, -1.9_ft, -45_deg}, 1.1),
        {.rotator = makeRotator(-45_deg, Limits<QAngle>(0.5_s, 60_deg / second))});
@@ -58,18 +60,28 @@ void autonomous() {
   pros::delay(600);
   roll(topIntake);
   pros::delay(600);
-  roll(intake);
+  roll(off);
 
   asyncTask(pros::delay(700); roll(out););
 
-  move(QuinticHermite({0_ft, 0_ft, 135_deg}, {-3.5_ft, 4_ft, 180_deg}),
+  move(QuinticHermite({0_ft, 0_ft, 135_deg}, {-3.5_ft, 3.5_ft, 180_deg}),
        {.curve = true, .start = -45_deg});
 
-  turn(70_deg);
+  turn(90_deg);
 
   roll(intake);
-  move(QuinticHermite({0_ft, 0_ft, 95_deg}, {3.5_ft, 2.5_ft, 0_deg}, 1, 3),
-       {.curve = true, .start = 90_deg});
+  move(QuinticHermite({0_ft, 0_ft, 105_deg}, {3.5_ft, 1.7_ft, 0_deg}, 1, 3),
+       {.curve = true,
+        .start = 90_deg,
+        .rotator = makeVision({.ball = 0_pct}, [](const Profile<>::State& state) {
+          if (state.t > 1.6_s) {
+            auto error = util::rollAngle180(
+              0_deg - (-1 * Robot::imu()->imu->get_rotation() * degree - Robot::imu()->offset));
+            return Robot::imu()->pid->step(-error.convert(degree)) * rpm * 20;
+          }
+          return 0_rpm;
+        })});
+  Robot::model()->stop();
 
   shootEdge();
 
