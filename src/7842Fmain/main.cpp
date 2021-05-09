@@ -33,12 +33,17 @@ void opcontrol() {
 // }
 
 void shootEdge() {
+  // roll(topOut);
+  // pros::delay(500);
+  // roll(shootWithoutPoop);
+  // pros::delay(500);
+  // asyncTask({
+  //   pros::delay(350);
+  //   roll(intakeWithoutPoop);
+  // });
   roll(shoot);
-  pros::delay(1000);
-  asyncTask({
-    pros::delay(500);
-    roll(intake);
-  });
+  pros::delay(900);
+  roll(off);
 }
 
 void autonomous() {
@@ -57,9 +62,9 @@ void autonomous() {
 
   // shoot
   roll(on);
-  pros::delay(700);
-  roll(topIntake);
-  pros::delay(300);
+  pros::delay(600);
+  roll(intake);
+  pros::delay(200);
   roll(off);
 
   asyncTask(pros::delay(700); roll(out););
@@ -86,143 +91,31 @@ void autonomous() {
   shootEdge();
 
   drive(-3_ft, {.rotator = [](const Profile<>::State& state) {
-    if (state.t > 1.6_s) {
-      auto error = util::rollAngle180(
-        0_deg - (-1 * Robot::imu()->imu->get_rotation() * degree - Robot::imu()->offset));
-      return Robot::imu()->pid->step(-error.convert(degree)) * rpm * 20;
-    }
-    return 0_rpm;
+    auto error = util::rollAngle180(
+      0_deg - (-1 * Robot::imu()->imu->get_rotation() * degree - Robot::imu()->offset));
+    return Robot::imu()->pid->step(-error.convert(degree)) * rpm * 20;
   }});
 
   turn(225_deg);
 
   roll(loadingPoop);
-  move(QuinticHermite({0_ft, 0_ft, 225_deg}, {-1_ft, -6_ft, -80_deg}, 1, 3),
-       {.curve = true, .start = 225_deg});
+  move(QuinticHermite({0_ft, 0_ft, 205_deg}, {-2.5_ft, -5.5_ft, -90_deg}, 1.5, 4),
+       {.curve = true, .start = 205_deg});
 
-  // asyncTask(pros::delay(1200); roll(out););
-  // move(QuinticHermite({0_ft, 0_ft, 0_deg}, {2_ft, 3_ft, 120_deg}),
-  //      {.curve = true, .start = 180_deg});
+  shootEdge();
 
-  // roll(intake);
+  drive(-1_ft);
 
-  // move(
-  //   make_piecewise<QuinticHermite>({{0_ft, 0_ft, 0_deg}, {3_ft, 4_ft, 0_deg}, {2_ft, 6_ft, 0_deg}}),
-  //   {.curve = true});
+  /* ---------------------------- third corner goal --------------------------- */
 
-  // // deploy after strafing from edge
-  // move(Line({0_ft, 0_ft}, {-1.5_ft, 0_ft}));
+  // purge and turn
+  asyncTask({
+    pros::delay(400);
+    roll(loadingPoop);
+  });
+  turn(-190_deg);
 
-  // roll(deploy);
-  // pros::delay(500);
-  // roll(intakeWithoutPoop);
-
-  // /* ------------------------------- first corner goal ------------------------------- */
-
-  // // to ball and goal
-  // move->curve(Mesh({0_ft, 0_ft, 0_deg}, {1.9_ft, 3.8_ft, 70_deg}), {});
-
-  // // shoot
-  // roll(intakeWithoutPoop);
-  // pros::delay(100);
-  // roll(topOut);
-  // pros::delay(400);
-  // roll(onWithoutPoop);
-  // pros::delay(500);
-  // roll(off);
-
-  // // back up
-  // asyncTask({
-  //   pros::delay(200);
-  //   roll(out);
-  // });
-  // drive(-2.5_ft);
-
-  // /* ----------------------------- first edge goal ---------------------------- */
-
-  // // purge and turn
-  // turn(-75_deg);
-
-  // // to ball
-  // roll(intake);
-  // drive(3.75_ft, {.ball_seek = 30_pct});
-
-  // // to goal
-  // turn(177_deg);
-  // drive(3_ft, {.goal_seek = 50_pct});
-
-  // // shoot
-  // shootEdge();
-
-  // // back up
-  // drive(-0.85_ft);
-
-  // /* --------------------------- second corner goal --------------------------- */
-
-  // // purge and turn
-  // asyncTask({
-  //   pros::delay(400);
-  //   roll(poopIn);
-  // });
-  // turn(-92_deg);
-
-  // // to ball and goal
-  // pros::delay(200);
-  // roll(intake);
-  // move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3.4_ft, 5.75_ft, -85_deg}), {.ball_seek = 10_pct});
-
-  // // shoot
-  // shootCorner();
-
-  // // back up
-  // drive(-3_ft);
-
-  // /* ---------------------------- second edge goal ---------------------------- */
-
-  // // purge and turn
-  // roll(out);
-  // pros::delay(200);
-  // turn(16_deg);
-
-  // // to ball
-  // roll(intake);
-  // drive(3.2_ft, {.ball_seek = 20_pct});
-
-  // // to goal
-  // turn(-92_deg);
-  // drive(3_ft, {.goal_seek = 50_pct});
-
-  // // shoot
-  // roll(topOut);
-  // pros::delay(500);
-  // roll(shootWithoutPoop);
-  // pros::delay(500);
-  // asyncTask({
-  //   pros::delay(350);
-  //   roll(intakeWithoutPoop);
-  // });
-
-  // // back up
-  // drive(-1.6_ft);
-
-  // /* ---------------------------- third corner goal --------------------------- */
-
-  // // purge and turn
-  // asyncTask({
-  //   pros::delay(400);
-  //   roll(poopIn);
-  // });
-  // turn(-2_deg);
-
-  // // to ball
-  // roll(intake);
-  // drive(4.3_ft, {.ball_seek = 50_pct});
-
-  // // to goal
-  // turn(-61_deg);
-  // drive(3.3_ft, {.goal_seek = 50_pct});
-
-  // // shoot
+  // shoot
   // shootCorner();
 
   // // back up
