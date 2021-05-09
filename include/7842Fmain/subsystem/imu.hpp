@@ -18,9 +18,9 @@ public:
     Timer settleTime;
     Rate rate;
     do {
-      error = util::rollAngle180(a - (imu->get_rotation() * degree - offset));
+      error = util::rollAngle180(a - (-1 * imu->get_rotation() * degree - offset));
       double out = pid->step(-error.convert(degree));
-      model->tank(out, -out);
+      model->tank(-out, out);
       if (abs(error) < tolerance) settleTime.placeHardMark();
       rate.delayUntil(10_ms);
     } while ((abs(error) >= tolerance && settleTime.getDtFromStart() < 3_s) ||
@@ -29,7 +29,7 @@ public:
   }
 
   void reset(const QAngle& start = 0_deg) {
-    offset = imu->get_rotation() * degree - start;
+    offset = -1 * imu->get_rotation() * degree - start;
   }
 
   void calibrate() {
