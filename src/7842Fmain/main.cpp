@@ -78,24 +78,13 @@ void autonomous() {
   move(QuinticHermite({0_ft, 0_ft, 110_deg}, {3.3_ft, 2.2_ft, 0_deg}, 1.7, 3),
        {.curve = true,
         .start = 110_deg,
-        .rotator = makeVision({.goal = 80_pct}, [](const Profile<>::State& state) {
-          if (state.t > 1.6_s) {
-            auto error = util::rollAngle180(
-              0_deg - (-1 * Robot::imu()->imu->get_rotation() * degree - Robot::imu()->offset));
-            return Robot::imu()->pid->step(-error.convert(degree)) * rpm * 20;
-          }
-          return 0_rpm;
-        })});
+        .rotator = Injector().addBallVision(80_pct).addImu(0_deg, 1.6_s).build()});
   Robot::model()->stop();
 
   shootEdge();
   asyncTask(pros::delay(400); roll(out););
 
-  drive(-2.8_ft, {.rotator = [](const Profile<>::State& state) {
-    auto error = util::rollAngle180(
-      0_deg - (-1 * Robot::imu()->imu->get_rotation() * degree - Robot::imu()->offset));
-    return Robot::imu()->pid->step(-error.convert(degree)) * rpm * 20;
-  }});
+  drive(-2.8_ft, {.rotator = Injector().addImu(0_deg)});
 
   turn(225_deg);
 
