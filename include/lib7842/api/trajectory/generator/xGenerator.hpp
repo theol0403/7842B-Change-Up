@@ -22,6 +22,7 @@ struct XFlags {
   bool curve {false};
   QAngle start {0_deg};
   Rotator rotator {makeRotator(0_rpm)};
+  Rotator angler {makeRotator(0_rpm)};
 };
 
 class XGenerator {

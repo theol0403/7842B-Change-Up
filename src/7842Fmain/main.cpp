@@ -78,13 +78,13 @@ void autonomous() {
   move(QuinticHermite({0_ft, 0_ft, 110_deg}, {3.3_ft, 2.2_ft, 0_deg}, 1.7, 3),
        {.curve = true,
         .start = 110_deg,
-        .rotator = Injector().addBallVision(80_pct).addImu(0_deg, 1.6_s).build()});
+        .angler = Injector().addBallVision(80_pct).addImu(0_deg, 1.6_s).build()});
   Robot::model()->stop();
 
   shootEdge();
   asyncTask(pros::delay(400); roll(out););
 
-  drive(-2.8_ft, {.rotator = Injector().addImu(0_deg).build()});
+  drive(-2.8_ft, {.angler = Injector().addImu(0_deg).build()});
 
   turn(225_deg);
 
