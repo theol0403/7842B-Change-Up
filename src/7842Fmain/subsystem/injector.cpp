@@ -28,8 +28,7 @@ Injector&& Injector::addGoalVision(const Marker& start, const Marker& end) {
 Injector&& Injector::addImu(const QAngle& a, const Marker& start, const Marker& end) {
   add(
     [=](const Profile<>::State& /*state*/) {
-      auto error = util::rollAngle180(
-        a - (-1 * Robot::imu()->imu->get_rotation() * degree - Robot::imu()->offset));
+      auto error = util::rollAngle180(a - Robot::imu()->get());
       return Robot::imu()->pid->step(-error.convert(degree)) * rpm * 20;
     },
     start, end);

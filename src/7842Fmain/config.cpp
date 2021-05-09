@@ -51,7 +51,8 @@ void Robot::_initializeDevices() {
                                      std::make_shared<OpticalSensor>(6),
                                      std::make_shared<OpticalSensor>(3));
 
-  _imu = std::make_shared<IMUTurn>(std::make_shared<pros::Imu>(5), _model,
+  _imu = std::make_shared<IMUTurn>(std::make_shared<pros::Imu>(5), std::make_shared<pros::Imu>(8),
+                                   _model,
                                    std::make_shared<IterativePosPIDController>(
                                      0.03, 0.0025, 0.0003, 0, TimeUtilFactory().create()));
 }
