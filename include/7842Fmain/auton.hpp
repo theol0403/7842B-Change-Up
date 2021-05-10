@@ -7,6 +7,7 @@
 // shorthand
 #define move Robot::chassis()->follow
 #define roll(x) Robot::roller()->setNewState(rollerStates::x)
+#define AB AnglerBuilder
 
 // drive a certain distance
 inline void drive(const QLength& m, const XFlags& flags = {}) {

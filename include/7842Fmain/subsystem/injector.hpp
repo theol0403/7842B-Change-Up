@@ -4,22 +4,22 @@
 #include <variant>
 
 namespace lib7842 {
-class Injector {
+class AnglerBuilder {
 public:
-  constexpr Injector() = default;
+  constexpr AnglerBuilder() = default;
 
   using Marker = std::variant<nullptr_t, Number, QLength, QTime>;
 
-  Injector&& add(const Rotator& rotator, const Marker& start = {}, const Marker& end = {});
-  Injector&& addBallVision(const Marker& start = {}, const Marker& end = -0.7_ft);
-  Injector&& addGoalVision(const Marker& start = 80_pct, const Marker& end = -1.5_ft);
-  Injector&& addImu(const QAngle& a, const Marker& start = {}, const Marker& end = {});
-  Injector&& addRoller(const rollerStates& roller, const Marker& start = {},
-                       const Marker& end = {});
+  AnglerBuilder&& add(const Angler& angler, const Marker& start = {}, const Marker& end = {});
+  AnglerBuilder&& addBallVision(const Marker& start = {}, const Marker& end = -0.7_ft);
+  AnglerBuilder&& addGoalVision(const Marker& start = 80_pct, const Marker& end = -1.5_ft);
+  AnglerBuilder&& addImu(const QAngle& a, const Marker& start = {}, const Marker& end = {});
+  AnglerBuilder&& addRoller(const rollerStates& roller, const Marker& start = {},
+                            const Marker& end = {});
 
-  Rotator build();
+  operator Angler();
 
 protected:
-  std::vector<std::tuple<Rotator, Marker, Marker>> rotators {};
+  std::vector<std::tuple<Angler, Marker, Marker>> anglers {};
 };
 } // namespace lib7842

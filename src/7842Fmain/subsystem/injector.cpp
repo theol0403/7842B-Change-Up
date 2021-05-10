@@ -2,12 +2,12 @@
 #include "7842Fmain/config.hpp"
 
 namespace lib7842 {
-Injector&& Injector::add(const Rotator& rotator, const Marker& start, const Marker& end) {
-  rotators.emplace_back(std::make_tuple(rotator, start, end));
+AnglerBuilder&& AnglerBuilder::add(const Angler& angler, const Marker& start, const Marker& end) {
+  anglers.emplace_back(std::make_tuple(angler, start, end));
   return std::move(*this);
 }
 
-Injector&& Injector::addBallVision(const Marker& start, const Marker& end) {
+AnglerBuilder&& AnglerBuilder::addBallVision(const Marker& start, const Marker& end) {
   add(
     [=](const Profile<>::State& /*state*/) {
       return Robot::vision()->getOffset() * -0.7_deg / second;
@@ -16,7 +16,7 @@ Injector&& Injector::addBallVision(const Marker& start, const Marker& end) {
   return std::move(*this);
 }
 
-Injector&& Injector::addGoalVision(const Marker& start, const Marker& end) {
+AnglerBuilder&& AnglerBuilder::addGoalVision(const Marker& start, const Marker& end) {
   add(
     [=](const Profile<>::State& /*state*/) {
       return Robot::vision()->getBlueOffset() * -0.7_deg / second;
@@ -25,7 +25,7 @@ Injector&& Injector::addGoalVision(const Marker& start, const Marker& end) {
   return std::move(*this);
 }
 
-Injector&& Injector::addImu(const QAngle& a, const Marker& start, const Marker& end) {
+AnglerBuilder&& AnglerBuilder::addImu(const QAngle& a, const Marker& start, const Marker& end) {
   add(
     [=](const Profile<>::State& /*state*/) {
       auto error = util::rollAngle180(a - Robot::imu()->get());
@@ -35,7 +35,8 @@ Injector&& Injector::addImu(const QAngle& a, const Marker& start, const Marker& 
   return std::move(*this);
 }
 
-Injector&& Injector::addRoller(const rollerStates& roller, const Marker& start, const Marker& end) {
+AnglerBuilder&& AnglerBuilder::addRoller(const rollerStates& roller, const Marker& start,
+                                         const Marker& end) {
   add(
     [=](const Profile<>::State& /*state*/) {
       Robot::roller()->setNewState(roller);
@@ -45,11 +46,11 @@ Injector&& Injector::addRoller(const rollerStates& roller, const Marker& start, 
   return std::move(*this);
 }
 
-Rotator Injector::build() {
-  return [rotators = std::move(rotators)](const Profile<>::State& state) {
-    return std::accumulate(rotators.begin(), rotators.end(), 0_rpm,
+AnglerBuilder::operator Angler() {
+  return [anglers = std::move(anglers)](const Profile<>::State& state) {
+    return std::accumulate(anglers.begin(), anglers.end(), 0_rpm,
                            [&](const QAngularSpeed& w, const auto& tuple) {
-                             auto& rotator = std::get<0>(tuple);
+                             auto& angler = std::get<0>(tuple);
                              auto& start = std::get<1>(tuple);
                              auto& end = std::get<2>(tuple);
 
@@ -97,7 +98,7 @@ Rotator Injector::build() {
                                  break;
                              }
 
-                             if (afterStart && beforeEnd) { return w + rotator(state); }
+                             if (afterStart && beforeEnd) { return w + angler(state); }
                              return w;
                            });
   };
