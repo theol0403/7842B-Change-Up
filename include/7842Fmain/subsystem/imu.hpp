@@ -44,7 +44,7 @@ public:
   void calibrate() {
     imu1->reset();
     imu2->reset();
-    pros::delay(2000);
+    pros::delay(1000);
     while (imu1->is_calibrating() || imu2->is_calibrating()) {
       pros::delay(10);
     }
