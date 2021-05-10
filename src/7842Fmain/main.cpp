@@ -58,12 +58,13 @@ void autonomous() {
   Robot::model()->stop();
 
   move(QuinticHermite({0_ft, 0_ft, -180_deg}, {-0.0_ft, -1.9_ft, -45_deg}, 1.1),
-       {.rotator = makeRotator(-42_deg, Limits<QAngle>(0.5_s, 60_deg / second))});
+       {.rotator = makeRotator(-42_deg, Limits<QAngle>(0.5_s, 60_deg / second)),
+        .angler = Injector().addRoller(rollerStates::on, -300_ms).build()});
 
   // shoot
   roll(on);
-  pros::delay(800);
-  roll(topIntake);
+  pros::delay(500);
+  roll(top);
   pros::delay(100);
   roll(off);
 
@@ -72,29 +73,35 @@ void autonomous() {
   move(QuinticHermite({0_ft, 0_ft, 135_deg}, {-3.6_ft, 3.4_ft, 180_deg}),
        {.curve = true, .start = -45_deg});
 
-  turn(88_deg);
+  turn(87_deg);
 
   roll(intake);
   move(QuinticHermite({0_ft, 0_ft, 110_deg}, {3.3_ft, 2.2_ft, 0_deg}, 1.7, 3),
        {.curve = true,
         .start = 110_deg,
-        .angler = Injector().addBallVision(80_pct).addImu(0_deg, 1.6_s).build()});
+        .angler = Injector()
+                    .addBallVision(80_pct)
+                    .addImu(-5_deg, 1.6_s)
+                    .addRoller(rollerStates::on, -300_ms)
+                    .build()});
   Robot::model()->stop();
 
-  shootEdge();
-  asyncTask(pros::delay(400); roll(out););
+  roll(shoot);
+  pros::delay(600);
+  roll(off);
+  asyncTask(pros::delay(600); roll(out););
 
   drive(-2.8_ft, {.angler = Injector().addImu(0_deg).build()});
 
-  turn(225_deg);
+  turn(231_deg);
 
   roll(loadingPoop);
-  move(QuinticHermite({0_ft, 0_ft, 205_deg}, {-3_ft, -5.5_ft, -90_deg}, 2, 4.5),
-       {.curve = true, .start = 205_deg});
-
-  roll(topIntake);
-  pros::delay(500);
-  roll(off);
+  move(
+    QuinticHermite({0_ft, 0_ft, 200_deg}, {-3.3_ft, -5.5_ft, -90_deg}, 2, 4.5),
+    {.curve = true,
+     .start = 205_deg,
+     .angler =
+       Injector().addBallVision(0_s, 1.5_s).addRoller(rollerStates::topIntake, -300_ms).build()});
 
   drive(-0.7_ft);
 
@@ -107,14 +114,21 @@ void autonomous() {
   });
   turn(190_deg);
 
-  move(QuarticBezier({{0_ft, 0_ft}, {0_ft, 1_ft}, {-2_ft, 2_ft}, {3_ft, 4_ft}, {3_ft, 5.7_ft}}),
+  move(QuarticBezier({{0_ft, 0_ft}, {0_ft, 1_ft}, {-2_ft, 2_ft}, {3.4_ft, 4_ft}, {3.4_ft, 5.5_ft}}),
        {.curve = true, .start = 90_deg});
 
-  // shoot
-  // shootCorner();
+  move(QuinticHermite({0_ft, 0_ft, -180_deg}, {0.1_ft, 1.9_ft, 45_deg}, 1.1),
+       {.rotator = makeRotator(41_deg, Limits<QAngle>(0.5_s, 60_deg / second)),
+        .angler = Injector().addRoller(rollerStates::on, -300_ms).build()});
 
-  // // back up
-  // drive(-2_ft);
+  roll(on);
+  pros::delay(500);
+  roll(topIntake);
+  pros::delay(100);
+  roll(off);
+
+  // back up
+  drive(-2_ft);
 
   // /* ----------------------------- third edge goal ---------------------------- */
 
