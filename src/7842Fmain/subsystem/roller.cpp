@@ -159,11 +159,11 @@ void Roller::loop() {
           top(-12000);
           bottom(-12000);
         } else if (getTopLight() != colors::none && getBottomLight() != colors::none) {
-          top(0);
+          top(500);
           bottom(-500);
         } else if (getTopLight() != colors::none) {
           // balance between raising ball to prevent rubbing and bringing ball too high
-          top(0);
+          top(500);
           bottom(5000);
         } else {
           // balance between bringing ball too fast and accidentally pooping
