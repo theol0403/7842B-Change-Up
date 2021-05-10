@@ -57,7 +57,7 @@ void autonomous() {
   move(QuinticHermite(110_deg, {3.2_ft, 2.0_ft, 0_deg}, 1.7, 3),
        {.curve = true,
         .steerer =
-          AB().addBallVision(80_pct).addImu(-5_deg, 1.6_s).addRoller(rollerStates::on, -300_ms)});
+          AB().addGoalVision(80_pct).addImu(-5_deg, 1.6_s).addRoller(rollerStates::on, -300_ms)});
   Robot::model()->stop();
 
   roll(shoot);
@@ -110,7 +110,7 @@ void autonomous() {
   move(QuinticHermite(70_deg, {-3.2_ft, 2.0_ft, 180_deg}, 1.7, 3),
        {.curve = true,
         .steerer =
-          AB().addBallVision(80_pct).addImu(180_deg, 1.6_s).addRoller(rollerStates::on, -300_ms)});
+          AB().addGoalVision(80_pct).addImu(180_deg, 1.6_s).addRoller(rollerStates::on, -300_ms)});
   Robot::model()->stop();
 
   // /* ----------------------------- third edge goal ---------------------------- */
