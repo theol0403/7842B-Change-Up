@@ -66,6 +66,9 @@ public:
   void initialize();
 
   enum class colors { none, red, blue };
+  colors targetColor {colors::red};
+  colors garbageColor {colors::blue};
+
   colors getTopLight() const;
   colors getBottomLight() const;
 

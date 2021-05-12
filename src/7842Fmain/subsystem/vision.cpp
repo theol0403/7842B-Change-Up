@@ -21,11 +21,11 @@ void VisionTask::initialize() {
   // vision->set_signature(BLUE, &BLUE_SIG);
 
   pros::vision_signature_s_t RED_SIG =
-    pros::Vision::signature_from_utility(RED, 7423, 10707, 9065, -1479, -109, -794, 3.700, 0);
+    pros::Vision::signature_from_utility(RED, 6099, 10113, 8106, -1, 669, 334, 3.500, 0);
   vision->set_signature(RED, &RED_SIG);
 
   pros::vision_signature_s_t BLUE_SIG =
-    pros::Vision::signature_from_utility(BLUE, -2409, -1563, -1986, 7527, 10923, 9224, 3.500, 0);
+    pros::Vision::signature_from_utility(BLUE, -3401, -2215, -2808, 10335, 16207, 13270, 3.900, 0);
   vision->set_signature(BLUE, &BLUE_SIG);
 }
 

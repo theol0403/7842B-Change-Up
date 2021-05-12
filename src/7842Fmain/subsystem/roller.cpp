@@ -24,9 +24,9 @@ Roller::colors Roller::getTopLight() const {
 
   int hue = topLight->getHue();
   switch (hue) {
-    case 160 ... 300: return colors::blue;
+    case 160 ... 300: return garbageColor;
     case 0 ... 40:
-    case 350 ... 360: return colors::red;
+    case 350 ... 360: return targetColor;
     default: return colors::none;
   }
 }
@@ -42,9 +42,9 @@ Roller::colors Roller::getBottomLight() const {
 
   int hue = bottomLight->getHue();
   switch (hue) {
-    case 180 ... 300: return colors::blue;
+    case 180 ... 300: return garbageColor;
     case 0 ... 40:
-    case 350 ... 360: return colors::red;
+    case 350 ... 360: return targetColor;
     default: return colors::none;
   }
 }

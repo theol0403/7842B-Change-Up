@@ -51,6 +51,19 @@ void Robot::_initializeDevices() {
                                      std::make_shared<OpticalSensor>(6),
                                      std::make_shared<OpticalSensor>(3));
 
+  _screen->makePage<GUI::Actions>("Color")
+    ->button("Red",
+             [&] {
+               Robot::roller()->targetColor = Roller::colors::red;
+               Robot::roller()->garbageColor = Roller::colors::blue;
+             })
+    .button("Blue",
+            [&] {
+              Robot::roller()->targetColor = Roller::colors::blue;
+              Robot::roller()->garbageColor = Roller::colors::red;
+            })
+    .build();
+
   _imu = std::make_shared<IMUTurn>(std::make_shared<pros::Imu>(5), std::make_shared<pros::Imu>(8),
                                    _model,
                                    std::make_shared<IterativePosPIDController>(
