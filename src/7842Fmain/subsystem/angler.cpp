@@ -104,4 +104,10 @@ AnglerBuilder::operator Angler() {
   };
 }
 
+AnglerBuilder::operator Strafer() {
+  return [angler = Angler(*this)](const Profile<>::State& state) {
+    return angler(state) * 1_s;
+  };
+}
+
 } // namespace lib7842

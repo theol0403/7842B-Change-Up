@@ -70,8 +70,8 @@ void autonomous() {
   // drive two balls and curve right to goal
   move(QuinticHermite(110_deg, {3.1_ft, 2.1_ft, 0_deg}, 1.7, 3),
        {.curve = true,
-        .steerer =
-          AB().addGoalVision(60_pct).addImu(-5_deg, 1.6_s).addRoller(rollerStates::on, -200_ms)});
+        .steerer = AB().addImu(-5_deg, 1.6_s).addRoller(rollerStates::on, -200_ms),
+        .strafer = AB().addGoalVision(60_pct)});
   Robot::model()->stop();
 
   // shoot two red in edge
@@ -91,10 +91,8 @@ void autonomous() {
   // to ball and curve left to goal
   move(QuinticHermite(200_deg, {-3.8_ft, -5_ft, -90_deg}, 2.8, 3.5),
        {.curve = true,
-        .steerer = AB()
-                     .addBallVision(0.0_s, 1.5_s)
-                     .addGoalVision(60_pct)
-                     .addRoller(rollerStates::top, -200_ms)});
+        .steerer = AB().addBallVision(0.0_s, 1.5_s).addRoller(rollerStates::top, -200_ms),
+        .strafer = AB().addGoalVision(60_pct)});
 
   // shoot one red in edge and remove one blue
   pros::delay(200);
@@ -142,8 +140,8 @@ void autonomous() {
   // drive two balls and curve right to goal
   move(QuinticHermite(70_deg, {-3.2_ft, 2.1_ft, 180_deg}, 1.7, 3),
        {.curve = true,
-        .steerer =
-          AB().addGoalVision(80_pct).addImu(180_deg, 1.6_s).addRoller(rollerStates::on, -200_ms)});
+        .steerer = AB().addImu(180_deg, 1.6_s).addRoller(rollerStates::on, -200_ms),
+        .strafer = AB().addGoalVision(80_pct)});
   Robot::model()->stop();
 
   // shoot two red in edge

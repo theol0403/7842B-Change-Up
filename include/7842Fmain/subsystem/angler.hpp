@@ -18,6 +18,7 @@ public:
                             const Marker& end = {});
 
   operator Angler();
+  operator Strafer();
 
 protected:
   std::vector<std::tuple<Angler, Marker, Marker>> anglers {};
