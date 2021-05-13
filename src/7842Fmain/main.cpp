@@ -71,7 +71,7 @@ void autonomous() {
   turn(233_deg);
 
   roll(loadingPoop);
-  move(QuinticHermite(200_deg, {-4.1_ft, -5_ft, -90_deg}, 2.8, 3.5),
+  move(QuinticHermite(200_deg, {-3.8_ft, -5_ft, -90_deg}, 2.8, 3.5),
        {.curve = true,
         .steerer = AB()
                      .addBallVision(0.0_s, 1.5_s)
@@ -95,9 +95,9 @@ void autonomous() {
        {.start_v = 90_pct, .end_v = 0.1_pct, .curve = true});
   Robot::model()->stop();
 
-  move(QuinticHermite(-180_deg, {0.2_ft, 2.5_ft, 45_deg}, 1.1),
+  move(QuinticHermite(-180_deg, {0.1_ft, 2.4_ft, 45_deg}, 1.1),
        {.start = 0_deg,
-        .rotator = makeAngler(40_deg, Limits<QAngle>(0.5_s, 60_deg / second)),
+        .rotator = makeAngler(39_deg, Limits<QAngle>(0.5_s, 60_deg / second)),
         .steerer = AB().addRoller(rollerStates::on, -300_ms)});
 
   roll(on);
@@ -122,10 +122,10 @@ void autonomous() {
   roll(shoot);
   pros::delay(600);
   roll(off);
-  asyncTask(pros::delay(600); roll(out););
 
-  asyncTask(pros::delay(300); roll(on); pros::delay(400); roll(intake););
-  move(CubicBezier({{0_ft, 0_ft}, {0_ft, -3_ft}, {4_ft, -3_ft}, {4_ft, 0_ft}}), {.start = 90_deg});
+  asyncTask(pros::delay(300); roll(out); pros::delay(500); roll(intake););
+  move(CubicBezier({{0_ft, 0_ft}, {0_ft, -2.5_ft}, {4_ft, -2_ft}, {4_ft, 0.5_ft}}),
+       {.start = 90_deg});
 
   move(QuinticHermite(-180_deg, {-0.1_ft, -2.1_ft, -45_deg}, 1.1),
        {.start = 0_deg,
@@ -139,10 +139,9 @@ void autonomous() {
   pros::delay(50);
   roll(off);
 
-  asyncTask(pros::delay(700); roll(out););
-
-  move(QuinticHermite({0_ft, 0_ft, 135_deg}, {-3.5_ft, 3.5_ft, 180_deg}),
-       {.curve = true, .start = -45_deg});
+  drive(-1.5_ft);
+  turn(0_deg);
+  roll(loadingPoop);
 
   // /* ----------------------------- third edge goal ---------------------------- */
 
