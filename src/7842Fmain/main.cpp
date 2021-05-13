@@ -18,9 +18,17 @@ void opcontrol() {
   }
 }
 
+void shootCorner() {
+  roll(on);
+  pros::delay(500);
+  roll(topIntake);
+  pros::delay(50);
+  roll(off);
+}
+
 void shootEdge() {
   roll(shoot);
-  pros::delay(900);
+  pros::delay(600);
   roll(off);
 }
 
@@ -46,21 +54,17 @@ void autonomous() {
         .steerer = AB().addRoller(rollerStates::on, -300_ms)});
 
   // shoot two red in corner
-  roll(on);
-  pros::delay(500);
-  roll(topIntake);
-  pros::delay(50);
-  roll(off);
+  shootCorner();
 
   // back up
   asyncTask(pros::delay(700); roll(out););
   move(QuinticHermite({0_ft, 0_ft, 135_deg}, {-3.5_ft, 3.5_ft, 180_deg}),
        {.curve = true, .start = -45_deg});
 
-  roll(intake);
-
   /* ----------------------------- first edge goal ---------------------------- */
 
+  // purge and turn
+  roll(intake);
   turn(87_deg);
 
   // drive two balls and curve right to goal
@@ -71,9 +75,7 @@ void autonomous() {
   Robot::model()->stop();
 
   // shoot two red in edge
-  roll(shoot);
-  pros::delay(600);
-  roll(off);
+  shootEdge();
 
   asyncTask(pros::delay(600); roll(out););
 
@@ -82,10 +84,11 @@ void autonomous() {
 
   /* ---------------------------- second edge goal ---------------------------- */
 
+  // turn and purge
   turn(233_deg);
+  roll(loadingPoop);
 
   // to ball and curve left to goal
-  roll(loadingPoop);
   move(QuinticHermite(200_deg, {-3.8_ft, -5_ft, -90_deg}, 2.8, 3.5),
        {.curve = true,
         .steerer = AB()
@@ -119,12 +122,10 @@ void autonomous() {
         .rotator = makeAngler(39_deg, Limits<QAngle>(0.5_s, 60_deg / second)),
         .steerer = AB().addRoller(rollerStates::on, -300_ms)});
 
-  // shoot two red
+  // shoot two red in corner
   roll(on);
-  pros::delay(600);
-  roll(intake);
-  pros::delay(300);
-  roll(off);
+  pros::delay(200);
+  shootCorner();
 
   // purge
   asyncTask(pros::delay(700); roll(out););
@@ -132,10 +133,10 @@ void autonomous() {
   // back up
   move(QuinticHermite(45_deg, {3.5_ft, 3.9_ft, 0_deg}), {.curve = true, .start = -135_deg});
 
-  roll(intake);
-
   /* ----------------------------- third edge goal ---------------------------- */
 
+  // intake and turn
+  roll(loadingPoop);
   turn(96_deg);
 
   // drive two balls and curve right to goal
@@ -145,10 +146,8 @@ void autonomous() {
           AB().addGoalVision(80_pct).addImu(180_deg, 1.6_s).addRoller(rollerStates::on, -200_ms)});
   Robot::model()->stop();
 
-  // shoot two red
-  roll(shoot);
-  pros::delay(600);
-  roll(off);
+  // shoot two red in edge
+  shootEdge();
 
   // back up while turning right
   drive(-2_ft,
@@ -171,12 +170,8 @@ void autonomous() {
         .rotator = makeAngler(-39_deg, Limits<QAngle>(0.5_s, 60_deg / second)),
         .steerer = AB().addRoller(rollerStates::on, -300_ms)});
 
-  // shoot two red
-  roll(on);
-  pros::delay(500);
-  roll(topIntake);
-  pros::delay(50);
-  roll(off);
+  // shoot two red in corner
+  shootCorner();
 
   /* ---------------------------- fourth edge goal ---------------------------- */
 
