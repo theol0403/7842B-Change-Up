@@ -3,6 +3,7 @@
 
 #include "subsystem/angler.hpp"
 #include "subsystem/imu.hpp"
+#include "subsystem/line.hpp"
 #include "subsystem/roller.hpp"
 #include "subsystem/vision.hpp"
 

@@ -16,6 +16,8 @@ public:
   AnglerBuilder&& addImu(const QAngle& a, const Marker& start = {}, const Marker& end = {});
   AnglerBuilder&& addRoller(const rollerStates& roller, const Marker& start = {},
                             const Marker& end = {});
+  AnglerBuilder&& addLineStrafe(const Marker& start, const Marker& end);
+  AnglerBuilder&& addLineAngle(const Marker& start, const Marker& end);
 
   operator Angler();
   operator Strafer();

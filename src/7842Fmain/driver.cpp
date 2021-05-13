@@ -34,9 +34,16 @@ void driverBaseControl() {
   double rightY = mAnalog(RIGHT_Y);
   double leftX = mAnalog(LEFT_X);
 
+  // if (master(DOWN)) {
+  //   rightX += Robot::vision()->getOffset() * 0.015;
+  //   rightX = rightX * rightX * util::sgn(rightX);
+  // }
   if (master(DOWN)) {
-    rightX += Robot::vision()->getOffset() * 0.015;
+    rightX += Robot::line()->getStrafe() * 0.0017;
     rightX = rightX * rightX * util::sgn(rightX);
+
+    leftX += Robot::line()->getRotation() * 0.0017;
+    leftX = leftX * leftX * util::sgn(leftX);
   }
 
   // Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),

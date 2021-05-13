@@ -40,10 +40,10 @@ enum class rollerStates {
   onPoop = on | poop,
   outPoop = out | poop,
 
-  toggles = 0b00000111, // bitmask for roller toggles
-  modifiers = 0b00011000, // bitmask for roller modifiers
-  flags = 0b00011111, // bitmask for flags
-  actions = 0b11100000, // bitmask for actions
+  toggles = 0b100000111, // bitmask for roller toggles
+  modifiers = 0b100011000, // bitmask for roller modifiers
+  flags = 0b100011111, // bitmask for flags
+  actions = 0b1111100000, // bitmask for actions
 };
 
 ENUM_FLAG_OPERATORS(rollerStates)

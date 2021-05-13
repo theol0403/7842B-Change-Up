@@ -68,6 +68,10 @@ void Robot::_initializeDevices() {
                                    _model,
                                    std::make_shared<IterativePosPIDController>(
                                      0.03, 0.0025, 0.0003, 0, TimeUtilFactory().create()));
+
+  _line = std::make_shared<LineSensor>(
+    std::make_shared<pros::ADILineSensor>('A'), std::make_shared<pros::ADILineSensor>('F'),
+    std::make_shared<pros::ADILineSensor>('E'), std::make_shared<pros::ADILineSensor>('B'));
 }
 
 /***
