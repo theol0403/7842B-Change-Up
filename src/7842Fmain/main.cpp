@@ -108,7 +108,7 @@ void autonomous() {
   asyncTask(pros::delay(700); roll(out););
 
   // back up
-  move(QuinticHermite(45_deg, {3.5_ft, 3.7_ft, 0_deg}), {.curve = true, .start = -135_deg});
+  move(QuinticHermite(45_deg, {3.5_ft, 3.9_ft, 0_deg}), {.curve = true, .start = -135_deg});
 
   turn(96_deg);
 
@@ -123,123 +123,29 @@ void autonomous() {
   pros::delay(600);
   roll(off);
 
-  asyncTask(pros::delay(300); roll(out); pros::delay(500); roll(intake););
-  move(CubicBezier({{0_ft, 0_ft}, {0_ft, -2.5_ft}, {4_ft, -2_ft}, {4_ft, 0.5_ft}}),
-       {.start = 90_deg});
+  drive(-2_ft,
+        {.rotator = AB()
+                      .add(makeAngler(-90_deg, Limits<QAngle>(0.3_s, 60_deg / second)), 0_s, 70_pct)
+                      .addImu(90_deg, 70_pct)});
 
-  move(QuinticHermite(-180_deg, {-0.1_ft, -2.1_ft, -45_deg}, 1.1),
+  roll(loadingPoop);
+  drive(4_ft, {.steerer = AB().addBallVision(0_s, 70_pct)});
+
+  move(Line({-2.1_ft, -0.7_ft}), {.start = 90_deg, .rotator = AB().addImu(180_deg, 0_pct)});
+
+  move(QuinticHermite(-180_deg, {-0.1_ft, -2.2_ft, -45_deg}, 1.1),
        {.start = 0_deg,
         .rotator = makeAngler(-39_deg, Limits<QAngle>(0.5_s, 60_deg / second)),
         .steerer = AB().addRoller(rollerStates::on, -300_ms)});
 
-  // shoot
   roll(on);
   pros::delay(500);
   roll(topIntake);
   pros::delay(50);
   roll(off);
 
-  drive(-1.5_ft);
-  turn(0_deg);
-  roll(loadingPoop);
+  asyncTask(pros::delay(700); roll(out););
 
-  // /* ----------------------------- third edge goal ---------------------------- */
-
-  // // purge and turn
-  // roll(out);
-  // pros::delay(200);
-  // turn(111_deg);
-
-  // // to ball
-  // roll(intake);
-  // drive(4.35_ft, {.ball_seek = 30_pct});
-
-  // // to goal
-  // turn(-5_deg);
-  // drive(3.1_ft, {.goal_seek = 50_pct});
-
-  // // shoot
-  // shootEdge();
-
-  // // back up
-  // drive(-1.2_ft);
-
-  // /* --------------------------- fourth corner goal --------------------------- */
-
-  // // purge and turn
-  // asyncTask({
-  //   pros::delay(300);
-  //   roll(poopIn);
-  // });
-  // turn(77_deg);
-
-  // // to ball and goal
-  // roll(intake);
-  // move->curve(Mesh({0_ft, 0_ft, 0_deg}, {-3_ft, 6.25_ft, -80_deg}), {.ball_seek = 10_pct});
-
-  // // shoot
-  // shootCorner();
-
-  // // back up
-  // drive(-1.6_ft);
-
-  // /* ---------------------------- fourth edge goal ---------------------------- */
-
-  // // purge and turn
-  // roll(out);
-  // pros::delay(200);
-  // turn(172_deg);
-
-  // // to ball
-  // roll(intake);
-  // drive(4.27_ft, {.ball_seek = 40_pct});
-
-  // // to goal
-  // turn(81_deg);
-  // drive(0.9_ft);
-
-  // // shoot
-  // shootEdge();
-  // roll(onWithoutPoop);
-  // pros::delay(300);
-
-  // // back up
-  // asyncTask({
-  //   pros::delay(400);
-  //   roll(out);
-  // });
-  // drive(-0.8_ft);
-
-  // /* ------------------------------- center goal ------------------------------ */
-
-  // // purge and turn
-  // roll(out);
-  // pros::delay(200);
-  // turn(-94_deg);
-
-  // // to ball
-  // roll(intake);
-  // drive(2_ft, {.ball_seek = 0_pct});
-
-  // turn(-97_deg);
-  // Timer t;
-  // while (t.getDtFromStart() < 0.2_s) {
-  //   Robot::model()->xArcade((Robot::vision()->getBlueOffset()) * 0.025, 0, 0);
-  //   pros::delay(10);
-  // }
-  // move(Line({0_ft, 0_ft}, {0.55_ft, 0_ft}));
-
-  // // move to poke
-  // drive(1.42_ft);
-  // drive(-1_ft);
-  // turn(-97_deg);
-  // move(Line({0_ft, 0_ft}, {-0.4_ft, 0_ft}));
-  // drive(1.4_ft);
-  // roll(onWithoutPoop);
-  // pros::delay(600);
-  // drive(-1_ft);
-  // turn(-97_deg);
-  // move(Line({0_ft, 0_ft}, {0.75_ft, 0_ft}));
-  // drive(1.3_ft);
-  // drive(-2_ft);
+  move(QuinticHermite({0_ft, 0_ft, 135_deg}, {-3.5_ft, 3.5_ft, 180_deg}),
+       {.curve = true, .start = -45_deg});
 }
