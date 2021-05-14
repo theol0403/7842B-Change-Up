@@ -39,11 +39,11 @@ void driverBaseControl() {
   //   rightX = rightX * rightX * util::sgn(rightX);
   // }
   if (master(DOWN)) {
-    rightX += Robot::line()->getStrafe() * 0.0017;
+    rightX += Robot::line()->getStrafe() * 0.001;
     rightX = rightX * rightX * util::sgn(rightX);
 
-    leftX += Robot::line()->getRotation() * 0.0017;
-    leftX = leftX * leftX * util::sgn(leftX);
+    // leftX += Robot::line()->getRotation() * 0.0017;
+    // leftX = leftX * leftX * util::sgn(leftX);
   }
 
   // Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),

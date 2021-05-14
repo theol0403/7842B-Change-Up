@@ -28,16 +28,7 @@ AnglerBuilder&& AnglerBuilder::addGoalVision(const Marker& start, const Marker& 
 AnglerBuilder&& AnglerBuilder::addLineStrafe(const Marker& start, const Marker& end) {
   add(
     [=](const Profile<>::State& /*state*/) {
-      return Robot::line()->getStrafe() * -0.08_deg / second;
-    },
-    start, end);
-  return std::move(*this);
-}
-
-AnglerBuilder&& AnglerBuilder::addLineAngle(const Marker& start, const Marker& end) {
-  add(
-    [=](const Profile<>::State& /*state*/) {
-      return Robot::line()->getRotation() * -0.08_deg / second;
+      return Robot::line()->getStrafe() * -0.023_deg / second;
     },
     start, end);
   return std::move(*this);
@@ -124,7 +115,7 @@ AnglerBuilder::operator Angler() {
 
 AnglerBuilder::operator Strafer() {
   return [angler = Angler(*this)](const Profile<>::State& state) {
-    return angler(state) * 1_s;
+    return angler(state) * 0.9_s;
   };
 }
 

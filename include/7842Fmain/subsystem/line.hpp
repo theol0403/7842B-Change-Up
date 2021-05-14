@@ -3,7 +3,7 @@
 #include "pros/adi.hpp"
 #include <memory>
 
-class LineSensor : public TaskWrapper {
+class LineSensor {
 public:
   LineSensor(const std::shared_ptr<pros::ADILineSensor>& itopLeft,
              const std::shared_ptr<pros::ADILineSensor>& itopRight,
@@ -11,7 +11,7 @@ public:
              const std::shared_ptr<pros::ADILineSensor>& ibottomLeft) :
     topLeft(itopLeft), topRight(itopRight), bottomRight(ibottomRight), bottomLeft(ibottomLeft) {
     calibrate();
-    startTask("Line");
+    /* startTask("Line"); */
   }
 
   void calibrate() {
@@ -44,18 +44,18 @@ public:
     return (getFront() + getBack()) / 2.0;
   }
 
-  void loop() override {
-    while (true) {
-      std::cout << "TopRight: " << topRight->get_value_calibrated() - topRightOffset
-                << " TopLeft: " << topLeft->get_value_calibrated() - topLeftOffset
-                << " BottomRight: " << bottomRight->get_value_calibrated() - bottomRightOffset
-                << " BottomLeft: " << bottomLeft->get_value_calibrated() - bottomLeftOffset
-                << std::endl;
-      std::cout << "Front: " << getFront() << " Back: " << getBack() << std::endl;
-      std::cout << "Rotation: " << getRotation() << ", Strafe: " << getStrafe() << std::endl;
-      pros::delay(20);
-    }
-  }
+  /* void loop() override { */
+  /*   while (true) { */
+  /*     std::cout << "TopRight: " << topRight->get_value_calibrated() - topRightOffset */
+  /*               << " TopLeft: " << topLeft->get_value_calibrated() - topLeftOffset */
+  /*               << " BottomRight: " << bottomRight->get_value_calibrated() - bottomRightOffset */
+  /*               << " BottomLeft: " << bottomLeft->get_value_calibrated() - bottomLeftOffset */
+  /*               << std::endl; */
+  /*     std::cout << "Front: " << getFront() << " Back: " << getBack() << std::endl; */
+  /*     std::cout << "Rotation: " << getRotation() << ", Strafe: " << getStrafe() << std::endl; */
+  /*     pros::delay(20); */
+  /*   } */
+  /* } */
 
   std::shared_ptr<pros::ADILineSensor> topLeft;
   std::shared_ptr<pros::ADILineSensor> topRight;

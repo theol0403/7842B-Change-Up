@@ -122,6 +122,12 @@ void Roller::loop() {
           intake(getIntake());
           break;
 
+        case rs::outSlow:
+          top(0);
+          bottom(0);
+          intake(-4000);
+          break;
+
         default:
           std::cout << "Error: action not found: "
                     << std::bitset<sizeof(rs)>(static_cast<std::underlying_type_t<rs>>(state))

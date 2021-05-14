@@ -24,6 +24,7 @@ enum class rollerStates {
   timedPoop = 2 << 5, // poop for time
   backPoop = 3 << 5, // bring blue down then poop
   shootRev = 4 << 5, // bring rollers back manually
+  outSlow = 4 << 6, // outtake slowly
 
   // state combinations
   loading = intake | bottom, // load balls into robot. Disable rollers one by one.
