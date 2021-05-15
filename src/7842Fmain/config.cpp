@@ -29,7 +29,7 @@ void Robot::_initializeChassis() {
 
   ChassisScales scales({3.25_in, 16_in}, 360);
   Limits<> limits(scales, 200_rpm, 0.7_s, 1, 1);
-  _chassis = std::make_shared<XGenerator>(_model, 200_rpm, scales, limits, 10_ms);
+  _chassis = std::make_shared<XGenerator>(_model, 200_rpm, scales, limits, 5_ms);
 }
 
 /***
@@ -69,9 +69,9 @@ void Robot::_initializeDevices() {
                                    std::make_shared<IterativePosPIDController>(
                                      0.03, 0.0025, 0.0003, 0, TimeUtilFactory().create()));
 
-  _line = std::make_shared<LineSensor>(
-    std::make_shared<pros::ADILineSensor>('F'), std::make_shared<pros::ADILineSensor>('A'),
-    std::make_shared<pros::ADILineSensor>('B'), std::make_shared<pros::ADILineSensor>('E'));
+  // _line = std::make_shared<LineSensor>(
+  //   std::make_shared<pros::ADILineSensor>('F'), std::make_shared<pros::ADILineSensor>('A'),
+  //   std::make_shared<pros::ADILineSensor>('B'), std::make_shared<pros::ADILineSensor>('E'));
 }
 
 /***

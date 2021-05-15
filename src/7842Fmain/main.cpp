@@ -82,16 +82,15 @@ void autonomous() {
   asyncTask(pros::delay(600); roll(out););
 
   // back up
-  drive(-2.8_ft, {.steerer = AB().addImu(0_deg)});
+  drive(-2.9_ft, {.rotator = AB().addImu(234_deg, -1.0_s)});
 
   /* ---------------------------- second edge goal ---------------------------- */
 
   // turn and purge
-  turn(233_deg);
   roll(loadingPoop);
 
   // to ball and curve left to goal
-  move(QuinticHermite(200_deg, {-4_ft, -5_ft, -100_deg}, 2.8, 3.5),
+  move(QuinticHermite(200_deg, {-5_ft, -5_ft, -100_deg}, 2.8, 3.5),
        {.curve = true,
         .steerer = AB().addBallVision(0.0_s, 20_pct).addRoller(rollerStates::top, -200_ms),
         .strafer = AB().addGoalVision(70_pct)});
@@ -101,15 +100,12 @@ void autonomous() {
 
   // back up
   drive(-0.7_ft);
+  turn(184_deg);
 
   /* ---------------------------- second corner goal --------------------------- */
 
   // purge and turn
-  asyncTask({
-    pros::delay(400);
-    roll(loadingPoop);
-  });
-  turn(184_deg);
+  roll(loadingPoop);
 
   // drive to first ball and strafe to second ball
   move(Line({2_ft, 0_ft}), {.end_v = 90_pct});
@@ -152,6 +148,8 @@ void autonomous() {
   // shoot two red in edge
   shootEdge();
 
+  asyncTask(pros::delay(500); roll(loadingPoop););
+
   // back up while turning right
   drive(-1.9_ft,
         {.rotator = AB()
@@ -161,35 +159,51 @@ void autonomous() {
   /* ---------------------------- third corner goal --------------------------- */
 
   // to ball
-  roll(loadingPoop);
   drive(4.1_ft, {.steerer = AB().addBallVision(0_s, 70_pct)});
 
-  // strafe and turn to side ball
-  move(Line({-2.4_ft, -0.9_ft}), {.start = 90_deg, .rotator = AB().addImu(183_deg, 0_pct)});
-
-  // strafe to goal
-  move(QuinticHermite(-180_deg, {-0.4_ft, -2.5_ft, -45_deg}, 1.1),
-       {.start = 0_deg,
-        .rotator = makeAngler(-39_deg, Limits<QAngle>(0.5_s, 60_deg / second)),
-        .steerer = AB().addRoller(rollerStates::on, -300_ms)});
+  // strafe and turn to goal
+  move(Line({2_ft, -0.9_ft}), {.start = 90_deg,
+                               .rotator = AB().addImu(135_deg, 0_pct),
+                               .steerer = AB().addRoller(rollerStates::on, -300_ms)});
 
   // shoot two red in corner
   shootCorner();
 
+  // purge
+  asyncTask(pros::delay(300); roll(out); pros::delay(400); roll(intake););
+
+  /* ------------------------------- center goal ------------------------------ */
+
+  // strafe to ball
+  move(QuinticHermite(225_deg, {-2.5_ft, -0.3_ft, 90_deg}, 2, 1.1),
+       {
+         .start = 45_deg,
+         .rotator = makeAngler(39_deg, Limits<QAngle>(0.5_s, 60_deg / second)),
+       });
+
+  // strafe to center goal
+  move(Line({-4_ft, -4_ft}), {.start = 180_deg, .rotator = AB().addImu(0_deg, -2_s)});
+
+  roll(loadingPoop);
+
+  // drive to goal
+  drive(2_ft);
+
+  pros::delay(500);
+  roll(onPoop);
+  pros::delay(400);
+  roll(off);
+
   /* ---------------------------- fourth edge goal ---------------------------- */
 
-  // purge
-  asyncTask(pros::delay(700); roll(out););
+  // back up and turn
+  drive(-1.5_ft);
+  turn(40_deg);
 
-  // back up
-  move(QuinticHermite(45_deg, {3.8_ft, 3.8_ft, 0_deg}), {.curve = true, .start = -135_deg});
-
-  // turn and purge
-  turn(35_deg);
   roll(loadingPoop);
 
   // to ball and curve left to goal
-  move(QuinticHermite(200_deg, {-2_ft, -5_ft, -93_deg}, 2.5, 3),
+  move(QuinticHermite(200_deg, {-4_ft, -5_ft, -93_deg}, 2.5, 3),
        {.curve = true,
         .steerer = AB().addBallVision(0.0_s, 20_pct).addRoller(rollerStates::top, -200_ms),
         .strafer = AB().addGoalVision(70_pct)});
@@ -209,8 +223,8 @@ void autonomous() {
 
   // to ball and goal
   roll(intake);
-  move(Mesh({0_ft, 0_ft, 90_deg}, {-3_ft, 6.25_ft, -10_deg}),
-       {.curve = true, .strafer = AB().addBallVision(10_pct, 50_pct)});
+  move(Mesh({0_ft, 0_ft, 90_deg}, {-3_ft, 7_ft, -10_deg}),
+       {.curve = true, .strafer = AB().addBallVision(0_pct, 60_pct)});
 
   // shoot
   shootCorner();
