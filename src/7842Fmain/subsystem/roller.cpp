@@ -134,6 +134,12 @@ void Roller::loop() {
           intake(12000);
           break;
 
+        case rs::intakeOnly:
+          top(0);
+          bottom(-2000);
+          intake(12000);
+          break;
+
         default:
           std::cout << "Error: action not found: "
                     << std::bitset<sizeof(rs)>(static_cast<std::underlying_type_t<rs>>(state))
@@ -176,7 +182,7 @@ void Roller::loop() {
         } else if (getTopLight() != colors::none) {
           // balance between raising ball to prevent rubbing and bringing ball too high
           top(500);
-          bottom(8000);
+          bottom(9000);
         } else {
           // balance between bringing ball too fast and accidentally pooping
           top(6000);
@@ -207,7 +213,7 @@ void Roller::loop() {
           }
         } else {
           if (getBottomLight() == colors::blue) {
-            bottom(2000);
+            bottom(5000);
           } else {
             bottom(12000);
           }
