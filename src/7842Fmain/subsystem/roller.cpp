@@ -97,8 +97,8 @@ void Roller::loop() {
           break;
 
         case rs::timedPoop:
-          top(-8000);
-          bottom(8000);
+          top(-10000);
+          bottom(10000);
           intake(getIntake());
           if (macroTime.getDtFromMark() >= 100_ms) {
             runAction(rs::off);
