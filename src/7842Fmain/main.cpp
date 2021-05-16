@@ -99,7 +99,7 @@ void autonomous() {
   pros::delay(200);
 
   // back up
-  drive(-0.7_ft);
+  drive(-0.6_ft);
   turn(184_deg);
 
   /* ---------------------------- second corner goal --------------------------- */

@@ -19,7 +19,7 @@ AnglerBuilder&& AnglerBuilder::addBallVision(const Marker& start, const Marker& 
 AnglerBuilder&& AnglerBuilder::addGoalVision(const Marker& start, const Marker& end) {
   add(
     [=](const Profile<>::State& /*state*/) {
-      return Robot::vision()->getBlueOffset() * -0.8_deg / second;
+      return Robot::vision()->getBlueOffset() * -0.5_deg / second;
     },
     start, end);
   return std::move(*this);
