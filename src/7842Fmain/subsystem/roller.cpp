@@ -208,7 +208,7 @@ void Roller::loop() {
       case rs::on:
         // don't shoot a blue ball
         if (getTopLight() == colors::blue) {
-          top(5000);
+          top(4000);
         } else {
           top(12000);
         }

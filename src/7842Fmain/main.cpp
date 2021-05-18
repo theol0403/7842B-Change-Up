@@ -36,8 +36,8 @@ void shootEdge() {
   roll(on);
   pros::delay(300);
   roll(shoot);
-  pros::delay(400);
-  roll(off);
+  pros::delay(100);
+  asyncTask(pros::delay(200); roll(off););
 }
 
 void autonomous() {
@@ -51,7 +51,7 @@ void autonomous() {
 
   // to ball
   move(Line({2_ft, 0_ft}), {.end_v = 90_pct});
-  move(Mesh(29_deg, {2.4_ft, 1.5_ft, 4_deg}),
+  move(Mesh(29_deg, {2.4_ft, 1.5_ft, 0_deg}),
        {.start_v = 90_pct, .end_v = 0.1_pct, .curve = true, .start = 29_deg});
   Robot::model()->stop();
 
@@ -117,7 +117,7 @@ void autonomous() {
 
   // drive to first ball and strafe to second ball
   move(Line({2.2_ft, 0_ft}), {.end_v = 90_pct});
-  move(QuinticHermite({3.5_ft, -1.0_ft, 0_deg}, 0.8, 1.2), {.start_v = 90_pct, .end_v = 0.1_pct});
+  move(QuinticHermite({3.5_ft, -1.1_ft, 0_deg}, 0.8, 1.2), {.start_v = 90_pct, .end_v = 0.1_pct});
   Robot::model()->stop();
 
   // strafe to goal
@@ -197,10 +197,10 @@ void autonomous() {
   roll(loadingPoop);
 
   // drive to goal
-  drive(2.7_ft, {.top_v = 60_pct, .steerer = AB().addGoalVision(0_pct, 20_pct)});
+  drive(2.7_ft, {.end_v = 30_pct, .top_v = 60_pct, .steerer = AB().addGoalVision(0_pct, 20_pct)});
   drive(-0.2_ft);
 
-  pros::delay(500);
+  pros::delay(300);
   roll(onPoop);
   pros::delay(400);
   roll(forcePoop);
@@ -211,9 +211,8 @@ void autonomous() {
 
   // back up and turn
   drive(-1.5_ft);
-  turn(50_deg);
-
   roll(loadingPoop);
+  turn(50_deg);
 
   // to ball and curve left to goal
   move(QuinticHermite(200_deg, {-2.9_ft, -5.5_ft, -93_deg}, 2.5, 2.5),
@@ -247,8 +246,9 @@ void autonomous() {
 
   drive(-0.1_ft);
   // shoot two red in corner
-  shootCorner();
-  roll(out);
+  roll(on);
+  pros::delay(400);
+  roll(loadingPoop);
 
   // back up
   drive(-1_ft);

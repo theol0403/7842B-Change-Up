@@ -115,7 +115,7 @@ AnglerBuilder::operator Angler() {
 
 AnglerBuilder::operator Strafer() {
   return [angler = Angler(*this)](const Profile<>::State& state) {
-    return std::clamp(angler(state) * 0.8_s, -40_deg, 40_deg);
+    return std::clamp(angler(state) * 0.8_s, -20_deg, 20_deg);
   };
 }
 
