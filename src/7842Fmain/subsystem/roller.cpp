@@ -97,8 +97,8 @@ void Roller::loop() {
           break;
 
         case rs::timedPoop:
-          top(-10000);
-          bottom(10000);
+          top(-8000);
+          bottom(8000);
           intake(getIntake());
           if (macroTime.getDtFromMark() >= 100_ms) {
             runAction(rs::off);
@@ -124,7 +124,7 @@ void Roller::loop() {
 
         case rs::outSlow:
           top(0);
-          bottom(0);
+          bottom(-8000);
           intake(-4000);
           break;
 
@@ -132,6 +132,18 @@ void Roller::loop() {
           top(-12000);
           bottom(12000);
           intake(12000);
+          break;
+
+        case rs::forceOn:
+          top(12000);
+          bottom(12000);
+          intake(12000);
+          break;
+
+        case rs::forceShoot:
+          top(12000);
+          bottom(12000);
+          intake(0);
           break;
 
         case rs::intakeOnly:
@@ -195,15 +207,11 @@ void Roller::loop() {
       case rs::shoot:
       case rs::on:
         // don't shoot a blue ball
-        // if (getTopLight() == colors::blue) {
-        //   //  move to intake mode
-        //   state &= ~rs::shoot;
-        //   top(-6000);
-        //   pros::delay(100);
-        //   continue;
-        // } else {
-        top(12000);
-        // }
+        if (getTopLight() == colors::blue) {
+          top(5000);
+        } else {
+          top(12000);
+        }
         // if red on the top needs to be separated from bottom ball
         if (getTopLight() == colors::red && getBottomLight() != colors::none) {
           if (getBottomLight() == colors::blue) {
