@@ -97,8 +97,8 @@ void Roller::loop() {
           break;
 
         case rs::timedPoop:
-          top(-8000);
-          bottom(8000);
+          top(-12000);
+          bottom(12000);
           intake(getIntake());
           if (macroTime.getDtFromMark() >= 100_ms) {
             runAction(rs::off);
@@ -189,11 +189,11 @@ void Roller::loop() {
           top(-12000);
           bottom(-12000);
         } else if (getTopLight() != colors::none && getBottomLight() != colors::none) {
-          top(500);
+          top(300);
           bottom(-500);
         } else if (getTopLight() != colors::none) {
           // balance between raising ball to prevent rubbing and bringing ball too high
-          top(500);
+          top(300);
           bottom(9000);
         } else {
           // balance between bringing ball too fast and accidentally pooping
@@ -208,7 +208,7 @@ void Roller::loop() {
       case rs::on:
         // don't shoot a blue ball
         if (getTopLight() == colors::blue) {
-          top(4000);
+          top(5000);
         } else {
           top(12000);
         }
