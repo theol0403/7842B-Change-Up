@@ -197,7 +197,7 @@ void Roller::loop() {
           bottom(9000);
         } else {
           // balance between bringing ball too fast and accidentally pooping
-          top(6000);
+          top(5700);
           // if there is a blue but it can't poop
           bottom(12000);
         }

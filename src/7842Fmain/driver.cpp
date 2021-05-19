@@ -38,13 +38,13 @@ void driverBaseControl() {
   //   rightX += Robot::vision()->getOffset() * 0.015;
   //   rightX = rightX * rightX * util::sgn(rightX);
   // }
-  if (master(DOWN)) {
-    rightX += Robot::line()->getStrafe() * 0.001;
-    rightX = rightX * rightX * util::sgn(rightX);
+  // if (master(DOWN)) {
+  //   rightX += Robot::line()->getStrafe() * 0.001;
+  //   rightX = rightX * rightX * util::sgn(rightX);
 
-    // leftX += Robot::line()->getRotation() * 0.0017;
-    // leftX = leftX * leftX * util::sgn(leftX);
-  }
+  //   // leftX += Robot::line()->getRotation() * 0.0017;
+  //   // leftX = leftX * leftX * util::sgn(leftX);
+  // }
 
   // Robot::model()->xArcade(std::pow(rightX, 2) * util::sgn(rightX),
   //                         std::pow(rightY, 2) * util::sgn(rightY), std::pow(leftX, 3));
@@ -89,7 +89,7 @@ void driverDeviceControl() {
   if (master(R1)) { state |= rollerStates::shoot; }
 
   // add actions
-  if (master(B)) {
+  if (master(B) || master(DOWN)) {
     state |= rollerStates::deploy;
   } else if (master(L1)) {
     state |= rollerStates::shootRev;
