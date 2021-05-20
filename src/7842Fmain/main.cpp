@@ -22,7 +22,7 @@ void shootCorner() {
   roll(on);
   pros::delay(350);
   roll(intake);
-  pros::delay(100);
+  pros::delay(80);
   roll(outSlow);
 }
 
@@ -37,7 +37,7 @@ void shootEdge() {
   pros::delay(300);
   roll(shoot);
   pros::delay(300);
-  roll(off);
+  roll(outSlow);
 }
 
 void autonomous() {
@@ -71,8 +71,8 @@ void autonomous() {
   shootCorner();
 
   // back up
-  asyncTask(pros::delay(700); roll(out););
-  move(QuinticHermite({0_ft, 0_ft, 135_deg}, {-3.1_ft, 3.6_ft, 180_deg}, 1.3, 1),
+  asyncTask(roll(out); pros::delay(200); roll(off); pros::delay(500); roll(out););
+  move(QuinticHermite({0_ft, 0_ft, 135_deg}, {-3.1_ft, 3.7_ft, 180_deg}, 1.3, 1),
        {.curve = true, .start = -45_deg});
 
   /* ----------------------------- first edge goal ---------------------------- */
@@ -94,7 +94,7 @@ void autonomous() {
   asyncTask(pros::delay(500); roll(out););
 
   // back up
-  drive(-2.75_ft, {.rotator = AB().addImu(231_deg, 0.5_s)});
+  drive(-2.75_ft, {.rotator = AB().addImu(230_deg, 0.5_s)});
 
   /* ---------------------------- second edge goal ---------------------------- */
 
@@ -102,14 +102,14 @@ void autonomous() {
   roll(loadingPoop);
 
   // to ball and curve left to goal
-  move(QuinticHermite(200_deg, {-3.85_ft, -5.5_ft, -110_deg}, 2.8, 3.5),
+  move(QuinticHermite(200_deg, {-3.8_ft, -5.5_ft, -110_deg}, 2.8, 3.5),
        {.curve = true,
         .steerer = AB().addBallVision(0.0_s, 00_pct).addRoller(rollerStates::top, -400_ms)});
 
   // shoot one red in edge and remove one blue
   // pros::delay(100);
 
-  asyncTask(pros::delay(200); roll(outSlow););
+  asyncTask(pros::delay(100); roll(outSlow););
 
   // back up
   drive(-0.6_ft);
@@ -139,7 +139,7 @@ void autonomous() {
   shootCorner();
 
   // purge
-  asyncTask(pros::delay(700); roll(out););
+  asyncTask(roll(out); pros::delay(200); roll(off); pros::delay(500); roll(out););
 
   // back up
   move(QuinticHermite(45_deg, {3.7_ft, 2.85_ft, 0_deg}), {.curve = true, .start = -135_deg});
@@ -151,7 +151,7 @@ void autonomous() {
   turn(96_deg);
 
   // drive two balls and curve right to goal
-  move(QuinticHermite(70_deg, {-3.3_ft, 2.3_ft, 180_deg}, 1.7, 3),
+  move(QuinticHermite(70_deg, {-3.3_ft, 2.3_ft, 183_deg}, 1.7, 3),
        {.curve = true,
         .steerer = AB().addImu(180_deg, 1.6_s).addRoller(rollerStates::on, -400_ms),
         .strafer = AB().addGoalVision(70_pct)});
@@ -176,15 +176,15 @@ void autonomous() {
   // strafe and turn to goal
   move(Line({-3.4_ft, 1.85_ft}), {.start = 90_deg,
                                   .rotator = AB().addImu(152_deg, 10_pct),
-                                  .steerer = AB().addRoller(rollerStates::on, -350_ms)});
-  roll(outSlow);
+                                  .steerer = AB().addRoller(rollerStates::on, -300_ms)});
+
+  asyncTask(pros::delay(250); roll(out); pros::delay(200); roll(loading););
   drive(-0.1_ft);
   Robot::model()->stop();
 
   // shoot two red in corner
 
   /* ------------------------------- center goal ------------------------------ */
-  asyncTask(pros::delay(200); roll(loading););
 
   // strafe to ball
   move(
@@ -197,7 +197,7 @@ void autonomous() {
     });
 
   // strafe to center goal
-  asyncTask(pros::delay(400); roll(forceShoot); pros::delay(250); roll(loading););
+  asyncTask(pros::delay(400); roll(forceShoot); pros::delay(300); roll(loading););
   move(Line({2.4_ft, -2.8_ft}), {.start = 180_deg});
 
   asyncTask(pros::delay(300); roll(loadingPoop););
@@ -205,13 +205,13 @@ void autonomous() {
 
   // drive to goal
   drive(2.5_ft, {.end_v = 40_pct, .top_v = 70_pct, .steerer = AB().addGoalVision(0_pct, 20_pct)});
-  drive(-0.2_ft);
+  drive(-0.25_ft);
 
   pros::delay(300);
   roll(onPoop);
   pros::delay(400);
   roll(forcePoop);
-  pros::delay(600);
+  pros::delay(630);
   roll(off);
 
   /* ---------------------------- fourth edge goal ---------------------------- */
