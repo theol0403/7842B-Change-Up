@@ -20,9 +20,9 @@ void opcontrol() {
 
 void shootCorner() {
   roll(on);
-  pros::delay(350);
+  pros::delay(330);
   roll(intake);
-  pros::delay(80);
+  pros::delay(100);
   roll(outSlow);
 }
 
@@ -102,7 +102,7 @@ void autonomous() {
   roll(loadingPoop);
 
   // to ball and curve left to goal
-  move(QuinticHermite(200_deg, {-3.8_ft, -5.5_ft, -110_deg}, 2.8, 3.5),
+  move(QuinticHermite(200_deg, {-3.7_ft, -5.5_ft, -110_deg}, 2.8, 3.5),
        {.curve = true,
         .steerer = AB().addBallVision(0.0_s, 00_pct).addRoller(rollerStates::top, -400_ms)});
 
@@ -151,7 +151,7 @@ void autonomous() {
   turn(96_deg);
 
   // drive two balls and curve right to goal
-  move(QuinticHermite(70_deg, {-3.3_ft, 2.3_ft, 183_deg}, 1.7, 3),
+  move(QuinticHermite(70_deg, {-3.3_ft, 2.2_ft, 183_deg}, 1.7, 3),
        {.curve = true,
         .steerer = AB().addImu(180_deg, 1.6_s).addRoller(rollerStates::on, -400_ms),
         .strafer = AB().addGoalVision(70_pct)});
@@ -166,12 +166,12 @@ void autonomous() {
   drive(-1.6_ft, {.rotator = AB()
                                .add(makeAngler(-90_deg, Limits<QAngle>(0.3_s, 60_deg / second)),
                                     0.3_s, 50_pct)
-                               .addImu(93_deg, 50_pct)});
+                               .addImu(94_deg, 50_pct)});
 
   /* ---------------------------- third corner goal --------------------------- */
 
   // to ball
-  drive(4.1_ft, {.strafer = AB().addBallVision(0_s, 70_pct)});
+  drive(4.05_ft, {.strafer = AB().addBallVision(0_s, 70_pct)});
 
   // strafe and turn to goal
   move(Line({-3.4_ft, 1.85_ft}), {.start = 90_deg,
@@ -257,8 +257,7 @@ void autonomous() {
 
   drive(-0.1_ft);
   shootCorner();
-  roll(out);
-  asyncTask(pros::delay(200); roll(off););
+  asyncTask(pros::delay(100); roll(out); pros::delay(200); roll(off););
 
   // back up
   drive(-1_ft);
