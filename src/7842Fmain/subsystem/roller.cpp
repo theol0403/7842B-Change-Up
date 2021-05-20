@@ -213,7 +213,7 @@ void Roller::loop() {
           top(12000);
         }
         // if red on the top needs to be separated from bottom ball
-        if (getTopLight() == colors::red && getBottomLight() != colors::none) {
+        if (getTopLight() != colors::none && getBottomLight() != colors::none) {
           if (getBottomLight() == colors::blue) {
             bottom(0);
           } else {
