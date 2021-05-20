@@ -51,7 +51,7 @@ void driverBaseControl() {
 
   Robot::model()->xArcade(rightX, rightY, leftX);
 
-  if (master(X) && !pros::competition::is_connected()) autonomous();
+  if (master(X) && master(UP) && !pros::competition::is_connected()) autonomous();
 }
 
 /***

@@ -20,9 +20,9 @@ void opcontrol() {
 
 void shootCorner() {
   roll(on);
-  pros::delay(330);
+  pros::delay(310);
   roll(intake);
-  pros::delay(100);
+  pros::delay(120);
   roll(outSlow);
 }
 
@@ -82,7 +82,7 @@ void autonomous() {
   turn(87_deg);
 
   // drive two balls and curve right to goal
-  move(QuinticHermite(110_deg, {3.1_ft, 2.55_ft, 0_deg}, 1.7, 3),
+  move(QuinticHermite(110_deg, {3.1_ft, 2.6_ft, 0_deg}, 1.7, 3),
        {.curve = true,
         .steerer = AB().addImu(-5_deg, 1.6_s).addRoller(rollerStates::on, -400_ms),
         .strafer = AB().addGoalVision(1.6_s)});
@@ -166,7 +166,7 @@ void autonomous() {
   drive(-1.6_ft, {.rotator = AB()
                                .add(makeAngler(-90_deg, Limits<QAngle>(0.3_s, 60_deg / second)),
                                     0.3_s, 50_pct)
-                               .addImu(94_deg, 50_pct)});
+                               .addImu(93_deg, 50_pct)});
 
   /* ---------------------------- third corner goal --------------------------- */
 
@@ -178,7 +178,7 @@ void autonomous() {
                                   .rotator = AB().addImu(152_deg, 10_pct),
                                   .steerer = AB().addRoller(rollerStates::on, -300_ms)});
 
-  asyncTask(pros::delay(250); roll(out); pros::delay(200); roll(loading););
+  asyncTask(pros::delay(200); roll(out); pros::delay(200); roll(loading););
   drive(-0.1_ft);
   Robot::model()->stop();
 
@@ -219,7 +219,7 @@ void autonomous() {
   // back up and turn
   drive(-1.6_ft);
   roll(loadingPoop);
-  turn(49_deg);
+  turn(47_deg);
 
   // to ball and curve left to goal
   move(QuinticHermite(200_deg, {-2.8_ft, -5.5_ft, -93_deg}, 2.5, 2.5),
@@ -238,11 +238,11 @@ void autonomous() {
     pros::delay(300);
     roll(loadingPoop);
   });
-  turn(7_deg);
+  turn(6_deg);
 
   // drive to first ball and strafe to second ball
   move(Line({3_ft, 0_ft}), {.end_v = 90_pct});
-  move(QuinticHermite({2.7_ft, -0.9_ft, 0_deg}, 0.8, 1.2), {.start_v = 90_pct, .end_v = 0.1_pct});
+  move(QuinticHermite({2.8_ft, -0.9_ft, 0_deg}, 0.8, 1.2), {.start_v = 90_pct, .end_v = 0.1_pct});
   Robot::model()->stop();
 
   roll(off);
