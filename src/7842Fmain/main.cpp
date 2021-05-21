@@ -22,7 +22,7 @@ void shootCorner() {
   roll(on);
   pros::delay(310);
   roll(intake);
-  pros::delay(120);
+  pros::delay(110);
   roll(outSlow);
 }
 
@@ -34,9 +34,9 @@ void shootSingleCorner() {
 
 void shootEdge() {
   roll(on);
-  pros::delay(300);
+  pros::delay(280);
   roll(shoot);
-  pros::delay(300);
+  pros::delay(320);
   roll(outSlow);
 }
 
@@ -178,7 +178,7 @@ void autonomous() {
                                   .rotator = AB().addImu(152_deg, 10_pct),
                                   .steerer = AB().addRoller(rollerStates::on, -300_ms)});
 
-  asyncTask(pros::delay(200); roll(out); pros::delay(200); roll(loading););
+  asyncTask(pros::delay(150); roll(out); pros::delay(200); roll(loading););
   drive(-0.1_ft);
   Robot::model()->stop();
 
