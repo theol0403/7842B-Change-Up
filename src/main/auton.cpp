@@ -1,5 +1,7 @@
-#include "7842Fmain/config.hpp"
+#include "lib7842/api/positioning/spline/hermite.hpp"
 #include "main.h"
+#include "main/config.hpp"
+#include "subsystem/vision.hpp"
 
 // shorthand
 #define move Robot::chassis()->follow

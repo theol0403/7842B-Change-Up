@@ -1,5 +1,5 @@
-#include "7842Fmain/subsystem/angler.hpp"
-#include "7842Fmain/config.hpp"
+#include "main/subsystem/angler.hpp"
+#include "main/config.hpp"
 
 namespace lib7842 {
 AnglerBuilder&& AnglerBuilder::add(const Angler& angler, const Marker& start, const Marker& end) {

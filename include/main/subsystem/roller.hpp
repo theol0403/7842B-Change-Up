@@ -1,7 +1,7 @@
 #pragma once
-#include "7842Fmain/util/enum.hpp"
-#include "7842Fmain/util/statemachine.hpp"
 #include "main.h"
+#include "main/util/enum.hpp"
+#include "main/util/statemachine.hpp"
 
 // The first 3 bits toggle the state of each roller.
 // The next few bits modify the behavior of the rollers.
